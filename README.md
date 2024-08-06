@@ -1,6 +1,6 @@
 # cafeapp_v2
 
-A new Flutter project.
+Cafe App v2
 
 ## Getting Started
 
