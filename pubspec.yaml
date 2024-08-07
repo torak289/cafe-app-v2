@@ -39,6 +39,8 @@ dependencies:
   geolocator: ^12.0.0
   back_button_interceptor: ^7.0.3
   flutter_bloc: ^8.1.6
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
 
 dev_dependencies:
   flutter_test:
