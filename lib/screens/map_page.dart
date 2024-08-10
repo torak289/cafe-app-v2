@@ -32,7 +32,13 @@ class MapPage extends StatelessWidget {
               )
             ],
           ),
-          Center(child: TextButton(onPressed: () => {}, child: const Text("Click Me!"))),
+          Column(
+            children: [
+              TextButton(onPressed: () => {}, child: const Text("Zoom Out!")),
+              TextButton(onPressed: () => {}, child: const Text("Zoom In!"))
+              
+            ],
+          ),
         ],
       ),
     );
