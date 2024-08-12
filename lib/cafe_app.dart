@@ -1,7 +1,9 @@
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
+import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/themes/cafe_light.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,17 +22,18 @@ class CafeApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         //Auth Service
+        Provider<AuthService>(create: (context) => AuthService()),
+        //User Data
         //Provider<UserModel>.value(value: user)
         //Database Service
-        //Provider<DatabaseService>(create: (context) => ,)
+        Provider<DatabaseService>(create: (context) => DatabaseService(uid: '-1')),
         //Location Service
-        Provider<LocationService>(create: (context) => LocationService())
+        Provider<LocationService>(create: (context) => LocationService()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Cafe App',
-        theme: ThemeData(
-          useMaterial3: true,
-        ),
+        theme: cafeLightTheme,
         routes: Routes.routes,
         initialRoute: Routes.mapPage,
       ),
