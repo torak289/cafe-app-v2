@@ -30,22 +30,28 @@ class CafeMarker extends Marker {
                   color: AppColours.cafeIconColor,
                 ),
               ),
-              Text(
-                cafeName,
-                style: const TextStyle(
-                  fontFamily: "Monospace",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 8,
-                  color: AppColours.secondaryColor,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(left: 4),
-              ),
-              const Icon(
-                Icons.circle,
-                size: 8,
-                color: AppColours.secondaryColor,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cafeName,
+                    style: const TextStyle(
+                      fontFamily: "Monospace",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 8,
+                      color: AppColours.secondaryColor,
+                    ),
+                  ),
+                  const Text(
+                    'Cafe',
+                    style: TextStyle(
+                      fontFamily: "Monospace",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 8,
+                      color: AppColours.secondaryColor,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

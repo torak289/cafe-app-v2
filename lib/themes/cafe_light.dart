@@ -15,6 +15,23 @@ ThemeData cafeLightTheme = ThemeData(
   ),
   //Text
   fontFamily: _fontFamily,
+  //Search
+  inputDecorationTheme: const InputDecorationTheme(
+    contentPadding: EdgeInsets.zero,
+    filled: true,
+    fillColor: AppColours.backgroundColor,
+    border: OutlineInputBorder(
+      gapPadding: 0,
+      borderSide: BorderSide(
+        width: 2.0,
+        strokeAlign: BorderSide.strokeAlignCenter,
+        color: AppColours.buttonBackgroundColor,
+      ),
+      borderRadius: BorderRadius.all(
+        Radius.circular(32),
+      ),
+    ),
+  ),
   //Buttons
   textButtonTheme: const TextButtonThemeData(
     style: ButtonStyle(
