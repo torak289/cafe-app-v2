@@ -16,4 +16,8 @@ class AppColours {
   static const Color buttonTextColor = Colors.white;
   static const Color buttonBackgroundColor = Colors.black;
 
+  //Icon Colors
+  static const Color cafeIconColor = Colors.black;
+  static const Color roasterIconColor = Colors.pinkAccent;
+
 }

@@ -1,5 +1,7 @@
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/widgets/cafe_marker.dart';
+import 'package:cafeapp_v2/widgets/roaster_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,7 +30,7 @@ class MapPage extends StatelessWidget {
                   options: MapOptions(
                     initialCenter: LatLng(
                         snapshot.data!.latitude, snapshot.data!.longitude),
-                    initialZoom: 12,
+                    initialZoom: 14.5,
                   ),
                   children: [
                     TileLayer(
@@ -37,48 +39,21 @@ class MapPage extends StatelessWidget {
                       userAgentPackageName: 'io.cafe-app',
                       maxZoom: 21,
                     ),
-                    const MarkerLayer(
+                    MarkerLayer(
                       markers: [
-                        Marker(
-                          point: LatLng(51.2283, -2.8088),
-                          child: Icon(
-                            Icons.location_on_sharp,
-                            color: Colors.black,
-                          ),
+                        CafeMarker(
+                          point: const LatLng(51.2283, -2.8088),
+                          cafeName: "The Swan Wedmore",
                         ),
-                        Marker(
-                          point: LatLng(51.2200, -2.8000),
-                          child: Icon(
-                            Icons.location_on_sharp,
-                            color: Colors.pinkAccent,
-                          ),
+                        RoasterMarker(
+                          point: const LatLng(51.2200, -2.8000),
+                          roasterName: "Wedmore Roasters",
                         ),
                       ],
                     )
                   ],
                 ),
-                Column(
-                  children: [
-                    TextButton(
-                      onPressed: () => {
-                        //TODO: implement zoom out
-                        Navigator.pushNamed(context, Routes.registrationPage)
-                      },
-                      child: const Text("Zoom Out!"),
-                    ),
-                    TextButton(
-                      onPressed: () => {
-                        //TODO: implement zoom in
-                        Navigator.pushNamed(context, Routes.loginPage)
-                      },
-                      child: const Text("Zoom In!"),
-                    ),
-                    TextButton(
-                      onPressed: () => {},
-                      child: Text("Center!"),
-                    ),
-                  ],
-                ),
+                //Map Search
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -86,12 +61,39 @@ class MapPage extends StatelessWidget {
                     children: [
                       TextButton(
                         onPressed: () => {},
-                        child: Text("Find Cafe"),
+                        child: const Text("Find Cafe"),
                       ),
-                      TextField(),
+                      const TextField(
+                        decoration: InputDecoration(
+                          hintText: "Search",
+                        ),
+                      ),
                     ],
                   ),
                 ),
+                //Map Controls
+                Column(
+                  children: [
+                    IconButton(
+                      onPressed: () => {},
+                      icon: const Icon(
+                        Icons.zoom_out_rounded,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => {},
+                      icon: const Icon(
+                        Icons.zoom_in_rounded,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => {},
+                      icon: const Icon(
+                        Icons.my_location_rounded,
+                      ),
+                    ),
+                  ],
+                )
               ],
             );
           } else {
