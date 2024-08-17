@@ -1,3 +1,8 @@
+import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:cafeapp_v2/data_models/cafe_model.dart';
+import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/widgets/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/roaster_marker.dart';
@@ -6,14 +11,25 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MapPage extends StatelessWidget {
-  const MapPage({super.key});
+  MapPage({super.key});
 
+  final List<Marker> markers = [
+    CafeMarker(
+        point: const LatLng(51.2283, -2.8088), cafeName: "The Swan Wedmore"),
+    CafeMarker(point: const LatLng(51.2253, -2.8058), cafeName: "Test Cafe"),
+    RoasterMarker(
+        point: const LatLng(51.2200, -2.8000), roasterName: "Wedmore Roasters"),
+  ];
   @override
   Widget build(BuildContext context) {
     final LocationService location =
         Provider.of<LocationService>(context, listen: false);
+    final DatabaseService database =
+        Provider.of<DatabaseService>(context, listen: false);
+    final AuthService authService = Provider.of(context, listen: false);
 
     MapController mapController = MapController();
     return Scaffold(
@@ -22,8 +38,9 @@ class MapPage extends StatelessWidget {
         builder: (context, AsyncSnapshot<Position> snapshot) {
           if (snapshot.hasData) {
             return Stack(
-              alignment: AlignmentDirectional.bottomCenter,
+              alignment: AlignmentDirectional.bottomEnd,
               children: [
+                //Map
                 FlutterMap(
                   mapController: mapController,
                   options: MapOptions(
@@ -39,59 +56,25 @@ class MapPage extends StatelessWidget {
                       maxZoom: 21,
                     ),
                     MarkerLayer(
-                      markers: [
-                        CafeMarker(
-                          point: const LatLng(51.2283, -2.8088),
-                          cafeName: "The Swan Wedmore",
-                        ),
-                        RoasterMarker(
-                          point: const LatLng(51.2200, -2.8000),
-                          roasterName: "Wedmore Roasters",
-                        ),
-                      ],
-                    )
+                      markers: markers,
+                    ),
                   ],
                 ),
-                //Map Search
-                Padding(
-                  padding: const EdgeInsets.all(16),
+                //State
+                //Profile
+                GestureDetector(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        onPressed: () => {},
-                        child: const Text("Find Cafe"),
-                      ),
-                      const TextField(
-                        decoration: InputDecoration(
-                          hintText: "Search",
-                        ),
+                      Text('${authService.appState}'),
+                      const Icon(
+                        Icons.person,
+                        color: AppColours.cafeIconColor,
                       ),
                     ],
                   ),
-                ),
-                //Map Controls
-                Column(
-                  children: [
-                    IconButton(
-                      onPressed: () => {},
-                      icon: const Icon(
-                        Icons.zoom_out_rounded,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => {},
-                      icon: const Icon(
-                        Icons.zoom_in_rounded,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () => {},
-                      icon: const Icon(
-                        Icons.my_location_rounded,
-                      ),
-                    ),
-                  ],
+                  onTap: () {
+                    Navigator.pushNamed(context, Routes.loginPage);
+                  },
                 )
               ],
             );

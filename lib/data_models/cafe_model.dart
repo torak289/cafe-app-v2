@@ -1,19 +1,37 @@
 import 'package:latlong2/latlong.dart';
 
 class CafeModel {
-  String uid;
-  String owner;
+  //String? uid;
+  //DateTime? created_at;
   String name;
   String description;
-  LatLng location;
   List<String> coffees;
+  String owner;
+  LatLng location;
+  double? rating;
 
   CafeModel({
-    required this.uid,
-    required this.owner,
+    //this.uid,
+    //this.created_at,
     required this.name,
     required this.description,
-    required this.location,
     required this.coffees,
+    required this.owner,
+    required this.location,
+    this.rating,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      //'uid': uid,
+      //'created_at': created_at,
+      'name': name,
+      'description': description,
+      'coffees': coffees,
+      'location': 'POINT(${location.latitude} ${location.longitude})',
+      'rating': rating,
+    };
+  }
+  /*factory CafeModel.fromJson(Map<String, dynamic> data, String uid) {
+  }*/
 }

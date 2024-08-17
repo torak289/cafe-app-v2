@@ -19,23 +19,38 @@ class CafeApp extends StatelessWidget {
     //Force android navbar edge to edge for better looking UI (Seamless)
     SystemUiUtils.toggleSystemUi(true);
 
-    return MultiProvider(
-      providers: [
-        //Auth Service
-        Provider<AuthService>(create: (context) => AuthService()),
-        //User Data
-        //Provider<UserModel>.value(value: user)
-        //Database Service
-        Provider<DatabaseService>(create: (context) => DatabaseService(uid: '-1')),
-        //Location Service
-        Provider<LocationService>(create: (context) => LocationService()),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Cafe App',
-        theme: cafeLightTheme,
-        routes: Routes.routes,
-        initialRoute: Routes.mapPage,
+    return ListenableProvider<AuthService>(
+      //Auth Service
+      create: (context) => AuthService(),
+      child: Consumer<AuthService>(
+        builder: (context, authService, child) {
+          return StreamBuilder<UserModel?>(
+            stream: authService.user.stream, //Issue with Null User
+            builder: (context, AsyncSnapshot<UserModel?> snapshot) {
+              final UserModel? user = snapshot.data;
+              //TODO: Add user not null check here for stuff... else return build fail
+              return MultiProvider(
+                providers: [
+                  //User Data
+                  Provider<UserModel?>.value(value: user),
+                  //Database Service
+                  Provider<DatabaseService>(
+                    create: (context) => DatabaseService(uid: user?.uid),
+                  ),
+                  //Location Service
+                  Provider<LocationService>(create: (context) => LocationService()),
+                ],
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'Cafe App',
+                  theme: cafeLightTheme,
+                  routes: Routes.routes,
+                  initialRoute: Routes.mapPage,
+                ),
+              );
+            }
+          );
+        },
       ),
     );
   }
