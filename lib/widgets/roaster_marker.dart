@@ -5,8 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class RoasterMarker extends Marker {
-  LatLng point;
-  String roasterName;
+  @override
+  final LatLng point;
+  final String roasterName;
 
   RoasterMarker({
     required this.point,

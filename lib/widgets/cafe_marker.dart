@@ -5,8 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 class CafeMarker extends Marker {
-  LatLng point;
-  String cafeName;
+  @override
+  final LatLng point;
+  final String cafeName;
 
   CafeMarker({
     required this.point,
@@ -15,7 +16,7 @@ class CafeMarker extends Marker {
           point: point,
           width: 192,
           rotate: true,
-          alignment: Alignment.bottomRight,
+          alignment: Alignment.bottomRight, //Bottom Right (1,1)
           child: Row(
             children: [
               GestureDetector(

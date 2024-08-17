@@ -1,7 +1,7 @@
 import 'package:latlong2/latlong.dart';
 
 class CafeModel {
-  //String? uid;
+  String? uid;
   //DateTime? created_at;
   String name;
   String description;
@@ -11,7 +11,7 @@ class CafeModel {
   double? rating;
 
   CafeModel({
-    //this.uid,
+    this.uid,
     //this.created_at,
     required this.name,
     required this.description,
@@ -32,6 +32,16 @@ class CafeModel {
       'rating': rating,
     };
   }
-  /*factory CafeModel.fromJson(Map<String, dynamic> data, String uid) {
-  }*/
+
+  factory CafeModel.fromJson(Map<String, dynamic> data) {
+    return CafeModel(
+        uid: data['uid'],
+        name: data['name'],
+        description: data['description'],
+        coffees: data['coffees'],
+        owner: data['owner'],
+        location: LatLng.fromJson(
+          data['location'],
+        ));
+  }
 }

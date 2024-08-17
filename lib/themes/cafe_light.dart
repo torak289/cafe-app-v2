@@ -50,4 +50,10 @@ ThemeData cafeLightTheme = ThemeData(
       ),
     ),
   ),
+  iconButtonTheme: const IconButtonThemeData(
+    style: ButtonStyle(
+      minimumSize: WidgetStatePropertyAll(Size.zero),
+      padding: WidgetStatePropertyAll(EdgeInsets.zero)
+    )
+  )
 );
