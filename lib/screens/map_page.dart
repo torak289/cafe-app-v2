@@ -7,6 +7,7 @@ import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/widgets/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/map_controls.dart';
 import 'package:cafeapp_v2/widgets/roaster_marker.dart';
+import 'package:cafeapp_v2/widgets/search_controls.dart';
 import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -98,12 +99,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                           animatedMapController: animatedMapController,
                           position: position.data!),
                       //Debug
-                      Center(
+                      Align(
+                        alignment: Alignment.topCenter,
                         child: Text(
                           '${authService.appState}',
-                          style: const TextStyle(
-                              color: AppColours.errorText,
-                              fontWeight: FontWeight.bold),
+                          style: const TextStyle(color: AppColours.errorText),
                         ),
                       ),
                       //Profile
@@ -115,7 +115,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         onTap: () {
                           Navigator.pushNamed(context, Routes.loginPage);
                         },
-                      )
+                      ),
+                      const SearchControls(),
                     ],
                   );
                 } else {
