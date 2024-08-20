@@ -90,7 +90,7 @@ class AuthService with ChangeNotifier {
       }
       return "Success";
     } catch (e) {
-      debugPrint("Error: $e");
+      //debugPrint("Error: $e");
       _appState = AppState.Unauthenticated;
       notifyListeners();
       return e.toString();

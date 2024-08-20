@@ -5,7 +5,7 @@ class CafeModel {
   //DateTime? created_at;
   String name;
   String description;
-  List<String> coffees;
+  //List<String> coffees;
   String owner;
   LatLng location;
   double? rating;
@@ -15,7 +15,7 @@ class CafeModel {
     //this.created_at,
     required this.name,
     required this.description,
-    required this.coffees,
+    //required this.coffees,
     required this.owner,
     required this.location,
     this.rating,
@@ -27,7 +27,7 @@ class CafeModel {
       //'created_at': created_at,
       'name': name,
       'description': description,
-      'coffees': coffees,
+      //'coffees': coffees,
       'location': 'POINT(${location.latitude} ${location.longitude})',
       'rating': rating,
     };
@@ -35,13 +35,15 @@ class CafeModel {
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
     return CafeModel(
-        uid: data['uid'],
-        name: data['name'],
-        description: data['description'],
-        coffees: data['coffees'],
-        owner: data['owner'],
-        location: LatLng.fromJson(
-          data['location'],
-        ));
+      uid: data['uid'],
+      name: data['name'],
+      description: data['description'],
+      //coffees: data['coffees'],
+      owner: data['owner'],
+      location: LatLng(
+        data['latitude'],
+        data['longitude'],
+      ),
+    );
   }
 }

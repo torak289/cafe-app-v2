@@ -1,13 +1,167 @@
+import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/data_models/cafe_model.dart';
+import 'package:cafeapp_v2/data_models/user_model.dart';
+import 'package:cafeapp_v2/enum/app_states.dart';
+import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/database_service.dart';
+import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/widgets/map_controls.dart';
+import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 
-class AddCafePage extends StatelessWidget {
+class AddCafePage extends StatefulWidget {
+  @override
+  State<AddCafePage> createState() => _AddCafePageState();
+}
+
+class _AddCafePageState extends State<AddCafePage>
+    with TickerProviderStateMixin {
+  late final AnimatedMapController animatedMapController =
+      AnimatedMapController(vsync: this);
+
+  TextEditingController cafeName = TextEditingController();
+  TextEditingController cafeDescription = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final LocationService location =
+        Provider.of<LocationService>(context, listen: false);
+    final UserModel user = Provider.of<UserModel>(context, listen: false);
+    final DatabaseService database =
+        Provider.of<DatabaseService>(context, listen: false);
+    final AuthService authService =
+        Provider.of<AuthService>(context, listen: false);
     return Scaffold(
-        body: Center(
-      child: Text(
-        "Add Cafe Page",
+      body: Column(
+        children: [
+          FutureBuilder<LocationPermission>(
+            future: location.checkServices(),
+            builder: (context, locationData) {
+              if (locationData.data == LocationPermission.always ||
+                  locationData.data == LocationPermission.whileInUse) {
+                return StreamBuilder<Position>(
+                  stream: location.positionStream,
+                  builder: (context, AsyncSnapshot<Position> position) {
+                    if (position.hasData) {
+                      return Stack(
+                        alignment: AlignmentDirectional.bottomEnd,
+                        children: [
+                          //Map
+                          SizedBox(
+                            height: 400,
+                            child: FlutterMap(
+                              mapController:
+                                  animatedMapController.mapController,
+                              options: MapOptions(
+                                initialCenter: LatLng(position.data!.latitude,
+                                    position.data!.longitude),
+                                initialZoom: 14.5,
+                                cameraConstraint: CameraConstraint.contain(
+                                  bounds: LatLngBounds(
+                                    const LatLng(-90, -180),
+                                    const LatLng(90, 180),
+                                  ),
+                                ),
+                              ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName: 'io.cafe-app',
+                                  maxZoom: 21,
+                                ),
+                                MarkerLayer(
+                                  markers: [
+                                    UserMarker(
+                                      position: position.data!,
+                                      controller:
+                                          animatedMapController.mapController,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          //Center locator
+                          const SizedBox(
+                            height: 400,
+                            child: Center(
+                              child: Icon(
+                                Icons.location_searching_rounded,
+                                color: AppColours.iconButtonIconColor,
+                              ),
+                            ),
+                          ),
+                          //Map Controls
+                          MapControls(
+                              animatedMapController: animatedMapController,
+                              position: position.data!),
+                          //Debug
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              '${authService.appState}',
+                              style:
+                                  const TextStyle(color: AppColours.errorText),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      );
+                    }
+                  },
+                );
+              } else {
+                return Center(
+                  child: Column(
+                    children: [
+                      Text(locationData.error.toString()),
+                      TextButton(
+                        onPressed: () {
+                          location.openLocationSetting();
+                        },
+                        child: const Text('Location Settings'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
+          TextField(
+            controller: cafeName,
+          ),
+          TextField(
+            controller: cafeDescription,
+          ),
+          TextButton(
+              onPressed: () async {
+                if (authService.appState == AppState.Authenticated) {
+                  CafeModel newCafe = CafeModel(
+                      name: cafeName.text.trim(),
+                      description: cafeDescription.text.trim(),
+                      //coffees: ['1', '2', '3'],
+                      owner: user.uid,
+                      location:
+                          animatedMapController.mapController.camera.center);
+                  await database.addCafe(newCafe);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                  }
+                }
+              },
+              child: const Text("Submit"))
+        ],
       ),
-    ));
+    );
   }
 }

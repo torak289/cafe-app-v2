@@ -7,20 +7,25 @@ class SearchControls extends StatelessWidget {
     super.key,
   });
 
-//TODO: Implement actual search & map control... Will probably need access to map controller...
+//TODO: Implement actual search & map control... Will probably need access to map controller... Probably needs to be a stateful widget...
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppColours.screenHorizontal, 0, AppColours.screenHorizontal, AppColours.screenVertical),
+      padding: const EdgeInsets.fromLTRB(AppColours.screenHorizontal, 0,
+          AppColours.screenHorizontal, AppColours.screenVertical),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextButton(onPressed: () {
-            Navigator.pushNamed(context, Routes.addCafePage);
-          }, child: const Text("Add Cafe")),
           TextButton(
-            onPressed: () => {},
+              onPressed: () {
+                Navigator.pushNamed(context, Routes.addCafePage);
+              },
+              child: const Text("Add Cafe")),
+          TextButton(
+            onPressed: () => {
+              //TODO: FIND CAFE FUNCTIONALITY...
+            },
             child: const Text("Find Cafe"),
           ),
           TextField()

@@ -17,7 +17,7 @@ class MapControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, AppColours.screenHorizontal, AppColours.screenVertical),
+      padding: const EdgeInsets.fromLTRB(0, 0, AppColours.screenHorizontal, AppColours.screenVertical * 3),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -30,7 +30,6 @@ class MapControls extends StatelessWidget {
               color: AppColours.iconButtonIconColor,
             ),
           ),
-          const Padding(padding: EdgeInsets.all(AppColours.buttonSpacing)),
           IconButton(
             onPressed: () {
               animatedMapController.animatedZoomIn();
@@ -40,7 +39,6 @@ class MapControls extends StatelessWidget {
               color: AppColours.iconButtonIconColor,
             ),
           ),
-          const Padding(padding: EdgeInsets.all(AppColours.buttonSpacing)),
           IconButton(
             onPressed: () {
               animatedMapController.animateTo(

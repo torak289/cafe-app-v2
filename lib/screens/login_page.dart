@@ -1,11 +1,15 @@
+import 'package:cafeapp_v2/constants/app_colours.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final AuthService authService = Provider.of(context, listen: false);
@@ -44,24 +48,33 @@ class LoginPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.left,
               ),
-              TextField(),
-              TextField(),
+              TextField(
+                controller: emailController,
+              ),
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+              ),
               TextButton(
                 onPressed: () async => {
                   await authService.emailLogin(
-                      'torak289@gmail.com', 'Wolf235!'),
-                  //TODO: Fix mounting issue -> Probably a stateful widget
-                  Navigator.pop(context),
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  ),
+                  if (context.mounted)
+                    {
+                      Navigator.pop(context),
+                    }
                 },
-                child: Text("Login"),
+                child: const Text("Login"),
               ),
               const Row(
                 children: [
                   Expanded(child: Divider(color: Colors.black)),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: 16,
-                        right: 16), //TODO: Move padding to a const file
+                        left: AppColours.screenHorizontal,
+                        right: AppColours.screenHorizontal),
                     child: Text("Or", textAlign: TextAlign.center),
                   ),
                   Expanded(child: Divider(color: Colors.black)),
