@@ -9,6 +9,7 @@ import 'package:cafeapp_v2/widgets/roaster_marker.dart';
 import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -20,30 +21,24 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
-  /*final List<Marker> markers = [
-    CafeMarker(
-        point: const LatLng(51.2283, -2.8088), cafeName: "The Swan Wedmore"),
-    CafeMarker(point: const LatLng(51.2253, -2.8058), cafeName: "Test Cafe"),
-    RoasterMarker(
-        point: const LatLng(51.2200, -2.8000), roasterName: "Wedmore Roasters"),
-  ];*/
-  List<Marker> markers(List<CafeModel> cafes) {
-    List<Marker> markers = List.empty();
+class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
+  late final AnimatedMapController animatedMapController =
+      AnimatedMapController(vsync: this);
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    animatedMapController.dispose();
+  }
 
+  List<Marker> getMarkers(List<CafeModel> cafeModelList) {
+    List<CafeModel> cafes = cafeModelList;
+    List<Marker> markers = List<Marker>.empty();
     for (int i = 0; i < cafes.length; i++) {
       markers
           .add(CafeMarker(point: cafes[i].location, cafeName: cafes[i].name));
     }
     return markers;
-  }
-
-  MapController mapController = MapController();
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    mapController.dispose();
   }
 
   @override
@@ -69,7 +64,7 @@ class _MapPageState extends State<MapPage> {
                     children: [
                       //Map
                       FlutterMap(
-                        mapController: mapController,
+                        mapController: animatedMapController.mapController,
                         options: MapOptions(
                           initialCenter: LatLng(position.data!.latitude,
                               position.data!.longitude),
@@ -86,18 +81,18 @@ class _MapPageState extends State<MapPage> {
                             markers: [
                               UserMarker(
                                 position: position.data!,
+                                controller: animatedMapController.mapController,
                               ),
                             ],
                           ),
                         ],
                       ),
-                      //State
+                      //Map Controls
                       Column(
                         children: [
                           IconButton(
                             onPressed: () {
-                              mapController.move(mapController.camera.center,
-                                  mapController.camera.zoom - 1);
+                              animatedMapController.animatedZoomOut();
                             },
                             icon: const Icon(
                               Icons.zoom_out_rounded,
@@ -106,8 +101,7 @@ class _MapPageState extends State<MapPage> {
                           ),
                           IconButton(
                             onPressed: () {
-                              mapController.move(mapController.camera.center,
-                                  mapController.camera.zoom + 1);
+                              animatedMapController.animatedZoomIn();
                             },
                             icon: const Icon(
                               Icons.zoom_in_rounded,
@@ -116,10 +110,10 @@ class _MapPageState extends State<MapPage> {
                           ),
                           IconButton(
                             onPressed: () {
-                              mapController.move(
-                                  LatLng(position.data!.latitude!,
-                                      position.data!.longitude!),
-                                  mapController.camera.zoom);
+                              animatedMapController.animateTo(
+                                dest: LatLng(position.data!.latitude,
+                                    position.data!.longitude),
+                              );
                             },
                             icon: const Icon(
                               Icons.my_location_rounded,

@@ -24,7 +24,7 @@ class AuthService with ChangeNotifier {
   Future<AuthState> _onAuthStateChanged(AuthState data) async {
     final AuthChangeEvent event = data.event;
     final Session? session = data.session;
-    debugPrint('Event: $event, Session: $session');
+    //debugPrint('Event: $event, Session: $session');
 
     if (session != null) {
       _user.sink.add(userFromSupabase(session.user));

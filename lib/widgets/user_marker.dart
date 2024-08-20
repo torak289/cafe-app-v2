@@ -6,26 +6,35 @@ import 'package:latlong2/latlong.dart';
 
 class UserMarker extends Marker {
   final Position position;
-  UserMarker({required this.position})
-      : super(
-            point: LatLng(position.latitude, position.longitude),
-            alignment: Alignment.center,
+  final MapController controller;
+  UserMarker({
+    required this.position,
+    required this.controller,
+  }) : super(
+          point: LatLng(position.latitude, position.longitude),
+          alignment: Alignment.center,
+          child: GestureDetector(
+            onDoubleTap: () {
+              controller.move(LatLng(position.latitude, position.longitude), controller.camera.zoom);
+            },
             child: Stack(
               alignment: Alignment.center,
               children: [
                 /*Icon(
-                  Icons.circle,
-                  color: const Color.fromARGB(125, 0, 0, 0),
-                  size: position.accuracy,
-                ),*/
+                    Icons.circle,
+                    color: const Color.fromARGB(125, 0, 0, 0),
+                    size: position.accuracy,
+                  ),*/
                 Transform.rotate(
                   angle: position.heading,
                   child: const Icon(
                     Icons.navigation,
                     color: AppColours.secondaryColor,
-                    size: 16,
+                    size: 20,
                   ),
                 )
               ],
-            ));
+            ),
+          ),
+        );
 }
