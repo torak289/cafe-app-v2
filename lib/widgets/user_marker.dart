@@ -1,0 +1,31 @@
+import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+
+class UserMarker extends Marker {
+  final Position position;
+  UserMarker({required this.position})
+      : super(
+            point: LatLng(position.latitude, position.longitude),
+            alignment: Alignment.center,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                /*Icon(
+                  Icons.circle,
+                  color: const Color.fromARGB(125, 0, 0, 0),
+                  size: position.accuracy,
+                ),*/
+                Transform.rotate(
+                  angle: position.heading,
+                  child: const Icon(
+                    Icons.navigation,
+                    color: AppColours.secondaryColor,
+                    size: 16,
+                  ),
+                )
+              ],
+            ));
+}

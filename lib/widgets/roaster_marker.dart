@@ -2,18 +2,14 @@ import 'package:cafeapp_v2/constants/app_colours.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 
 class RoasterMarker extends Marker {
-  @override
-  final LatLng point;
   final String roasterName;
 
   RoasterMarker({
-    required this.point,
+    required super.point,
     required this.roasterName,
   }) : super(
-          point: point,
           width: 192,
           alignment: Alignment.bottomRight,
           rotate: true,

@@ -6,23 +6,46 @@ import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/widgets/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/roaster_marker.dart';
+import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-class MapPage extends StatelessWidget {
+class MapPage extends StatefulWidget {
   MapPage({super.key});
 
-  final List<Marker> markers = [
+  @override
+  State<MapPage> createState() => _MapPageState();
+}
+
+class _MapPageState extends State<MapPage> {
+  /*final List<Marker> markers = [
     CafeMarker(
         point: const LatLng(51.2283, -2.8088), cafeName: "The Swan Wedmore"),
     CafeMarker(point: const LatLng(51.2253, -2.8058), cafeName: "Test Cafe"),
     RoasterMarker(
         point: const LatLng(51.2200, -2.8000), roasterName: "Wedmore Roasters"),
-  ];
+  ];*/
+  List<Marker> markers(List<CafeModel> cafes) {
+    List<Marker> markers = List.empty();
+
+    for (int i = 0; i < cafes.length; i++) {
+      markers
+          .add(CafeMarker(point: cafes[i].location, cafeName: cafes[i].name));
+    }
+    return markers;
+  }
+
+  MapController mapController = MapController();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    mapController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final LocationService location =
@@ -31,58 +54,120 @@ class MapPage extends StatelessWidget {
         Provider.of<DatabaseService>(context, listen: false);
     final AuthService authService = Provider.of(context, listen: false);
 
-    MapController mapController = MapController();
     return Scaffold(
-      body: FutureBuilder<Position>(
-        future: location.getCurrentPosition(),
-        builder: (context, AsyncSnapshot<Position> snapshot) {
-          if (snapshot.hasData) {
-            return Stack(
-              alignment: AlignmentDirectional.bottomEnd,
-              children: [
-                //Map
-                FlutterMap(
-                  mapController: mapController,
-                  options: MapOptions(
-                    initialCenter: LatLng(
-                        snapshot.data!.latitude, snapshot.data!.longitude),
-                    initialZoom: 14.5,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: 'io.cafe-app',
-                      maxZoom: 21,
-                    ),
-                    MarkerLayer(
-                      markers: markers,
-                    ),
-                  ],
-                ),
-                //State
-                //Profile
-                GestureDetector(
-                  child: Column(
+      body: FutureBuilder<LocationPermission>(
+        future: location.checkServices(),
+        builder: (context, locationData) {
+          if (locationData.data == LocationPermission.always ||
+              locationData.data == LocationPermission.whileInUse) {
+            return StreamBuilder<Position>(
+              stream: location.positionStream,
+              builder: (context, AsyncSnapshot<Position> position) {
+                if (position.hasData) {
+                  return Stack(
+                    alignment: AlignmentDirectional.bottomEnd,
                     children: [
-                      Text('${authService.appState}'),
-                      const Icon(
-                        Icons.person,
-                        color: AppColours.cafeIconColor,
+                      //Map
+                      FlutterMap(
+                        mapController: mapController,
+                        options: MapOptions(
+                          initialCenter: LatLng(position.data!.latitude,
+                              position.data!.longitude),
+                          initialZoom: 14.5,
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: 'io.cafe-app',
+                            maxZoom: 21,
+                          ),
+                          MarkerLayer(
+                            markers: [
+                              UserMarker(
+                                position: position.data!,
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
+                      //State
+                      Column(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              mapController.move(mapController.camera.center,
+                                  mapController.camera.zoom - 1);
+                            },
+                            icon: const Icon(
+                              Icons.zoom_out_rounded,
+                              color: AppColours.cafeIconColor,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              mapController.move(mapController.camera.center,
+                                  mapController.camera.zoom + 1);
+                            },
+                            icon: const Icon(
+                              Icons.zoom_in_rounded,
+                              color: AppColours.cafeIconColor,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              mapController.move(
+                                  LatLng(position.data!.latitude!,
+                                      position.data!.longitude!),
+                                  mapController.camera.zoom);
+                            },
+                            icon: const Icon(
+                              Icons.my_location_rounded,
+                              color: AppColours.cafeIconColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      //Profile
+                      GestureDetector(
+                        child: Column(
+                          children: [
+                            Text('${authService.appState}'),
+                            const Icon(
+                              Icons.person,
+                              color: AppColours.cafeIconColor,
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.loginPage);
+                        },
+                      )
                     ],
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(context, Routes.loginPage);
-                  },
-                )
-              ],
+                  );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  );
+                }
+              },
             );
           } else {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: Colors.black,
-            ));
+            return Center(
+              child: Column(
+                children: [
+                  Text(locationData.error.toString()),
+                  TextButton(
+                    onPressed: () {
+                      location.openLocationSetting();
+                    },
+                    child: const Text('Location Settings'),
+                  ),
+                ],
+              ),
+            );
           }
         },
       ),

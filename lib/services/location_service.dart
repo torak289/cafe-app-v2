@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 
 class LocationService {
-  Future<Position> _determinePosition() async {
+  Future<LocationPermission> checkServices() async {
     bool serviceEnabled;
     LocationPermission permission;
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -19,14 +19,11 @@ class LocationService {
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
-    return await Geolocator.getCurrentPosition();
+    return permission;
   }
-  Future<Position> getCurrentPosition() {
-    return _determinePosition();
-  }
-  Future<Position> getPointPosition() {
-    //Return the position of the center of the screen for passing when creating a cafe, roaster or etc...
+  Stream<Position> positionStream = Geolocator.getPositionStream();
 
-    return _determinePosition(); //TODO: Replace with actual point position return.
+  openLocationSetting(){
+    Geolocator.openAppSettings();
   }
 }
