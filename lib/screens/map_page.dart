@@ -5,6 +5,7 @@ import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/widgets/cafe_marker.dart';
+import 'package:cafeapp_v2/widgets/map_controls.dart';
 import 'package:cafeapp_v2/widgets/roaster_marker.dart';
 import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
-  MapPage({super.key});
+  const MapPage({super.key});
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -26,7 +27,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       AnimatedMapController(vsync: this);
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     animatedMapController.dispose();
   }
@@ -69,6 +69,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                           initialCenter: LatLng(position.data!.latitude,
                               position.data!.longitude),
                           initialZoom: 14.5,
+                          cameraConstraint: CameraConstraint.contain(
+                            bounds: LatLngBounds(
+                              const LatLng(-90, -180),
+                              const LatLng(90, 180),
+                            ),
+                          ),
                         ),
                         children: [
                           TileLayer(
@@ -88,50 +94,23 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         ],
                       ),
                       //Map Controls
-                      Column(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              animatedMapController.animatedZoomOut();
-                            },
-                            icon: const Icon(
-                              Icons.zoom_out_rounded,
-                              color: AppColours.cafeIconColor,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              animatedMapController.animatedZoomIn();
-                            },
-                            icon: const Icon(
-                              Icons.zoom_in_rounded,
-                              color: AppColours.cafeIconColor,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              animatedMapController.animateTo(
-                                dest: LatLng(position.data!.latitude,
-                                    position.data!.longitude),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.my_location_rounded,
-                              color: AppColours.cafeIconColor,
-                            ),
-                          ),
-                        ],
+                      MapControls(
+                          animatedMapController: animatedMapController,
+                          position: position.data!),
+                      //Debug
+                      Center(
+                        child: Text(
+                          '${authService.appState}',
+                          style: const TextStyle(
+                              color: AppColours.errorText,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                       //Profile
                       GestureDetector(
-                        child: Column(
-                          children: [
-                            Text('${authService.appState}'),
-                            const Icon(
-                              Icons.person,
-                              color: AppColours.cafeIconColor,
-                            ),
-                          ],
+                        child: const Icon(
+                          Icons.person,
+                          color: AppColours.cafeIconColor,
                         ),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.loginPage);

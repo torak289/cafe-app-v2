@@ -10,23 +10,29 @@ class DatabaseService {
 
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
-    //Add Cafe
   }
 
   Future<void> deleteCafe(CafeModel cafe) async {
     //Delete Cafe
+    await _remove(table: 'cafes', uid: cafe.uid!);
   }
+
   Future<List<CafeModel>> getCafes() async {
-    List<CafeModel> cafes;
-    final data = _select(path: 'cafes');
+    List<CafeModel> cafes = List.empty();
+    final data = await _select(table: 'cafes');
+
+    for (int i = 0; i < data.length; i++) {
+      cafes.add(CafeModel.fromJson(data[i]));
+    }
     return cafes;
   }
 
   Future<void> addRoaster(RoasterModel roaster) async {
     //Add Roaster
   }
-  Future<void> deleteRoaster() async {
+  Future<void> deleteRoaster(RoasterModel roaster) async {
     //Delete Roaster
+    //await _remove(table: 'roasters', uid: roaster.uid!);
   }
 
 //Abstract Functions for all database access
@@ -36,10 +42,12 @@ class DatabaseService {
     debugPrint('$path: $data');
     await reference.insert(data);
   }
-
-  Future<List<Map<String, dynamic>>> _select({required String path}) async {
-    final reference = database.from(path);
-
-    return await reference.select();
+  Future<void> _remove({required String table, required String uid}) async{
+    await database.from(table).delete().eq('uid', uid);
+  }
+  Future<List<Map<String, dynamic>>> _select({required String table}) async {
+    final data = await database.from(table).select();
+    debugPrint(data.toString());
+    return data;
   }
 }

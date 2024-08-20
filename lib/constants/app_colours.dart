@@ -15,9 +15,16 @@ class AppColours {
   //Button Colors
   static const Color buttonTextColor = Colors.white;
   static const Color buttonBackgroundColor = Colors.black;
+  static const Color iconButtonIconColor = Colors.black;
+  static const Color iconButtonIconBGColor = Colors.white;
 
   //Icon Colors
   static const Color cafeIconColor = Colors.black;
   static const Color roasterIconColor = Colors.pinkAccent;
+
+  //Edge Insets
+  static const double screenVertical = 32;
+  static const double screenHorizontal = 16;
+  static const double buttonSpacing = 8;
 
 }
