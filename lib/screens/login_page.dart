@@ -38,6 +38,8 @@ class LoginPage extends StatelessWidget {
           padding: const EdgeInsets.all(32.0), //TODO: Move to a const file
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Image.asset('assets/images/Cafe_Logo.png', scale: 2),
               const Text(

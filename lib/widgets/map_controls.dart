@@ -27,7 +27,6 @@ class MapControls extends StatelessWidget {
             },
             icon: const Icon(
               Icons.zoom_out_rounded,
-              color: AppColours.iconButtonIconColor,
             ),
           ),
           IconButton(
@@ -36,7 +35,6 @@ class MapControls extends StatelessWidget {
             },
             icon: const Icon(
               Icons.zoom_in_rounded,
-              color: AppColours.iconButtonIconColor,
             ),
           ),
           IconButton(
@@ -48,7 +46,6 @@ class MapControls extends StatelessWidget {
             },
             icon: const Icon(
               Icons.my_location_rounded,
-              color: AppColours.iconButtonIconColor,
             ),
           ),
         ],

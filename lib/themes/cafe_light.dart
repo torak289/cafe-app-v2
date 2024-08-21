@@ -1,8 +1,10 @@
 import 'package:cafeapp_v2/constants/app_colours.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-const String _fontFamily = "Ubuntu";
+String _fontFamily = "Ubuntu";
+BorderRadius _searchBorderRadius = BorderRadius.circular(32);
+double _searchBorderWidth = 2;
+double _searchGapPadding = 0;
 
 ThemeData cafeLightTheme = ThemeData(
   useMaterial3: true,
@@ -16,20 +18,40 @@ ThemeData cafeLightTheme = ThemeData(
   //Text
   fontFamily: _fontFamily,
   //Search
-  inputDecorationTheme: const InputDecorationTheme(
-    contentPadding: EdgeInsets.zero,
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+    isDense: true,
     filled: true,
     fillColor: AppColours.backgroundColor,
-    border: OutlineInputBorder(
-      gapPadding: 0,
+    floatingLabelBehavior: FloatingLabelBehavior.never,
+    labelStyle: TextStyle(
+      color: AppColours.secondaryColor,
+      fontWeight: FontWeight.bold,
+      fontFamily: _fontFamily,
+      fontSize: 14,
+    ),
+    focusedBorder: OutlineInputBorder(
+      gapPadding: _searchGapPadding,
       borderSide: BorderSide(
-        width: 2.0,
+        width: _searchBorderWidth,
+      ),
+      borderRadius: _searchBorderRadius,
+    ),
+    enabledBorder: OutlineInputBorder(
+      gapPadding: _searchGapPadding,
+      borderSide: BorderSide(
+        width: _searchBorderWidth,
+      ),
+      borderRadius: _searchBorderRadius,
+    ),
+    border: OutlineInputBorder(
+      gapPadding: _searchGapPadding,
+      borderSide: BorderSide(
+        width: _searchBorderWidth,
         strokeAlign: BorderSide.strokeAlignCenter,
         color: AppColours.buttonBackgroundColor,
       ),
-      borderRadius: BorderRadius.all(
-        Radius.circular(32),
-      ),
+      borderRadius: _searchBorderRadius,
     ),
   ),
   //Buttons
@@ -46,14 +68,23 @@ ThemeData cafeLightTheme = ThemeData(
         AppColours.primaryColor,
       ),
       padding: WidgetStatePropertyAll(
-        EdgeInsets.zero,
+        EdgeInsets.fromLTRB(32, 4, 32, 4),
       ),
     ),
   ),
   iconButtonTheme: const IconButtonThemeData(
     style: ButtonStyle(
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      alignment: Alignment.center,
+      shadowColor: WidgetStatePropertyAll(AppColours.secondaryColor),
+      elevation: WidgetStatePropertyAll(2),
+      backgroundColor: WidgetStatePropertyAll(AppColours.iconButtonIconBGColor),
+      iconColor: WidgetStatePropertyAll(AppColours.iconButtonIconColor),
+      iconSize: WidgetStatePropertyAll(20),
       minimumSize: WidgetStatePropertyAll(Size.zero),
-      padding: WidgetStatePropertyAll(EdgeInsets.zero)
-    )
-  )
+      padding: WidgetStatePropertyAll(
+        EdgeInsets.all(6),
+      ),
+    ),
+  ),
 );

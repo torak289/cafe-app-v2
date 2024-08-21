@@ -10,6 +10,7 @@ import 'package:cafeapp_v2/widgets/map_controls.dart';
 import 'package:cafeapp_v2/widgets/search_controls.dart';
 import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
@@ -115,7 +116,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                 Navigator.pushNamed(context, Routes.loginPage);
                               },
                             ),
-                            const SearchControls(),
+                            SearchControls(),
                           ],
                         );
                       } else {

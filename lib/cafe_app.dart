@@ -42,12 +42,14 @@ class CafeApp extends StatelessWidget {
                       create: (context) => LocationService(),
                     ),
                   ],
-                  child: MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    title: 'Cafe App',
-                    theme: cafeLightTheme,
-                    routes: Routes.routes,
-                    initialRoute: Routes.mapPage,
+                  child: SafeArea(
+                    child: MaterialApp(
+                      debugShowCheckedModeBanner: false,
+                      title: 'Cafe App',
+                      theme: cafeLightTheme,
+                      routes: Routes.routes,
+                      initialRoute: Routes.mapPage,
+                    ),
                   ),
                 );
               });
