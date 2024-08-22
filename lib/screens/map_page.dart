@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/widgets/map_controls.dart';
+import 'package:cafeapp_v2/widgets/profile.dart';
 import 'package:cafeapp_v2/widgets/search_controls.dart';
 import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                     builder: (context, AsyncSnapshot<Position> position) {
                       if (position.hasData) {
                         return Stack(
-                          alignment: AlignmentDirectional.bottomEnd,
                           children: [
                             //Map
                             FlutterMap(
@@ -85,8 +85,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                                if (cafeMarkerLayer.hasData)
-                                  cafeMarkerLayer.data!,
+                                FutureBuilder(future: database.getCafeMarkerLayer(animatedMapController), builder: (context, cafeMarkers) {
+                                  if(cafeMarkers.hasData){
+                                    return cafeMarkers.data!;
+                                  }
+                                  else {
+                                    return const MarkerLayer(markers: []);
+                                  }
+                                })
                               ],
                             ),
                             //Map Controls
@@ -103,23 +109,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                               ),
                             ),
                             //Profile
-                            GestureDetector(
-                              child: Container(
-                                width: 48,
-                                height: 48,
-                                decoration: const BoxDecoration(
-                                  color: CafeAppUI.primaryColor,
-                                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                                ),
-                                child: const Icon(
-                                  Icons.person,
-                                  color: CafeAppUI.cafeMarkerColor,
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, Routes.loginPage);
-                              },
-                            ),
+                            Profile(),
                             SearchControls(),
                           ],
                         );

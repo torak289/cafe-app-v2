@@ -2,11 +2,11 @@ import 'package:latlong2/latlong.dart';
 
 class CafeModel {
   String? uid;
-  //DateTime? created_at;
+  DateTime? created_at;
   String name;
-  String description;
-  //List<String> coffees;
-  String owner;
+  String? description;
+  List<String>? coffees;
+  String? owner;
   LatLng location;
   double? rating;
 
@@ -14,9 +14,9 @@ class CafeModel {
     this.uid,
     //this.created_at,
     required this.name,
-    required this.description,
+    this.description,
     //required this.coffees,
-    required this.owner,
+    this.owner,
     required this.location,
     this.rating,
   });
@@ -40,10 +40,14 @@ class CafeModel {
       description: data['description'],
       //coffees: data['coffees'],
       owner: data['owner'],
-      location: LatLng(
-        data['latitude'],
-        data['longitude'],
-      ),
+      location: LatLng(data['lat'], data['lng']),
+    );
+  }
+
+  factory CafeModel.cafeMarkerFromJson(Map<String, dynamic> data) {
+    return CafeModel(
+      name: data['cafename'],
+      location: LatLng(data['lat'], data['lng']),
     );
   }
 }

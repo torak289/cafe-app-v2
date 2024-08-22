@@ -20,7 +20,7 @@ class _SearchControlsState extends State<SearchControls> {
   void initState() {
     // TODO: implement initState
     super.initState();
-   searchController = TextEditingController();
+    searchController = TextEditingController();
   }
 
 //TODO: Implement actual search... Will probably need access to map controller...
@@ -29,9 +29,10 @@ class _SearchControlsState extends State<SearchControls> {
     DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(CafeAppUI.screenHorizontal, 0,
-          CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
+    return Positioned(
+      left: CafeAppUI.screenHorizontal,
+      right: CafeAppUI.screenHorizontal,
+      bottom: CafeAppUI.screenVertical,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -40,23 +41,28 @@ class _SearchControlsState extends State<SearchControls> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, Routes.addCafePage);
-                  },
-                  child: const Text("Add Cafe")),
+                onPressed: () {
+                  Navigator.pushNamed(context, Routes.addCafePage);
+                },
+                child: const Text("Add Cafe"),
+              ),
+              const Padding(
+                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextButton(
                 onPressed: () => {
                   //TODO: FIND CAFE FUNCTIONALITY...
+                  //This is going to be really really difficult...
                 },
                 child: const Text("Find Cafe"),
               ),
             ],
           ),
-          Padding(padding: EdgeInsets.all(8)),
+          const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(
             decoration: const InputDecoration(labelText: 'Search a cafe!'),
             controller: searchController,
-            onTapOutside: (event) => FocusScope.of(context).requestFocus(new FocusNode()), //TODO: meh behavior improve...
+            onTapOutside: (event) => FocusScope.of(context)
+                .requestFocus(FocusNode()), //TODO: meh behavior improve...
             onSubmitted: (input) async {
               /*await database.search(searchController.text.trim());
               if(context.mounted){

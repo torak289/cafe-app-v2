@@ -16,8 +16,9 @@ class MapControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, CafeAppUI.screenHorizontal, CafeAppUI.screenVertical * 3),
+    return Positioned(
+      right: CafeAppUI.mapControlsRightPadding,
+      bottom: CafeAppUI.mapControlsBottomPadding,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -29,6 +30,7 @@ class MapControls extends StatelessWidget {
               Icons.zoom_out_rounded,
             ),
           ),
+          const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           IconButton(
             onPressed: () {
               animatedMapController.animatedZoomIn();
@@ -37,6 +39,7 @@ class MapControls extends StatelessWidget {
               Icons.zoom_in_rounded,
             ),
           ),
+          const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           IconButton(
             onPressed: () {
               animatedMapController.animateTo(

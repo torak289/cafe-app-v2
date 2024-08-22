@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/widgets/cafe_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseService {
@@ -29,17 +32,19 @@ class DatabaseService {
     return cafes;
   }
 
-  Future<MarkerLayer> getCafeMarkerLayer() async {
-    List<CafeMarker> markers = List.empty();
-    final data = await _select(table: 'cafes');
+  Future<MarkerLayer> getCafeMarkerLayer(AnimatedMapController mapController) async {
+    List<CafeMarker> markers = List.empty(growable: true);
+    try {
+      final data = await _selectUsingFunc(func: 'select_cafe_latlng');
 
-    debugPrint(data[0].toString());
-
-    for (int i = 0; i < data.length; i++) {
-      CafeModel cafe = CafeModel.fromJson(data[i]);
-      markers.add(CafeMarker(point: cafe.location, cafeName: cafe.name));
-      debugPrint(markers[i].toString());
+      for (int i = 0; i < data.length; i++) {
+        CafeModel cafe = CafeModel.cafeMarkerFromJson(data[i]);
+        markers.add(CafeMarker(point: cafe.location, cafeName: cafe.name)); //TODO: move this back to the map page...
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
+    debugPrint("Markers Length: ${markers.length}");
     return MarkerLayer(markers: markers);
   }
 
@@ -64,8 +69,13 @@ class DatabaseService {
   }
 
   Future<List<Map<String, dynamic>>> _select({required String table}) async {
-    final data = await database.from(table).select('uid, name, description, owner, ST_Point(location::geometry) as location');
-    debugPrint(data.toString());
+    final data = await database.from(table).select();
+    return data;
+  }
+
+  Future<List<Map<String, dynamic>>> _selectUsingFunc(
+      {required String func}) async {
+    final data = await database.rpc(func).select();
     return data;
   }
 }
