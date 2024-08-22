@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
@@ -39,8 +39,8 @@ class _AddCafePageState extends State<AddCafePage>
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(
-            horizontal: AppColours.screenHorizontal,
-            vertical: AppColours.screenVertical),
+            horizontal: CafeAppUI.screenHorizontal,
+            vertical: CafeAppUI.screenVertical),
         child: Column(
           children: [
             FutureBuilder<LocationPermission>(
@@ -101,7 +101,7 @@ class _AddCafePageState extends State<AddCafePage>
                               child: Center(
                                 child: Icon(
                                   Icons.location_searching_rounded,
-                                  color: AppColours.iconButtonIconColor,
+                                  color: CafeAppUI.iconButtonIconColor,
                                 ),
                               ),
                             ),
@@ -115,7 +115,7 @@ class _AddCafePageState extends State<AddCafePage>
                               child: Text(
                                 '${authService.appState}',
                                 style: const TextStyle(
-                                    color: AppColours.errorText),
+                                    color: CafeAppUI.errorText),
                               ),
                             ),
                           ],

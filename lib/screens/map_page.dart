@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -103,14 +103,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                               child: Text(
                                 '${authService.appState}',
                                 style: const TextStyle(
-                                    color: AppColours.errorText),
+                                    color: CafeAppUI.errorText),
                               ),
                             ),
                             //Profile
                             GestureDetector(
-                              child: const Icon(
-                                Icons.person,
-                                color: AppColours.cafeIconColor,
+                              child: Container(
+                                width: 48,
+                                height: 48,
+                                decoration: const BoxDecoration(
+                                  color: CafeAppUI.primaryColor,
+                                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                                ),
+                                child: const Icon(
+                                  Icons.person,
+                                  color: CafeAppUI.cafeMarkerColor,
+                                ),
                               ),
                               onTap: () {
                                 Navigator.pushNamed(context, Routes.loginPage);

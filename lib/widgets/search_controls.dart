@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +30,8 @@ class _SearchControlsState extends State<SearchControls> {
         Provider.of<DatabaseService>(context, listen: false);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(AppColours.screenHorizontal, 0,
-          AppColours.screenHorizontal, AppColours.screenVertical),
+      padding: const EdgeInsets.fromLTRB(CafeAppUI.screenHorizontal, 0,
+          CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -52,9 +52,11 @@ class _SearchControlsState extends State<SearchControls> {
               ),
             ],
           ),
+          Padding(padding: EdgeInsets.all(8)),
           TextField(
             decoration: const InputDecoration(labelText: 'Search a cafe!'),
             controller: searchController,
+            onTapOutside: (event) => FocusScope.of(context).requestFocus(new FocusNode()), //TODO: meh behavior improve...
             onSubmitted: (input) async {
               /*await database.search(searchController.text.trim());
               if(context.mounted){

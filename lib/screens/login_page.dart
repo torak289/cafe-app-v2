@@ -1,5 +1,5 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
-import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -20,7 +20,13 @@ class LoginPage extends StatelessWidget {
           child: Column(
             children: [
               Text('${authService.appState}'),
-              Text('${user?.email}'),
+              Text('${user!.email}'),
+              BarcodeWidget(
+                data: user!.uid,
+                barcode: Barcode.qrCode(),
+                width: 150,
+                height: 150,
+              ),
               TextButton(
                 onPressed: () {
                   authService.signOut();
@@ -75,17 +81,25 @@ class LoginPage extends StatelessWidget {
                   Expanded(child: Divider(color: Colors.black)),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: AppColours.screenHorizontal,
-                        right: AppColours.screenHorizontal),
+                        left: CafeAppUI.screenHorizontal,
+                        right: CafeAppUI.screenHorizontal),
                     child: Text("Or", textAlign: TextAlign.center),
                   ),
                   Expanded(child: Divider(color: Colors.black)),
                 ],
               ),
               TextButton(
-                  onPressed: () => {}, child: Text("Login with Facebook")),
-              TextButton(onPressed: () => {}, child: Text("Login with Google")),
-              TextButton(onPressed: () => {}, child: Text("Login with X"))
+                onPressed: () => {},
+                child: Text("Login with Facebook"),
+              ),
+              TextButton(
+                onPressed: () => {},
+                child: Text("Login with Google"),
+              ),
+              TextButton(
+                onPressed: () => {},
+                child: Text("Login with X"),
+              )
             ],
           ),
         ),

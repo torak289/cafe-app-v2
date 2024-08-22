@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
 
 String _fontFamily = "Ubuntu";
@@ -8,32 +8,39 @@ double _searchGapPadding = 0;
 
 ThemeData cafeLightTheme = ThemeData(
   useMaterial3: true,
-  primaryColor: AppColours.primaryColor,
-  canvasColor: AppColours.backgroundColor,
-  scaffoldBackgroundColor: AppColours.backgroundColor,
+  primaryColor: CafeAppUI.primaryColor,
+  canvasColor: CafeAppUI.backgroundColor,
+  scaffoldBackgroundColor: CafeAppUI.backgroundColor,
   //Icons
   iconTheme: const IconThemeData(
-    color: AppColours.primaryColor,
+    color: CafeAppUI.primaryColor,
   ),
   //Text
   fontFamily: _fontFamily,
+
   //Search
+  textSelectionTheme: const TextSelectionThemeData(
+    cursorColor: CafeAppUI.secondaryText,
+    selectionColor: CafeAppUI.secondaryText,
+    selectionHandleColor: CafeAppUI.secondaryText,
+  ),
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
     isDense: true,
     filled: true,
-    fillColor: AppColours.backgroundColor,
+    fillColor: CafeAppUI.backgroundColor,
     floatingLabelBehavior: FloatingLabelBehavior.never,
     labelStyle: TextStyle(
-      color: AppColours.secondaryColor,
+      color: CafeAppUI.secondaryColor,
       fontWeight: FontWeight.bold,
       fontFamily: _fontFamily,
-      fontSize: 14,
+      fontSize: CafeAppUI.textSize,
     ),
     focusedBorder: OutlineInputBorder(
       gapPadding: _searchGapPadding,
       borderSide: BorderSide(
         width: _searchBorderWidth,
+        strokeAlign: BorderSide.strokeAlignCenter,
       ),
       borderRadius: _searchBorderRadius,
     ),
@@ -41,6 +48,7 @@ ThemeData cafeLightTheme = ThemeData(
       gapPadding: _searchGapPadding,
       borderSide: BorderSide(
         width: _searchBorderWidth,
+        strokeAlign: BorderSide.strokeAlignCenter,
       ),
       borderRadius: _searchBorderRadius,
     ),
@@ -49,7 +57,7 @@ ThemeData cafeLightTheme = ThemeData(
       borderSide: BorderSide(
         width: _searchBorderWidth,
         strokeAlign: BorderSide.strokeAlignCenter,
-        color: AppColours.buttonBackgroundColor,
+        color: CafeAppUI.buttonBackgroundColor,
       ),
       borderRadius: _searchBorderRadius,
     ),
@@ -57,18 +65,17 @@ ThemeData cafeLightTheme = ThemeData(
   //Buttons
   textButtonTheme: const TextButtonThemeData(
     style: ButtonStyle(
+      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       minimumSize: WidgetStatePropertyAll(Size.zero),
-      backgroundColor: WidgetStatePropertyAll(
-        AppColours.buttonBackgroundColor,
-      ),
-      foregroundColor: WidgetStatePropertyAll(
-        AppColours.buttonTextColor,
-      ),
-      iconColor: WidgetStatePropertyAll(
-        AppColours.primaryColor,
-      ),
+      shadowColor: WidgetStatePropertyAll(CafeAppUI.buttonShadowColor),
+      elevation: WidgetStatePropertyAll(CafeAppUI.buttonShadowHeight),
+      backgroundColor: WidgetStatePropertyAll(CafeAppUI.buttonBackgroundColor),
+      foregroundColor: WidgetStatePropertyAll(CafeAppUI.buttonTextColor),
+      iconColor: WidgetStatePropertyAll(CafeAppUI.primaryColor),
       padding: WidgetStatePropertyAll(
-        EdgeInsets.fromLTRB(32, 4, 32, 4),
+        EdgeInsets.symmetric(
+            vertical: CafeAppUI.buttonVerticalPadding,
+            horizontal: CafeAppUI.buttonHorizontalPadding),
       ),
     ),
   ),
@@ -76,14 +83,14 @@ ThemeData cafeLightTheme = ThemeData(
     style: ButtonStyle(
       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       alignment: Alignment.center,
-      shadowColor: WidgetStatePropertyAll(AppColours.secondaryColor),
-      elevation: WidgetStatePropertyAll(2),
-      backgroundColor: WidgetStatePropertyAll(AppColours.iconButtonIconBGColor),
-      iconColor: WidgetStatePropertyAll(AppColours.iconButtonIconColor),
-      iconSize: WidgetStatePropertyAll(20),
+      shadowColor: WidgetStatePropertyAll(CafeAppUI.secondaryColor),
+      elevation: WidgetStatePropertyAll(CafeAppUI.buttonShadowHeight),
+      backgroundColor: WidgetStatePropertyAll(CafeAppUI.iconButtonIconBGColor),
+      iconColor: WidgetStatePropertyAll(CafeAppUI.iconButtonIconColor),
+      iconSize: WidgetStatePropertyAll(CafeAppUI.iconButtonIconSize),
       minimumSize: WidgetStatePropertyAll(Size.zero),
       padding: WidgetStatePropertyAll(
-        EdgeInsets.all(6),
+        EdgeInsets.all(CafeAppUI.buttonVerticalPadding),
       ),
     ),
   ),

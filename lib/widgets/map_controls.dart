@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,7 +17,7 @@ class MapControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, AppColours.screenHorizontal, AppColours.screenVertical * 3),
+      padding: const EdgeInsets.fromLTRB(0, 0, CafeAppUI.screenHorizontal, CafeAppUI.screenVertical * 3),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

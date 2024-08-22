@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
@@ -28,7 +28,7 @@ class CafeMarker extends Marker {
                 },
                 child: const Icon(
                   Icons.location_on_sharp,
-                  color: AppColours.cafeIconColor,
+                  color: CafeAppUI.cafeMarkerColor,
                 ),
               ),
               Column(
@@ -40,7 +40,7 @@ class CafeMarker extends Marker {
                       fontFamily: "Monospace",
                       fontWeight: FontWeight.bold,
                       fontSize: 8,
-                      color: AppColours.secondaryColor,
+                      color: CafeAppUI.secondaryColor,
                     ),
                   ),
                   const Text(
@@ -49,7 +49,7 @@ class CafeMarker extends Marker {
                       fontFamily: "Monospace",
                       fontWeight: FontWeight.bold,
                       fontSize: 8,
-                      color: AppColours.secondaryColor,
+                      color: CafeAppUI.secondaryColor,
                     ),
                   ),
                 ],

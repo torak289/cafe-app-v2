@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/app_colours.dart';
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -29,7 +29,7 @@ class UserMarker extends Marker {
                   angle: position.heading,
                   child: const Icon(
                     Icons.navigation,
-                    color: AppColours.secondaryColor,
+                    color: CafeAppUI.secondaryColor,
                     size: 20,
                   ),
                 )
