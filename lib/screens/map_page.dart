@@ -1,16 +1,12 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
-import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
-import 'package:cafeapp_v2/widgets/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/map_controls.dart';
-//import 'package:cafeapp_v2/widgets/roaster_marker.dart';
 import 'package:cafeapp_v2/widgets/search_controls.dart';
 import 'package:cafeapp_v2/widgets/user_marker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
