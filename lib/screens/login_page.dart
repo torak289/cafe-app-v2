@@ -3,6 +3,7 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/widgets/loyalty_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,20 +15,23 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = Provider.of(context, listen: false);
-    final UserModel? user = Provider.of(context, listen: false);
     if (authService.appState == AppState.Authenticated) {
       return Scaffold(
-        body: Center(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: CafeAppUI.screenVertical,
+            horizontal: CafeAppUI.screenHorizontal,
+          ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('${authService.appState}'),
-              Text('${user!.email}'),
-              BarcodeWidget(
-                data: user!.uid,
-                barcode: Barcode.qrCode(),
-                width: 150,
-                height: 150,
+              Text(
+                '${authService.appState}',
+                textAlign: TextAlign.center,
               ),
+              LoyaltyCard(),
               TextButton(
                 onPressed: () {
                   authService.signOut();
