@@ -39,12 +39,12 @@ class DatabaseService {
 
       for (int i = 0; i < data.length; i++) {
         CafeModel cafe = CafeModel.cafeMarkerFromJson(data[i]);
-        markers.add(CafeMarker(point: cafe.location, cafeName: cafe.name)); //TODO: move this back to the map page...
+        markers.add(CafeMarker(point: cafe.location, cafeName: cafe.name, mapController: mapController)); //TODO: move this back to the map page...
       }
     } catch (e) {
       debugPrint(e.toString());
     }
-    debugPrint("Markers Length: ${markers.length}");
+    debugPrint("Markers Length: ${markers.length}"); //TODO: too many requests... 
     return MarkerLayer(markers: markers);
   }
 

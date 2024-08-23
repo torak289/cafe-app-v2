@@ -15,7 +15,7 @@ class UserMarker extends Marker {
           alignment: Alignment.center,
           child: GestureDetector(
             onDoubleTap: () {
-              controller.move(LatLng(position.latitude, position.longitude), controller.camera.zoom);
+              controller.move(LatLng(position.latitude, position.longitude), 18);
             },
             child: Stack(
               alignment: Alignment.center,

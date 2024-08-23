@@ -39,16 +39,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
 
+    Future<MarkerLayer> markerLayer = database.getCafeMarkerLayer(animatedMapController);
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
         builder: (context, locationData) {
           if (locationData.data == LocationPermission.always ||
               locationData.data == LocationPermission.whileInUse) {
-            return FutureBuilder(
-                future: database.getCafeMarkerLayer(),
-                builder: (context, cafeMarkerLayer) {
-                  return StreamBuilder<Position>(
+            return StreamBuilder<Position>(
                     stream: location.positionStream,
                     builder: (context, AsyncSnapshot<Position> position) {
                       if (position.hasData) {
@@ -85,7 +83,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                     ),
                                   ],
                                 ),
-                                FutureBuilder(future: database.getCafeMarkerLayer(animatedMapController), builder: (context, cafeMarkers) {
+                                FutureBuilder(future: markerLayer, builder: (context, cafeMarkers) {
                                   if(cafeMarkers.hasData){
                                     return cafeMarkers.data!;
                                   }
@@ -122,7 +120,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       }
                     },
                   );
-                });
           } else {
             return Center(
               child: Column(
