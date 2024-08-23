@@ -159,8 +159,6 @@ class _AddCafePageState extends State<AddCafePage>
                     CafeModel newCafe = CafeModel(
                         name: cafeName.text.trim(),
                         description: cafeDescription.text.trim(),
-                        //coffees: ['1', '2', '3'],
-                        owner: user.uid,
                         location:
                             animatedMapController.mapController.camera.center);
                     await database.addCafe(newCafe);

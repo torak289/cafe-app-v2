@@ -39,7 +39,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
 
-    Future<MarkerLayer> markerLayer = database.getCafeMarkerLayer(animatedMapController);
+    Future<MarkerLayer> markerLayer =
+        database.getCafeMarkerLayer(animatedMapController);
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -47,79 +48,82 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           if (locationData.data == LocationPermission.always ||
               locationData.data == LocationPermission.whileInUse) {
             return StreamBuilder<Position>(
-                    stream: location.positionStream,
-                    builder: (context, AsyncSnapshot<Position> position) {
-                      if (position.hasData) {
-                        return Stack(
-                          children: [
-                            //Map
-                            FlutterMap(
-                              mapController:
-                                  animatedMapController.mapController,
-                              options: MapOptions(
-                                initialCenter: LatLng(position.data!.latitude,
-                                    position.data!.longitude),
-                                initialZoom: 14.5,
-                                cameraConstraint: CameraConstraint.contain(
-                                  bounds: LatLngBounds(
-                                    const LatLng(-90, -180),
-                                    const LatLng(90, 180),
-                                  ),
-                                ),
-                              ),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                  userAgentPackageName: 'io.cafe-app',
-                                  maxZoom: 21,
-                                ),
-                                MarkerLayer(
-                                  markers: [
-                                    UserMarker(
-                                      position: position.data!,
-                                      controller:
-                                          animatedMapController.mapController,
-                                    ),
-                                  ],
-                                ),
-                                FutureBuilder(future: markerLayer, builder: (context, cafeMarkers) {
-                                  if(cafeMarkers.hasData){
-                                    return cafeMarkers.data!;
-                                  }
-                                  else {
-                                    return const MarkerLayer(markers: []);
-                                  }
-                                })
-                              ],
-                            ),
-                            //Map Controls
-                            MapControls(
-                                animatedMapController: animatedMapController,
-                                position: position.data!),
-                            //Debug
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                '${authService.appState}',
-                                style: const TextStyle(
-                                    color: CafeAppUI.errorText),
-                              ),
-                            ),
-                            //Profile
-                            Profile(),
-                            SearchControls(),
-                          ],
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
+              stream: location.positionStream,
+              builder: (context, AsyncSnapshot<Position> position) {
+                if (position.hasData) {
+                  return Stack(
+                    children: [
+                      //Map
+                      FlutterMap(
+                        mapController: animatedMapController.mapController,
+                        options: MapOptions(
+                          initialCenter: LatLng(position.data!.latitude,
+                              position.data!.longitude),
+                          initialZoom: 14.5,
+                          maxZoom: 19,
+                          interactionOptions: const InteractionOptions(
+                            flags:
+                                InteractiveFlag.all & ~InteractiveFlag.rotate,
                           ),
-                        );
-                      }
-                    },
+                          cameraConstraint: CameraConstraint.contain(
+                            bounds: LatLngBounds(
+                              const LatLng(-90, -180),
+                              const LatLng(90, 180),
+                            ),
+                          ),
+                        ),
+                        children: [
+                          TileLayer(
+                            urlTemplate:
+                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            userAgentPackageName: 'io.cafe-app',
+                            maxZoom: 20,
+                          ),
+                          MarkerLayer(
+                            markers: [
+                              UserMarker(
+                                position: position.data!,
+                                controller: animatedMapController.mapController,
+                              ),
+                            ],
+                          ),
+                          FutureBuilder(
+                              future: markerLayer,
+                              builder: (context, cafeMarkers) {
+                                if (cafeMarkers.hasData) {
+                                  return cafeMarkers.data!;
+                                } else {
+                                  return const MarkerLayer(markers: []);
+                                }
+                              })
+                        ],
+                      ),
+                      //Map Controls
+                      MapControls(
+                          animatedMapController: animatedMapController,
+                          position: position.data!),
+                      //Debug
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          '${authService.appState}',
+                          style: const TextStyle(color: CafeAppUI.errorText),
+                        ),
+                      ),
+                      //Profile
+                      Profile(),
+                      SearchControls(),
+                    ],
                   );
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  );
+                }
+              },
+            );
           } else {
             return Center(
               child: Column(

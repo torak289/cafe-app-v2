@@ -2,7 +2,7 @@ import 'package:latlong2/latlong.dart';
 
 class CafeModel {
   String? uid;
-  DateTime? created_at;
+  //DateTime? created_at;
   String name;
   String? description;
   List<String>? coffees;
@@ -14,20 +14,21 @@ class CafeModel {
     this.uid,
     //this.created_at,
     required this.name,
-    this.description,
-    //required this.coffees,
-    this.owner,
     required this.location,
+    this.description,
+    this.coffees,
+    this.owner,
     this.rating,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() { //TODO: Fix null issue in database when passed or create better toJson() functions...
     return {
       //'uid': uid,
       //'created_at': created_at,
       'name': name,
-      'description': description,
-      //'coffees': coffees,
+      'description': description ?? 'NO DESCRIPTION PROVIDED',
+      'coffees': coffees,
+      'owner': owner,
       'location': 'POINT(${location.latitude} ${location.longitude})',
       'rating': rating,
     };
@@ -35,10 +36,11 @@ class CafeModel {
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
     return CafeModel(
-      uid: data['uid'],
+      //uid: data['uid'],
       name: data['name'],
       description: data['description'],
-      //coffees: data['coffees'],
+      //created_at: data['created_at'], TODO: Parse DatTime
+      coffees: data['coffees'],
       owner: data['owner'],
       location: LatLng(data['lat'], data['lng']),
     );
@@ -46,6 +48,7 @@ class CafeModel {
 
   factory CafeModel.cafeMarkerFromJson(Map<String, dynamic> data) {
     return CafeModel(
+      uid: data['cafeuid'],
       name: data['cafename'],
       location: LatLng(data['lat'], data['lng']),
     );

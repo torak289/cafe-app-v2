@@ -10,17 +10,22 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseService {
   final String? uid;
-  DatabaseService({this.uid});
+
+  final List<CafeModel> cafes = List<CafeModel>.empty(growable: true);
+  final List<RoasterModel> roaster = List<RoasterModel>.empty(growable: true);
+
   SupabaseClient database = Supabase.instance.client;
+
+  DatabaseService({this.uid});
 
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
   }
 
-  Future<void> deleteCafe(CafeModel cafe) async {
+  /*Future<void> deleteCafe(CafeModel cafe) async {
     //Delete Cafe
     await _remove(table: 'cafes', uid: cafe.uid!);
-  }
+  }*/
 
   Future<List<CafeModel>> getCafes() async {
     List<CafeModel> cafes = List.empty();
@@ -32,19 +37,28 @@ class DatabaseService {
     return cafes;
   }
 
-  Future<MarkerLayer> getCafeMarkerLayer(AnimatedMapController mapController) async {
+  Future<MarkerLayer> getCafeMarkerLayer(
+      AnimatedMapController mapController) async {
+    //This function gets called 3 times on app start?
     List<CafeMarker> markers = List.empty(growable: true);
     try {
       final data = await _selectUsingFunc(func: 'select_cafe_latlng');
+      cafes.clear();
 
       for (int i = 0; i < data.length; i++) {
         CafeModel cafe = CafeModel.cafeMarkerFromJson(data[i]);
-        markers.add(CafeMarker(point: cafe.location, cafeName: cafe.name, mapController: mapController)); //TODO: move this back to the map page...
+        cafes.add(cafe);
+
+        markers.add(
+          CafeMarker(
+              cafe: cafe,
+              mapController: mapController),
+        ); //TODO: move this back to the map page...
       }
     } catch (e) {
       debugPrint(e.toString());
     }
-    debugPrint("Markers Length: ${markers.length}"); //TODO: too many requests... 
+    debugPrint("Markers Length: ${markers.length}");
     return MarkerLayer(markers: markers);
   }
 
@@ -64,7 +78,8 @@ class DatabaseService {
     await reference.insert(data);
   }
 
-  Future<void> _remove({required String table, required String uid}) async {
+  Future<void> _removebyUID(
+      {required String table, required String uid}) async {
     await database.from(table).delete().eq('uid', uid);
   }
 
