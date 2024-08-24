@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/widgets/loyalty_card.dart';
+import 'package:cafeapp_v2/widgets/profile_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,11 +28,9 @@ class LoginPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                '${authService.appState}',
-                textAlign: TextAlign.center,
-              ),
               LoyaltyCard(),
+              Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+              ProfileTabs(),
               TextButton(
                 onPressed: () {
                   authService.signOut();
@@ -39,6 +38,7 @@ class LoginPage extends StatelessWidget {
                 },
                 child: const Text('Logout'),
               ),
+              Text('${authService.appState}', textAlign: TextAlign.center),
             ],
           ),
         ),
@@ -48,8 +48,6 @@ class LoginPage extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.all(32.0), //TODO: Move to a const file
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Image.asset('assets/images/Cafe_Logo.png', scale: 2),

@@ -30,9 +30,9 @@ class _AddCafePageState extends State<AddCafePage>
   TextEditingController cafeDescription = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final LatLng? cafeLocation  = ModalRoute.of(context)?.settings.arguments as LatLng?;
     final LocationService location =
         Provider.of<LocationService>(context, listen: false);
-    final UserModel user = Provider.of<UserModel>(context, listen: false);
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
     final AuthService authService =
@@ -67,9 +67,9 @@ class _AddCafePageState extends State<AddCafePage>
                                 mapController:
                                     animatedMapController.mapController,
                                 options: MapOptions(
-                                  initialCenter: LatLng(position.data!.latitude,
-                                      position.data!.longitude),
-                                  initialZoom: 14.5,
+                                  initialCenter: (cafeLocation == null) ? LatLng(position.data!.latitude,
+                                      position.data!.longitude) : LatLng(cafeLocation.latitude, cafeLocation.longitude),
+                                  initialZoom: 19,
                                   cameraConstraint: CameraConstraint.contain(
                                     bounds: LatLngBounds(
                                       const LatLng(-90, -180),
@@ -82,7 +82,7 @@ class _AddCafePageState extends State<AddCafePage>
                                     urlTemplate:
                                         'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                                     userAgentPackageName: 'io.cafe-app',
-                                    maxZoom: 21,
+                                    maxZoom: 25,
                                   ),
                                   MarkerLayer(
                                     markers: [

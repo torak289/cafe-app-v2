@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -41,6 +43,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
     Future<MarkerLayer> markerLayer =
         database.getCafeMarkerLayer(animatedMapController);
+
+    Stream cafesStream =
+        database.database.from('cafes').stream(primaryKey: ['uid']);
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -57,10 +62,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       FlutterMap(
                         mapController: animatedMapController.mapController,
                         options: MapOptions(
+                          onLongPress: (tapPos, latlng) {
+                            debugPrint(latlng.toString());
+                            Navigator.pushNamed(context, Routes.addCafePage, arguments: latlng);
+                          },
                           initialCenter: LatLng(position.data!.latitude,
                               position.data!.longitude),
                           initialZoom: 14.5,
-                          maxZoom: 19,
+                          maxZoom: 21,
                           interactionOptions: const InteractionOptions(
                             flags:
                                 InteractiveFlag.all & ~InteractiveFlag.rotate,
@@ -77,7 +86,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             urlTemplate:
                                 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                             userAgentPackageName: 'io.cafe-app',
-                            maxZoom: 20,
+                            maxZoom: 25,
                           ),
                           MarkerLayer(
                             markers: [

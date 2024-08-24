@@ -50,9 +50,7 @@ class DatabaseService {
         cafes.add(cafe);
 
         markers.add(
-          CafeMarker(
-              cafe: cafe,
-              mapController: mapController),
+          CafeMarker(cafe: cafe, mapController: mapController),
         ); //TODO: move this back to the map page...
       }
     } catch (e) {

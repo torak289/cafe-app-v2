@@ -31,12 +31,10 @@ class CafeMarker extends Marker {
                     zoom: 16,
                   );
                 },
-                child: const Expanded(
-                  child: Icon(
-                    Icons.location_on_sharp,
-                    color: CafeAppUI.cafeMarkerColor,
-                    size: 20,
-                  ),
+                child: const Icon(
+                  Icons.location_on_sharp,
+                  color: CafeAppUI.cafeMarkerColor,
+                  size: 20,
                 ),
               ),
               Column(
