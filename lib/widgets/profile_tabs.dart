@@ -29,9 +29,8 @@ class _ProfileTabs extends State<ProfileTabs>
         mainAxisSize: MainAxisSize.max,
         children: [
           TabBar(
+            isScrollable: false,
             controller: tabController,
-            indicatorSize: TabBarIndicatorSize.tab,
-            dividerHeight: 2,
             tabs: const [
               Tab(text: 'Loyalty'),
               Tab(text: 'Cafe'),

@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               LoyaltyCard(),
-              Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               ProfileTabs(),
               TextButton(
                 onPressed: () {

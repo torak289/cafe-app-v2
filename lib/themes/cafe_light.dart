@@ -1,5 +1,6 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 String _fontFamily = "Ubuntu";
 BorderRadius _searchBorderRadius = BorderRadius.circular(32);
@@ -17,7 +18,20 @@ ThemeData cafeLightTheme = ThemeData(
   ),
   //Text
   fontFamily: _fontFamily,
-
+  //Tab
+  tabBarTheme: const TabBarTheme(
+    indicatorSize: TabBarIndicatorSize.tab,
+    indicator: UnderlineTabIndicator(
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+      borderSide: BorderSide(width: 3),
+    ),
+    labelStyle: TextStyle(
+      fontWeight: FontWeight.bold,
+      color: CafeAppUI.secondaryText,
+    ),
+    dividerColor: CafeAppUI.primaryColor,
+    indicatorColor: CafeAppUI.secondaryColor,
+  ),
   //Search
   textSelectionTheme: const TextSelectionThemeData(
     cursorColor: CafeAppUI.secondaryText,
