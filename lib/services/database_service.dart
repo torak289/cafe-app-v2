@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
-import 'package:cafeapp_v2/widgets/cafe_marker.dart';
+import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
+import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
@@ -11,8 +12,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DatabaseService {
   final String? uid;
 
-  final List<CafeModel> cafes = List<CafeModel>.empty(growable: true);
-  final List<RoasterModel> roaster = List<RoasterModel>.empty(growable: true);
+  List<CafeModel> cafes = List<CafeModel>.empty(growable: true);
+  List<RoasterModel> roaster = List<RoasterModel>.empty(
+      growable: true); //TODO: Implement Roasters in App...
 
   SupabaseClient database = Supabase.instance.client;
 
@@ -21,11 +23,6 @@ class DatabaseService {
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
   }
-
-  /*Future<void> deleteCafe(CafeModel cafe) async {
-    //Delete Cafe
-    await _remove(table: 'cafes', uid: cafe.uid!);
-  }*/
 
   Future<List<CafeModel>> getCafes() async {
     List<CafeModel> cafes = List.empty();
@@ -43,29 +40,63 @@ class DatabaseService {
     List<CafeMarker> markers = List.empty(growable: true);
     try {
       final data = await _selectUsingFunc(func: 'select_cafe_latlng');
+
       cafes.clear();
+      cafes = CafeappUtils.cafesFromJson(data);
 
-      for (int i = 0; i < data.length; i++) {
-        CafeModel cafe = CafeModel.cafeMarkerFromJson(data[i]);
-        cafes.add(cafe);
-
-        markers.add(
-          CafeMarker(cafe: cafe, mapController: mapController),
-        ); //TODO: move this back to the map page...
-      }
+      markers = CafeappUtils.cafesToMarkers(
+          cafes, mapController); //TODO: Move to map page...
     } catch (e) {
       debugPrint(e.toString());
     }
-    debugPrint("Markers Length: ${markers.length}");
     return MarkerLayer(markers: markers);
   }
 
-  Future<void> addRoaster(RoasterModel roaster) async {
-    //Add Roaster
+  Future<MarkerLayer> getCafesInBounds(AnimatedMapController mapController) async {
+    List<CafeMarker> markers = List.empty(growable: true);
+    try {
+      LatLngBounds bounds = mapController.mapController.camera.visibleBounds;
+      List<CafeModel> cafes = List.empty(growable: true);
+      final data = await _selectUsingFunc(func: 'cafes_in_bounds', params: {
+        'min_lat': bounds.southWest.latitude,
+        'min_long': bounds.southWest.longitude,
+        'max_lat': bounds.northEast.latitude,
+        'max_long': bounds.northEast.longitude,
+      });
+      debugPrint(data.toString());
+      cafes.clear();
+      cafes = CafeappUtils.cafesFromJson(data);
+
+      markers = CafeappUtils.cafesToMarkers(cafes, mapController);
+
+      return MarkerLayer(markers: markers);
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.error(e);
+    }
   }
-  Future<void> deleteRoaster(RoasterModel roaster) async {
-    //Delete Roaster
-    //await _remove(table: 'roasters', uid: roaster.uid!);
+  Future<MarkerLayer> getCafesInBoundsCamera(MapCamera camera, AnimatedMapController mapController) async {
+    List<CafeMarker> markers = List.empty(growable: true);
+    try {
+      LatLngBounds bounds = camera.visibleBounds;
+      List<CafeModel> cafes = List.empty(growable: true);
+      final data = await _selectUsingFunc(func: 'cafes_in_bounds', params: {
+        'min_lat': bounds.southWest.latitude,
+        'min_long': bounds.southWest.longitude,
+        'max_lat': bounds.northEast.latitude,
+        'max_long': bounds.northEast.longitude,
+      });
+      debugPrint(data.toString());
+      cafes.clear();
+      cafes = CafeappUtils.cafesFromJson(data);
+
+      markers = CafeappUtils.cafesToMarkers(cafes, mapController);
+
+      return MarkerLayer(markers: markers);
+    } catch (e) {
+      debugPrint(e.toString());
+      return Future.error(e);
+    }
   }
 
 //Abstract Functions for all database access
@@ -87,8 +118,8 @@ class DatabaseService {
   }
 
   Future<List<Map<String, dynamic>>> _selectUsingFunc(
-      {required String func}) async {
-    final data = await database.rpc(func).select();
+      {required String func, Map<String, dynamic>? params}) async {
+    final data = await database.rpc(func, params: params).select();
     return data;
   }
 }

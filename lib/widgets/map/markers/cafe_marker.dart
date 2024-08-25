@@ -4,11 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:provider/provider.dart';
 
 class CafeMarker extends Marker {
-  @override
   final CafeModel cafe;
   final AnimatedMapController mapController;
 
@@ -42,7 +39,7 @@ class CafeMarker extends Marker {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    cafe.name,
+                    cafe.name.toString(),
                     style: const TextStyle(
                       fontFamily: "Monospace",
                       fontWeight: FontWeight.bold,

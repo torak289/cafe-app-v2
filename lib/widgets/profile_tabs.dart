@@ -1,4 +1,3 @@
-import 'package:cafeapp_v2/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfileTabs extends StatefulWidget {

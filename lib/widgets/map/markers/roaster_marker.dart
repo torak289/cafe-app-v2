@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 
-class RoasterMarker extends Marker {
+class RoasterMarker extends Marker { //TODO: Update to take RoasterModel as Roaster
   final String roasterName;
 
   RoasterMarker({

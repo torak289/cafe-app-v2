@@ -3,7 +3,7 @@ import 'package:latlong2/latlong.dart';
 class CafeModel {
   String? uid;
   //DateTime? created_at;
-  String name;
+  String? name;
   String? description;
   List<String>? coffees;
   String? owner;
@@ -26,7 +26,7 @@ class CafeModel {
       //'uid': uid,
       //'created_at': created_at,
       'name': name,
-      'description': description ?? 'NO DESCRIPTION PROVIDED',
+      'description': description,
       'coffees': coffees,
       'owner': owner,
       'location': 'POINT(${location.latitude} ${location.longitude})',
@@ -36,20 +36,12 @@ class CafeModel {
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
     return CafeModel(
-      //uid: data['uid'],
-      name: data['name'],
+      uid: data['uid'],
+      name: data['name'], //TODO: change to name in Postgres func
       description: data['description'],
-      //created_at: data['created_at'], TODO: Parse DatTime
+      //created_at: data['created_at'], TODO: Parse Date Time
       coffees: data['coffees'],
       owner: data['owner'],
-      location: LatLng(data['lat'], data['lng']),
-    );
-  }
-
-  factory CafeModel.cafeMarkerFromJson(Map<String, dynamic> data) {
-    return CafeModel(
-      uid: data['cafeuid'],
-      name: data['cafename'],
       location: LatLng(data['lat'], data['lng']),
     );
   }

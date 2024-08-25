@@ -5,10 +5,10 @@ import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
-import 'package:cafeapp_v2/widgets/map_controls.dart';
+import 'package:cafeapp_v2/widgets/map/map_controls.dart';
 import 'package:cafeapp_v2/widgets/profile.dart';
 import 'package:cafeapp_v2/widgets/search_controls.dart';
-import 'package:cafeapp_v2/widgets/user_marker.dart';
+import 'package:cafeapp_v2/widgets/map/markers/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
@@ -26,7 +26,6 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   late final AnimatedMapController animatedMapController =
       AnimatedMapController(vsync: this);
-
   @override
   void dispose() {
     super.dispose();
@@ -42,10 +41,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         Provider.of<DatabaseService>(context, listen: false);
 
     Future<MarkerLayer> markerLayer =
-        database.getCafeMarkerLayer(animatedMapController);
+        database.getCafesInBounds(animatedMapController);
 
-    Stream cafesStream =
-        database.database.from('cafes').stream(primaryKey: ['uid']);
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -58,13 +55,18 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 if (position.hasData) {
                   return Stack(
                     children: [
-                      //Map
+                      //Map //-> Convert to reuseable widget for add screen too. Changes in 2 places currently...
                       FlutterMap(
                         mapController: animatedMapController.mapController,
                         options: MapOptions(
+                          onMapEvent: (event) {},
+                          onPositionChanged: (camera, boolean) {
+                            //markerLayer = database.getCafesInBoundsCamera(event.camera, animatedMapController);
+                          },
                           onLongPress: (tapPos, latlng) {
                             debugPrint(latlng.toString());
-                            Navigator.pushNamed(context, Routes.addCafePage, arguments: latlng);
+                            Navigator.pushNamed(context, Routes.addCafePage,
+                                arguments: latlng);
                           },
                           initialCenter: LatLng(position.data!.latitude,
                               position.data!.longitude),
