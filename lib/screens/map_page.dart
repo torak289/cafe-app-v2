@@ -5,9 +5,10 @@ import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/map_controls.dart';
 import 'package:cafeapp_v2/widgets/profile.dart';
-import 'package:cafeapp_v2/widgets/search_controls.dart';
+import 'package:cafeapp_v2/widgets/map/search_controls.dart';
 import 'package:cafeapp_v2/widgets/map/markers/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -26,23 +27,24 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   late final AnimatedMapController animatedMapController =
       AnimatedMapController(vsync: this);
+
+  late DatabaseService database;
+  late Future<MarkerLayer> markerLayer =
+      database.getCafesInBounds(animatedMapController);
+
   @override
   void dispose() {
     super.dispose();
     animatedMapController.dispose();
   }
 
+  final _inBoundsDebouncer = Debouncer(milliseconds: 200);
   @override
   Widget build(BuildContext context) {
     final LocationService location =
         Provider.of<LocationService>(context, listen: false);
     final AuthService authService = Provider.of(context, listen: false);
-    final DatabaseService database =
-        Provider.of<DatabaseService>(context, listen: false);
-
-    Future<MarkerLayer> markerLayer =
-        database.getCafesInBounds(animatedMapController);
-
+    database = Provider.of<DatabaseService>(context, listen: false);
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -55,22 +57,40 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 if (position.hasData) {
                   return Stack(
                     children: [
-                      //Map //-> Convert to reuseable widget for add screen too. Changes in 2 places currently...
                       FlutterMap(
                         mapController: animatedMapController.mapController,
                         options: MapOptions(
-                          onMapEvent: (event) {},
-                          onPositionChanged: (camera, boolean) {
-                            //markerLayer = database.getCafesInBoundsCamera(event.camera, animatedMapController);
-                          },
+                          onMapEvent: (event) => setState(
+                            () {
+                              //TODO: Improve Debounce... >>> Movement based Debounce >>> Location based Debounce
+                              //TODO: Implement Caching...
+                              String evtName = _eventName(event, markerLayer);
+                              final id = AnimationId.fromMapEvent(event);
+                              if (id != null) {
+                                if (id.moveId == AnimatedMoveId.finished) {
+                                  _inBoundsDebouncer.run(() {
+                                    markerLayer = database.getCafesInBounds(
+                                        animatedMapController);
+                                  });
+                                }
+                              }
+                              if (evtName == 'MapEventMoveEnd' ||
+                                  evtName == 'MapEventFlingAnimationEnd' ||
+                                  evtName == 'MapEventNonRotatedSizeChange') {
+                                _inBoundsDebouncer.run(() {
+                                  markerLayer = database
+                                      .getCafesInBounds(animatedMapController);
+                                });
+                              }
+                            },
+                          ),
                           onLongPress: (tapPos, latlng) {
-                            debugPrint(latlng.toString());
                             Navigator.pushNamed(context, Routes.addCafePage,
                                 arguments: latlng);
                           },
                           initialCenter: LatLng(position.data!.latitude,
                               position.data!.longitude),
-                          initialZoom: 14.5,
+                          initialZoom: 16,
                           maxZoom: 21,
                           interactionOptions: const InteractionOptions(
                             flags:
@@ -122,8 +142,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         ),
                       ),
                       //Profile
-                      Profile(),
-                      SearchControls(),
+                      const Profile(),
+                      SearchControls(
+                        markerLayer: markerLayer,
+                        mapController: animatedMapController,
+                      ),
                     ],
                   );
                 } else {
@@ -153,5 +176,52 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         },
       ),
     );
+  }
+
+  String _eventName(MapEvent? event, Future<MarkerLayer> markerLayer) {
+    debugPrint(event.toString());
+
+    switch (event) {
+      case MapEventTap():
+        return 'MapEventTap';
+      case MapEventSecondaryTap():
+        return 'MapEventSecondaryTap';
+      case MapEventLongPress():
+        return 'MapEventLongPress';
+      case MapEventMove():
+        return 'MapEventMove';
+      case MapEventMoveStart():
+        return 'MapEventMoveStart';
+      case MapEventMoveEnd():
+        return 'MapEventMoveEnd';
+      case MapEventFlingAnimation():
+        return 'MapEventFlingAnimation';
+      case MapEventFlingAnimationNotStarted():
+        return 'MapEventFlingAnimationNotStarted';
+      case MapEventFlingAnimationStart():
+        return 'MapEventFlingAnimationStart';
+      case MapEventFlingAnimationEnd():
+        return 'MapEventFlingAnimationEnd';
+      case MapEventDoubleTapZoom():
+        return 'MapEventDoubleTapZoom';
+      case MapEventScrollWheelZoom():
+        return 'MapEventScrollWheelZoom';
+      case MapEventDoubleTapZoomStart():
+        return 'MapEventDoubleTapZoomStart';
+      case MapEventDoubleTapZoomEnd():
+        return 'MapEventDoubleTapZoomEnd';
+      case MapEventRotate():
+        return 'MapEventRotate';
+      case MapEventRotateStart():
+        return 'MapEventRotateStart';
+      case MapEventRotateEnd():
+        return 'MapEventRotateEnd';
+      case MapEventNonRotatedSizeChange():
+        return 'MapEventNonRotatedSizeChange';
+      case null:
+        return 'null';
+      default:
+        return 'Unknown';
+    }
   }
 }

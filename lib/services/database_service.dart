@@ -52,7 +52,8 @@ class DatabaseService {
     return MarkerLayer(markers: markers);
   }
 
-  Future<MarkerLayer> getCafesInBounds(AnimatedMapController mapController) async {
+  Future<MarkerLayer> getCafesInBounds(
+      AnimatedMapController mapController) async {
     List<CafeMarker> markers = List.empty(growable: true);
     try {
       LatLngBounds bounds = mapController.mapController.camera.visibleBounds;
@@ -75,7 +76,9 @@ class DatabaseService {
       return Future.error(e);
     }
   }
-  Future<MarkerLayer> getCafesInBoundsCamera(MapCamera camera, AnimatedMapController mapController) async {
+
+  Future<MarkerLayer> getCafesInBoundsCamera(
+      MapCamera camera, AnimatedMapController mapController) async {
     List<CafeMarker> markers = List.empty(growable: true);
     try {
       LatLngBounds bounds = camera.visibleBounds;
@@ -91,7 +94,7 @@ class DatabaseService {
       cafes = CafeappUtils.cafesFromJson(data);
 
       markers = CafeappUtils.cafesToMarkers(cafes, mapController);
-
+      debugPrint(cafes.toString());
       return MarkerLayer(markers: markers);
     } catch (e) {
       debugPrint(e.toString());

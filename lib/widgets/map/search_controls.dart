@@ -2,11 +2,17 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:provider/provider.dart';
 
 class SearchControls extends StatefulWidget {
+  Future<MarkerLayer> markerLayer;
+  AnimatedMapController mapController;
   SearchControls({
     super.key,
+    required this.markerLayer,
+    required this.mapController,
   });
 
   @override
@@ -50,8 +56,10 @@ class _SearchControlsState extends State<SearchControls> {
                   padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextButton(
                 onPressed: () => {
-                  //TODO: FIND CAFE FUNCTIONALITY...
-                  //This is going to be really really difficult...
+                  //TODO: Implement map callback to refresh...
+                  widget.markerLayer = database.getCafesInBoundsCamera(
+                      widget.mapController.mapController.camera,
+                      widget.mapController),
                 },
                 child: const Text("Find Cafe"),
               ),

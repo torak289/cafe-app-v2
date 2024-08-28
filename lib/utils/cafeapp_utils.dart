@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
@@ -6,6 +9,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 
 class CafeappUtils {
+
+
   static List<CafeModel> cafesFromJson(List<Map<String, dynamic>> data) {
     try {
       List<CafeModel> cafes = List.empty(growable: true);
@@ -48,5 +53,18 @@ class CafeappUtils {
     } catch (e) {
       throw Exception(e);
     }
+  }
+}
+
+class Debouncer {
+  final int milliseconds;
+  Timer? _timer;
+
+  Debouncer({required this.milliseconds});
+  void run(VoidCallback action){
+    if(_timer != null){
+      _timer!.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }
