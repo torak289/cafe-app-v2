@@ -9,13 +9,13 @@ class CafeMarker extends Marker {
   final CafeModel cafe;
   final AnimatedMapController mapController;
 
-  CafeMarker(
-      {required this.cafe, required this.mapController})
+  CafeMarker({required this.cafe, required this.mapController})
       : super(
           width: 200,
           point: cafe.location,
           rotate: true,
-          alignment: Alignment.topRight, //This needs work to rotate around the marker point properly...
+          alignment: Alignment
+              .topRight, //This needs work to rotate around the marker point properly...
           child: Row(
             children: [
               GestureDetector(
@@ -28,6 +28,9 @@ class CafeMarker extends Marker {
                     zoom: 16,
                   );
                 },
+                onLongPress: (() {
+                  debugPrint('Open Navigation Application');
+                }),
                 child: const Icon(
                   Icons.location_on_sharp,
                   color: CafeAppUI.cafeMarkerColor,

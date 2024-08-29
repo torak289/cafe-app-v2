@@ -57,8 +57,7 @@ class _SearchControlsState extends State<SearchControls> {
               TextButton(
                 onPressed: () => {
                   //TODO: Implement map callback to refresh...
-                  widget.markerLayer = database.getCafesInBoundsCamera(
-                      widget.mapController.mapController.camera,
+                  widget.markerLayer = database.getCafesInBounds(
                       widget.mapController),
                 },
                 child: const Text("Find Cafe"),

@@ -24,34 +24,6 @@ class DatabaseService {
     await _add(path: 'cafes', data: cafe.toJson());
   }
 
-  Future<List<CafeModel>> getCafes() async {
-    List<CafeModel> cafes = List.empty();
-    final data = await _select(table: 'cafes');
-
-    for (int i = 0; i < data.length; i++) {
-      cafes.add(CafeModel.fromJson(data[i]));
-    }
-    return cafes;
-  }
-
-  Future<MarkerLayer> getCafeMarkerLayer(
-      AnimatedMapController mapController) async {
-    //This function gets called 3 times on app start?
-    List<CafeMarker> markers = List.empty(growable: true);
-    try {
-      final data = await _selectUsingFunc(func: 'select_cafe_latlng');
-
-      cafes.clear();
-      cafes = CafeappUtils.cafesFromJson(data);
-
-      markers = CafeappUtils.cafesToMarkers(
-          cafes, mapController); //TODO: Move to map page...
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-    return MarkerLayer(markers: markers);
-  }
-
   Future<MarkerLayer> getCafesInBounds(
       AnimatedMapController mapController) async {
     List<CafeMarker> markers = List.empty(growable: true);
@@ -70,31 +42,6 @@ class DatabaseService {
 
       markers = CafeappUtils.cafesToMarkers(cafes, mapController);
 
-      return MarkerLayer(markers: markers);
-    } catch (e) {
-      debugPrint(e.toString());
-      return Future.error(e);
-    }
-  }
-
-  Future<MarkerLayer> getCafesInBoundsCamera(
-      MapCamera camera, AnimatedMapController mapController) async {
-    List<CafeMarker> markers = List.empty(growable: true);
-    try {
-      LatLngBounds bounds = camera.visibleBounds;
-      List<CafeModel> cafes = List.empty(growable: true);
-      final data = await _selectUsingFunc(func: 'cafes_in_bounds', params: {
-        'min_lat': bounds.southWest.latitude,
-        'min_long': bounds.southWest.longitude,
-        'max_lat': bounds.northEast.latitude,
-        'max_long': bounds.northEast.longitude,
-      });
-      debugPrint(data.toString());
-      cafes.clear();
-      cafes = CafeappUtils.cafesFromJson(data);
-
-      markers = CafeappUtils.cafesToMarkers(cafes, mapController);
-      debugPrint(cafes.toString());
       return MarkerLayer(markers: markers);
     } catch (e) {
       debugPrint(e.toString());

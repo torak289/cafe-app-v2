@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class ProfileTabs extends StatefulWidget {
   const ProfileTabs({super.key});
@@ -20,6 +22,8 @@ class _ProfileTabs extends State<ProfileTabs>
     super.initState();
   }
 
+  String _scanBarcode = 'Unknown';
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -39,10 +43,15 @@ class _ProfileTabs extends State<ProfileTabs>
           Expanded(
             child: TabBarView(
               controller: tabController,
-              children: const [
-                Center(child: Text('Loyalty')),
-                Center(child: Text('Cafe')),
-                Center(child: Text('Roaster')),
+              children: [
+                const Center(child: Text('Loyalty')),
+                Center(
+                    child: TextButton(
+                        onPressed: () async {
+                          
+                        },
+                        child: const Text("Scan Code"))),
+                const Center(child: Text('Roaster')),
               ],
             ),
           )
