@@ -45,6 +45,7 @@ class DatabaseService {
       return MarkerLayer(markers: markers);
     } catch (e) {
       debugPrint(e.toString());
+      database.auth.refreshSession();
       return Future.error(e);
     }
   }

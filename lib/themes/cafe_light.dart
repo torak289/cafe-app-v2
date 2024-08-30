@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 String _fontFamily = "Ubuntu";
-BorderRadius _searchBorderRadius = BorderRadius.circular(32);
+BorderRadius _searchBorderRadius = BorderRadius.circular(16);
 double _searchBorderWidth = 2;
 double _searchGapPadding = 0;
 

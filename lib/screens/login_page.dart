@@ -18,17 +18,12 @@ class LoginPage extends StatelessWidget {
     final AuthService authService = Provider.of(context, listen: false);
     if (authService.appState == AppState.Authenticated) {
       return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: CafeAppUI.screenVertical,
-            horizontal: CafeAppUI.screenHorizontal,
-          ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              LoyaltyCard(),
+              const LoyaltyCard(),
               const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               ProfileTabs(),
               TextButton(
@@ -45,8 +40,8 @@ class LoginPage extends StatelessWidget {
       );
     } else {
       return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(32.0), //TODO: Move to a const file
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
