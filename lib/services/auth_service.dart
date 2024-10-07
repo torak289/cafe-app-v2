@@ -26,24 +26,26 @@ class AuthService with ChangeNotifier {
     final Session? session = data.session;
     //debugPrint('Event: $event, Session: $session');
 
-    if (session != null) {
+    if (session != null) { //This feels like it's in the wrong place and needs moving...
       _user.sink.add(userFromSupabase(session.user));
     }
 
     switch (event) {
       case AuthChangeEvent.initialSession:
-        _appState = AppState.Uninitialized;
-        _client.auth.refreshSession();
-
+        try {
+          _client.auth.refreshSession();
+        } catch (e) {
+          debugPrint(e.toString());
+        }
       case AuthChangeEvent.signedIn:
         _appState = AppState.Authenticated;
-
       case AuthChangeEvent.signedOut:
         _appState = AppState.Unauthenticated;
       case AuthChangeEvent.passwordRecovery:
       // handle password recovery
       case AuthChangeEvent.tokenRefreshed:
-        if (session != null) { //TODO: Make this work on app launch/relaunch
+        if (session != null) {
+          //TODO: Make this work on app launch/relaunch
           if (session.user.aud == "authenticated") {
             _appState = AppState.Authenticated;
           } else {
@@ -67,6 +69,10 @@ class AuthService with ChangeNotifier {
     return data;
   }
 
+  Future<void> anonRegister() async {
+    await _client.auth.signInAnonymously();
+  }
+
   Future<void> emailRegister(String email, String password) async {
     try {
       _appState = AppState.Registering;
@@ -86,7 +92,7 @@ class AuthService with ChangeNotifier {
       if (/* TODO: check email verified */ true) {
         _appState = AppState.Authenticated;
       } else {
-        _appState = AppState.Unverified;
+        _appState = AppState.Unverified; //TODO: Implement email verified checK
       }
       return "Success";
     } catch (e) {
