@@ -41,7 +41,7 @@ class _ProfileTabs extends State<ProfileTabs>
           ],
         ),
         SizedBox(
-          height: 400,
+          height: 440,
           child: TabBarView(
             controller: tabController,
             children: const [

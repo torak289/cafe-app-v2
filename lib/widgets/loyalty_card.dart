@@ -49,8 +49,8 @@ class LoyaltyCard extends StatelessWidget {
             BarcodeWidget(
               data: user.uid,
               barcode: Barcode.qrCode(),
-              width: 150,
-              height: 150,
+              width: 120,
+              height: 120,
             ),
           ],
         ),
