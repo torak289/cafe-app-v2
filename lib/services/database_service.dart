@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
+import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
@@ -25,15 +26,25 @@ class DatabaseService {
     await _add(path: 'cafes', data: cafe.toJson());
   }
 
+  Future<List<CoffeeModel>> getCoffeeList() async {
+    try {
+      final data = await database.from('coffees').select('name');
+      List<CoffeeModel> coffees = List.empty(growable: true);
+      coffees = CafeappUtils.coffeesFromJson(data);
+
+      return coffees;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<List<CafeModel>> getClosestCafe(LatLng currentPos) async {
     try {
       final data = await _selectUsingFunc(func: 'find_closest_cafe', params: {
         'lati': currentPos.latitude,
         'long': currentPos.longitude,
       });
-      List<CafeModel> cafes = List.empty(growable: true);
-      cafes.clear();
-      cafes = CafeappUtils.cafesFromJson(data);
+      List<CafeModel> cafes = CafeappUtils.cafesFromJson(data);
       return cafes;
     } catch (e) {
       return Future.error(e);
