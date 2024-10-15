@@ -1,5 +1,6 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -43,26 +44,14 @@ class _SearchControlsState extends State<SearchControls> {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, Routes.addCafePage);
-                },
-                child: const Text("Add Cafe"),
-              ),
-              const Padding(
-                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              TextButton(
-                onPressed: () => {
-                  //TODO: Implement map callback to refresh...
-                  widget.markerLayer = database.getCafesInBounds(
-                      widget.mapController),
-                },
-                child: const Text("Find Cafe"),
-              ),
-            ],
+          const Padding(
+              padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+          TextButton(
+            onPressed: () async{
+              List<CafeModel> closestCafes = await database.getClosestCafe(widget.mapController.mapController.camera.center);
+              widget.mapController.animateTo(dest: closestCafes[0].location, zoom: 18);
+            },
+            child: const Text("Find Cafe"),
           ),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(
