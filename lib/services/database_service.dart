@@ -7,6 +7,7 @@ import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseService {
@@ -22,6 +23,21 @@ class DatabaseService {
 
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
+  }
+
+  Future<List<CafeModel>> getClosestCafe(LatLng currentPos) async {
+    try {
+      final data = await _selectUsingFunc(func: 'find_closest_cafe', params: {
+        'lati': currentPos.latitude,
+        'long': currentPos.longitude,
+      });
+      List<CafeModel> cafes = List.empty(growable: true);
+      cafes.clear();
+      cafes = CafeappUtils.cafesFromJson(data);
+      return cafes;
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<MarkerLayer> getCafesInBounds(
