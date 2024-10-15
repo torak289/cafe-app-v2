@@ -47,6 +47,7 @@ dependencies:
   barcode_widget: ^2.0.4
   flutter_barcode_scanner: ^2.0.0
   maps_launcher: ^2.2.1
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
