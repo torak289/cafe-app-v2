@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
@@ -85,8 +86,13 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             },
                           ),
                           onLongPress: (tapPos, latlng) {
-                            Navigator.pushNamed(context, Routes.addCafePage,
-                                arguments: latlng);
+                            if (authService.appState ==
+                                AppState.Authenticated) {
+                              Navigator.pushNamed(context, Routes.addCafePage,
+                                  arguments: latlng);
+                            } else {
+                              debugPrint("Not Authenticated");
+                            }
                           },
                           initialCenter: LatLng(position.data!.latitude,
                               position.data!.longitude),
