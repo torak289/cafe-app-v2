@@ -1,7 +1,10 @@
+import 'package:cafeapp_v2/data_models/coffee_model.dart';
+import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:provider/provider.dart';
 
 class ProfileTabs extends StatefulWidget {
   const ProfileTabs({super.key});
@@ -27,6 +30,8 @@ class _ProfileTabs extends State<ProfileTabs>
 
   @override
   Widget build(BuildContext context) {
+    final DatabaseService database =
+        Provider.of<DatabaseService>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -44,7 +49,7 @@ class _ProfileTabs extends State<ProfileTabs>
           height: 440,
           child: TabBarView(
             controller: tabController,
-            children: const [
+            children: [
               const Center(child: Text('Loyalty')),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -69,27 +74,35 @@ class _ProfileTabs extends State<ProfileTabs>
                       ),
                     ],
                   ),
-                  Text('Coffees'),
-                  const Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    alignment: WrapAlignment.spaceBetween,
-                    children: [
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                      TextButton(onPressed: null, child: Text('Coffee')),
-                    ],
-                  ),
-                  Text('Locations'),
+                  const Text('Coffees'),
+                  FutureBuilder<List<CoffeeModel>>(
+                      future: database.getCoffeeList(),
+                      builder: (context, data) {
+                        if (data.hasData) {
+                          List<Widget> list = List.empty(growable: true);
+
+                          for (int i = 0; i < data.data!.length; i++) {
+                            list.add(TextButton(
+                                onPressed: null,
+                                child: Text(data.data![i].name)));
+                          }
+
+                          return Wrap(
+                            spacing: 0,
+                            runSpacing: 16,
+                            alignment: WrapAlignment.start,
+                            children: list,
+                          );
+                        } else {
+                          return const Center(
+                            child: Text("Error"),
+                          );
+                        }
+                      }),
+                  const Text('Locations'),
                 ],
               ),
-              Center(child: Text('Roaster')),
+              const Center(child: Text('Roaster')),
             ],
           ),
         )
