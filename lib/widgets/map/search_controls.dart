@@ -1,5 +1,4 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
-import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
@@ -44,14 +43,24 @@ class _SearchControlsState extends State<SearchControls> {
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-              padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+          const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextButton(
-            onPressed: () async{
-              List<CafeModel> closestCafes = await database.getClosestCafe(widget.mapController.mapController.camera.center);
-              widget.mapController.animateTo(dest: closestCafes[0].location, zoom: 18);
+            onPressed: () async {
+              List<CafeModel> closestCafes = await database.getClosestCafe(
+                  widget.mapController.mapController.camera.center);
+              widget.mapController
+                  .animateTo(dest: closestCafes[0].location, zoom: 18);
             },
             child: const Text("Find Cafe"),
+          ),
+          Container(
+            width: 600,
+            height: 200,
+            decoration: const BoxDecoration(
+              color: CafeAppUI.backgroundColor,
+              borderRadius: BorderRadius.all(
+                Radius.circular(16)),
+            ),
           ),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(

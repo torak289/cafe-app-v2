@@ -86,7 +86,6 @@ class _ProfileTabs extends State<ProfileTabs>
                                 onPressed: null,
                                 child: Text(data.data![i].name)));
                           }
-
                           return Wrap(
                             spacing: 0,
                             runSpacing: 16,
