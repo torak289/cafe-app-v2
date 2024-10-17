@@ -22,6 +22,20 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
+  Future<List<CafeModel>> search(String text) async {
+    List<CafeModel> results = List.empty(growable: true);
+
+    try {
+      String modifiedText = text.replaceAll(RegExp(r' '), '+');
+      debugPrint(modifiedText);
+      final data = await database.from("cafes").select('name').textSearch('name', "$modifiedText:*").limit(5);
+      debugPrint(data.toString());
+      return results;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
   }
