@@ -6,6 +6,7 @@ import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:geolocator_platform_interface/src/models/position.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +30,7 @@ class _SearchControlsState extends State<SearchControls> {
   late DatabaseService database;
   late LocationService location;
   late List<CafeModel> cafeResults = List.empty(growable: true);
+  late Position pos;
   @override
   void initState() {
     super.initState();
@@ -40,7 +42,6 @@ class _SearchControlsState extends State<SearchControls> {
 //TODO: Implement hybrid search
   void _search() async {
     final text = searchController.text;
-    final Position pos;
     try {
       pos = await location.currentPosition;
 
@@ -77,38 +78,46 @@ class _SearchControlsState extends State<SearchControls> {
             },
             child: const Text("Find Cafe"),
           ),
-          Container(
-            width: 600,
-            height: 200,
-            decoration: const BoxDecoration(
-              color: CafeAppUI.backgroundColor,
-              borderRadius: BorderRadius.all(Radius.circular(16)),
-            ),
-            child: Builder(builder: (context) {
-              if (cafeResults.isNotEmpty) {
-                List<Widget> list = List.empty(growable: true);
-                for (int i = 0; i < cafeResults.length; i++) {
-                  list.add(
-                    GestureDetector(
-                      onTap: () {
-                        widget.mapController.animateTo(
-                          duration: const Duration(milliseconds: 200),
-                          dest: cafeResults[i].location,
-                          zoom: widget.mapController.mapController.camera.zoom,
-                        );
-                      },
-                      child: Text(cafeResults[i].name.toString()),
+          Builder(builder: (context) {
+            if (searchController.) {
+              List<Widget> list = List.empty(growable: true);
+              for (int i = 0; i < cafeResults.length; i++) {
+                list.add(
+                  GestureDetector(
+                    onTap: () {
+                      widget.mapController.animateTo(
+                        duration: const Duration(milliseconds: 200),
+                        dest: cafeResults[i].location,
+                        zoom: widget.mapController.mapController.camera.zoom,
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(cafeResults[i].name.toString()),
+                        Text(
+                            '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
+                      ],
                     ),
-                  );
-                }
-                return Column(
-                  children: list,
+                  ),
                 );
-              } else {
-                return const Text("Empty");
               }
-            }),
-          ),
+              return Container(
+                width: 300,
+                height: 100,
+                decoration: const BoxDecoration(
+                  color: CafeAppUI.backgroundColor,
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                child: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  children: list,
+                ),
+              );
+            } else {
+              return Text('');
+            }
+          }),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(
             decoration: const InputDecoration(labelText: 'Search a cafe!'),

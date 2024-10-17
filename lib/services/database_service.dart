@@ -39,7 +39,6 @@ class DatabaseService {
       );
       for (int i = 0; i < data.length; i++) {
         results.add(CafeModel.fromJson(data[i]));
-        debugPrint(results[i].toString());
       }
       return results;
     } catch (e) {
