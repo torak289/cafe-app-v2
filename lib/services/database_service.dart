@@ -8,6 +8,7 @@ import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -22,14 +23,24 @@ class DatabaseService {
 
   DatabaseService({this.uid});
 
-  Future<List<CafeModel>> search(String text) async {
+  Future<List<CafeModel>> search(String text, Position currentPos) async {
     List<CafeModel> results = List.empty(growable: true);
 
     try {
       String modifiedText = text.replaceAll(RegExp(r' '), '+');
       debugPrint(modifiedText);
-      final data = await database.from("cafes").select('name').textSearch('name', "$modifiedText:*").limit(5);
-      debugPrint(data.toString());
+      final data = await _selectUsingFunc(
+        func: 'search_by_name',
+        params: {
+          'searchname': text,
+          'lati': currentPos.latitude,
+          'long': currentPos.longitude,
+        },
+      );
+      for (int i = 0; i < data.length; i++) {
+        results.add(CafeModel.fromJson(data[i]));
+        debugPrint(results[i].toString());
+      }
       return results;
     } catch (e) {
       return Future.error(e);

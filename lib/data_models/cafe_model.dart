@@ -37,12 +37,16 @@ class CafeModel {
   factory CafeModel.fromJson(Map<String, dynamic> data) {
     return CafeModel(
       uid: data['uid'],
-      name: data['name'], //TODO: change to name in Postgres func
+      name: data['name'],
       description: data['description'],
       //created_at: data['created_at'], TODO: Parse Date Time
       coffees: data['coffees'],
       owner: data['owner'],
       location: LatLng(data['lat'], data['lng']),
     );
+  }
+  @override
+  String toString() {
+    return 'uid: $uid, name: $name, $location';
   }
 }
