@@ -1,15 +1,18 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
+import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:geolocator_platform_interface/src/models/position.dart';
 import 'package:provider/provider.dart';
 
 class SearchControls extends StatefulWidget {
   Future<MarkerLayer> markerLayer;
   AnimatedMapController mapController;
+
   SearchControls({
     super.key,
     required this.markerLayer,
@@ -24,21 +27,34 @@ class _SearchControlsState extends State<SearchControls> {
   final TextEditingController searchController = TextEditingController();
   Debouncer searchDebounce = Debouncer(milliseconds: 250);
   late DatabaseService database;
-
+  late LocationService location;
+  late List<CafeModel> cafeResults = List.empty(growable: true);
   @override
   void initState() {
     super.initState();
     database = Provider.of<DatabaseService>(context, listen: false);
+    location = Provider.of<LocationService>(context, listen: false);
     searchController.addListener(_search);
   }
 
-//TODO: Implement actual search... Will probably need access to map controller...
+//TODO: Implement hybrid search
   void _search() async {
     final text = searchController.text;
+    final Position pos;
+    try {
+      pos = await location.currentPosition;
 
-    searchDebounce.run(() {
-      database.search(text);
-    });
+      searchDebounce.run(
+        () async {
+          final results = await database.search(text, pos);
+          setState(() {
+            cafeResults = results;
+          });
+        },
+      );
+    } catch (e) {
+      Future.error(e);
+    }
   }
 
   @override
@@ -61,14 +77,27 @@ class _SearchControlsState extends State<SearchControls> {
             },
             child: const Text("Find Cafe"),
           ),
-          /*Container(
+          Container(
             width: 600,
             height: 200,
             decoration: const BoxDecoration(
               color: CafeAppUI.backgroundColor,
               borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
-          ),*/
+            child: Builder(builder: (context) {
+              if (cafeResults.isNotEmpty) {
+                List<Widget> list = List.empty(growable: true);
+                for (int i = 0; i < cafeResults.length; i++) {
+                  list.add(Text(cafeResults[i].name.toString()));
+                }
+                return Column(
+                  children: list,
+                );
+              } else {
+                return Text("Empty");
+              }
+            }),
+          ),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(
             decoration: const InputDecoration(labelText: 'Search a cafe!'),
