@@ -88,13 +88,24 @@ class _SearchControlsState extends State<SearchControls> {
               if (cafeResults.isNotEmpty) {
                 List<Widget> list = List.empty(growable: true);
                 for (int i = 0; i < cafeResults.length; i++) {
-                  list.add(Text(cafeResults[i].name.toString()));
+                  list.add(
+                    GestureDetector(
+                      onTap: () {
+                        widget.mapController.animateTo(
+                          duration: const Duration(milliseconds: 200),
+                          dest: cafeResults[i].location,
+                          zoom: widget.mapController.mapController.camera.zoom,
+                        );
+                      },
+                      child: Text(cafeResults[i].name.toString()),
+                    ),
+                  );
                 }
                 return Column(
                   children: list,
                 );
               } else {
-                return Text("Empty");
+                return const Text("Empty");
               }
             }),
           ),
