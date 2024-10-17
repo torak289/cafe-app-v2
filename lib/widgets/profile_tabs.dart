@@ -50,7 +50,19 @@ class _ProfileTabs extends State<ProfileTabs>
           child: TabBarView(
             controller: tabController,
             children: [
-              const Center(child: Text('Loyalty')),
+              const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text('You don’t have any loyalty points. Visit a cafe near you '),
+                  Text(
+                    'Find a Cafe near you!',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ],
+              ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
