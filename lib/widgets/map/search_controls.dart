@@ -69,17 +69,8 @@ class _SearchControlsState extends State<SearchControls> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-          TextButton(
-            onPressed: () async {
-              List<CafeModel> closestCafes = await database.getClosestCafe(
-                  widget.mapController.mapController.camera.center);
-              widget.mapController
-                  .animateTo(dest: closestCafes[0].location, zoom: 18);
-            },
-            child: const Text("Find Cafe"),
-          ),
           Builder(builder: (context) {
-            if (searchController.) {
+            if (cafeResults.isNotEmpty) {
               List<Widget> list = List.empty(growable: true);
               for (int i = 0; i < cafeResults.length; i++) {
                 list.add(
@@ -115,15 +106,24 @@ class _SearchControlsState extends State<SearchControls> {
                 ),
               );
             } else {
-              return Text('');
+              return TextButton(
+                onPressed: () async {
+                  List<CafeModel> closestCafes = await database.getClosestCafe(
+                      widget.mapController.mapController.camera.center);
+                  widget.mapController
+                      .animateTo(dest: closestCafes[0].location, zoom: 18);
+                },
+                child: const Text("Find Cafe"),
+              );
             }
           }),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(
             decoration: const InputDecoration(labelText: 'Search a cafe!'),
             controller: searchController,
-            onTapOutside: (event) => FocusScope.of(context)
-                .requestFocus(FocusNode()), //TODO: meh behavior improve...
+            onTapOutside: (event) {
+              FocusScope.of(context).requestFocus(FocusNode());
+            }, //TODO: meh behavior improve...
           )
         ],
       ),
