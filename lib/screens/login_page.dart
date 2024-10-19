@@ -54,13 +54,16 @@ class LoginPage extends StatelessWidget {
                 ),
                 textAlign: TextAlign.left,
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextField(
                 controller: emailController,
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextField(
                 controller: passwordController,
                 obscureText: true,
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextButton(
                 onPressed: () async => {
                   await authService.emailLogin(
@@ -74,6 +77,7 @@ class LoginPage extends StatelessWidget {
                 },
                 child: const Text("Login"),
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
               const Row(
                 children: [
                   Expanded(child: Divider(color: Colors.black)),
@@ -86,17 +90,20 @@ class LoginPage extends StatelessWidget {
                   Expanded(child: Divider(color: Colors.black)),
                 ],
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
               TextButton(
                 onPressed: () => {},
-                child: Text("Login with Facebook"),
+                child: const Text("Login with Facebook"),
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextButton(
                 onPressed: () => {},
-                child: Text("Login with Google"),
+                child: const Text("Login with Google"),
               ),
+              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               TextButton(
                 onPressed: () => {},
-                child: Text("Login with X"),
+                child: const Text("Login with X"),
               )
             ],
           ),
