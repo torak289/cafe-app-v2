@@ -18,19 +18,17 @@ class _ProfileTabs extends State<ProfileTabs>
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       setState(() {});
     });
     super.initState();
   }
 
-  String _scanBarcode = 'Unknown';
+  final String _scanBarcode = 'Unknown';
 
   @override
   Widget build(BuildContext context) {
-    final DatabaseService database =
-        Provider.of<DatabaseService>(context, listen: false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
@@ -48,7 +46,7 @@ class _ProfileTabs extends State<ProfileTabs>
           height: 420,
           child: TabBarView(
             controller: tabController,
-            children: [
+            children: const [
               LoyaltyTab(),
               CafeTab(),
               //const Center(child: Text('Roaster')),

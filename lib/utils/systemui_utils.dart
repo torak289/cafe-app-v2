@@ -7,35 +7,35 @@ class SystemUiUtils {
   ///
   /// This also enables seamless navigation bars in Android.
   static void setStatusBarIconColors(BuildContext context, bool darkIconsOnLightBackground) {
-    SystemUiOverlayStyle _style;
+    SystemUiOverlayStyle style;
 
     if (Theme.of(context).brightness == Brightness.light) {
       if (darkIconsOnLightBackground) {
-        _style = SystemUiOverlayStyle.dark.copyWith(
+        style = SystemUiOverlayStyle.dark.copyWith(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.transparent,
         );
       } else {
-        _style = SystemUiOverlayStyle.light.copyWith(
+        style = SystemUiOverlayStyle.light.copyWith(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.transparent,
         );
       }
     } else {
       if (darkIconsOnLightBackground) {
-        _style = SystemUiOverlayStyle.light.copyWith(
+        style = SystemUiOverlayStyle.light.copyWith(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.transparent,
         );
       } else {
-        _style = SystemUiOverlayStyle.dark.copyWith(
+        style = SystemUiOverlayStyle.dark.copyWith(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.transparent,
         );
       }
     }
 
-    SystemChrome.setSystemUIOverlayStyle(_style);
+    SystemChrome.setSystemUIOverlayStyle(style);
   }
 
   static void toggleSystemUi(bool enabled) {

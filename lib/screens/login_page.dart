@@ -25,7 +25,7 @@ class LoginPage extends StatelessWidget {
             children: [
               const LoyaltyCard(),
               const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              ProfileTabs(),
+              const ProfileTabs(),
               TextButton(
                 onPressed: () {
                   authService.signOut();

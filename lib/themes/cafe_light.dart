@@ -1,6 +1,5 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 String _fontFamily = "Ubuntu";
 BorderRadius _searchBorderRadius = BorderRadius.circular(16);

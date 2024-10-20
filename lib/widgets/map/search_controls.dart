@@ -101,7 +101,7 @@ class _SearchControlsState extends State<SearchControls> {
                   borderRadius: BorderRadius.all(Radius.circular(16)),
                 ),
                 child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: list,
                 ),
               );

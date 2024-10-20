@@ -46,9 +46,15 @@ class DatabaseService {
     }
   }
 
-  Future<bool> getCafeData() async {
-    //TODO: Implemement Database functionality to get Cafe Tabs information for user...
-    return false;
+  Future<List<CafeModel>> getCafeData() async {
+    try {
+      final data = await _selectUsingFunc(func: 'get_owned_cafes');
+      List<CafeModel> cafes = CafeappUtils.cafesFromJson(data);
+      debugPrint(data.toString());
+      return cafes;
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<void> addCafe(CafeModel cafe) async {

@@ -1,18 +1,21 @@
 import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CafeTab extends StatelessWidget {
+  const CafeTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
-    return FutureBuilder<bool>(
+    return FutureBuilder<List<CafeModel>>(
         future: database.getCafeData(),
         builder: (context, future) {
-          if (future.hasData && future.data!) {
+          if (future.hasData) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,14 +42,14 @@ class CafeTab extends StatelessWidget {
                 const Text('Coffees'),
                 FutureBuilder<List<CoffeeModel>>(
                     future: database.getCoffeeList(),
-                    builder: (context, data) {
-                      if (data.hasData) {
+                    builder: (context, future) {
+                      if (future.hasData) {
                         List<Widget> list = List.empty(growable: true);
 
-                        for (int i = 0; i < data.data!.length; i++) {
+                        for (int i = 0; i < future.data!.length; i++) {
                           list.add(TextButton(
                               onPressed: null,
-                              child: Text(data.data![i].name)));
+                              child: Text(future.data![i].name)));
                         }
                         return Wrap(
                           spacing: 0,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegistrationPage extends StatelessWidget {
+  const RegistrationPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,11 +21,11 @@ class RegistrationPage extends StatelessWidget {
               ),
               textAlign: TextAlign.left,
             ),
-            TextField(),
-            TextField(),
+            const TextField(),
+            const TextField(),
             TextButton(
               onPressed: () => {},
-              child: Text("Register"),
+              child: const Text("Register"),
             ),
             const Row(
               children: [
@@ -36,10 +38,10 @@ class RegistrationPage extends StatelessWidget {
               ],
             ),
             TextButton(
-                onPressed: () => {}, child: Text("Register with Facebook")),
+                onPressed: () => {}, child: const Text("Register with Facebook")),
             TextButton(
-                onPressed: () => {}, child: Text("Register with Google")),
-            TextButton(onPressed: () => {}, child: Text("Register with X"))
+                onPressed: () => {}, child: const Text("Register with Google")),
+            TextButton(onPressed: () => {}, child: const Text("Register with X"))
           ],
         ),
       ),
