@@ -22,14 +22,33 @@ class CafeTab extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Name'),
+                      const Text('Name'),
                       Text('${future.data![0].name}'),
+                      const Icon(
+                        Icons.edit_rounded,
+                        size: 16,
+                        color: Colors.black,
+                      ),
                     ],
                   ),
-                  const Text('Description'),
                   const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Description'),
+                      Icon(
+                        Icons.edit_rounded,
+                        size: 16,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
+                  Text('${future.data![0].description}'),
+                  /*const Row(
                     children: [
                       Expanded(
                         child: TextField(
@@ -38,7 +57,7 @@ class CafeTab extends StatelessWidget {
                         ),
                       ),
                     ],
-                  ),
+                  ),*/
                   const Text('Coffees'),
                   FutureBuilder<List<CoffeeModel>>(
                       future: database.getCoffeeList(),
@@ -72,7 +91,8 @@ class CafeTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Text("Own a Cafe? Add it to our map!"),
-                  const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   TextButton(
                     onPressed: () =>
                         Navigator.pushNamed(context, Routes.addCafePage),

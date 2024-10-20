@@ -11,9 +11,9 @@ class LoyaltyCardModel {
 
   factory LoyaltyCardModel.fromJson(Map<String, dynamic> data) {
     return LoyaltyCardModel(
-      cafeName: data['cafeName'],
-      currentCount: data['currrentCount'],
-      totalCount: data['totalCount'],
+      cafeName: data['cafename'],
+      currentCount: data['currentcount'],
+      totalCount: data['totalcount'],
     );
   }
 }

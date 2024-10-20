@@ -1,9 +1,6 @@
-import 'package:cafeapp_v2/data_models/coffee_model.dart';
-import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/widgets/profile/cafe_tab.dart';
 import 'package:cafeapp_v2/widgets/profile/loyalty_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class ProfileTabs extends StatefulWidget {
   const ProfileTabs({super.key});
@@ -43,7 +40,7 @@ class _ProfileTabs extends State<ProfileTabs>
           ],
         ),
         SizedBox(
-          height: 420,
+          height: 400,
           child: TabBarView(
             controller: tabController,
             children: const [

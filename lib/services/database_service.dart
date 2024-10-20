@@ -46,23 +46,27 @@ class DatabaseService {
       return Future.error(e);
     }
   }
+
   Future<List<LoyaltyCardModel>> getLoyaltyData() async {
     try {
-      //final data = await _selectUsingFunc(func: 'get_loyalty');
+      final data = await _selectUsingFunc(func: 'get_loyalty');
+      debugPrint(data.toString());
       List<LoyaltyCardModel> loyaltyData = List.empty(growable: true);
-      for(int i = 0; i < 5; i++){      loyaltyData.add(LoyaltyCardModel(cafeName: 'Test $i', currentCount: 4, totalCount: 4));
+      for (int i = 0; i < data.length; i++) {
+        loyaltyData.add(LoyaltyCardModel.fromJson(data[i]));
       }
       return loyaltyData;
     } catch (e) {
       return Future.error(e);
     }
   }
+
   Future<List<CafeModel>> getCafeData() async {
     try {
       final data = await _selectUsingFunc(func: 'get_owned_cafes');
-      List<CafeModel> cafes = List.empty(growable: true);
-      cafes  = CafeappUtils.cafesFromJson(data);
       debugPrint(data.toString());
+      List<CafeModel> cafes = List.empty(growable: true);
+      cafes = CafeappUtils.cafesFromJson(data);
       return cafes;
     } catch (e) {
       return Future.error(e);
