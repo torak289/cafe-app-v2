@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
+import 'package:cafeapp_v2/data_models/loyalty_card_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
@@ -45,7 +46,17 @@ class DatabaseService {
       return Future.error(e);
     }
   }
-
+  Future<List<LoyaltyCardModel>> getLoyaltyData() async {
+    try {
+      //final data = await _selectUsingFunc(func: 'get_loyalty');
+      List<LoyaltyCardModel> loyaltyData = List.empty(growable: true);
+      for(int i = 0; i < 5; i++){      loyaltyData.add(LoyaltyCardModel(cafeName: 'Test $i', currentCount: 4, totalCount: 4));
+      }
+      return loyaltyData;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
   Future<List<CafeModel>> getCafeData() async {
     try {
       final data = await _selectUsingFunc(func: 'get_owned_cafes');

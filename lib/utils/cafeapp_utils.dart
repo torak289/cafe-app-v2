@@ -11,7 +11,8 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 
 class CafeappUtils {
 
-  static List<CoffeeModel> coffeesFromJson(List<Map<String,dynamic>> data) {
+  static List<CoffeeModel> coffeesFromJson(List<Map<String,dynamic>> data) { //TODO: Does it make sense to move this into the CoffeeModel?
+  
     try {
       List<CoffeeModel> coffees = List.empty(growable: true);
       for(int i = 0; i < data.length; i++){
@@ -22,7 +23,7 @@ class CafeappUtils {
       throw Exception(e);
     }
   }
-  static List<CafeModel> cafesFromJson(List<Map<String, dynamic>> data) {
+  static List<CafeModel> cafesFromJson(List<Map<String, dynamic>> data) { //TODO: Does it make sense to move this into the CafeModel?
     try {
       List<CafeModel> cafes = List.empty(growable: true);
       for (int i = 0; i < data.length; i++) {
