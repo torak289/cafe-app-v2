@@ -1,9 +1,7 @@
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
+import 'package:cafeapp_v2/widgets/cafe_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:provider/provider.dart';
 
 class ProfileTabs extends StatefulWidget {
@@ -46,73 +44,30 @@ class _ProfileTabs extends State<ProfileTabs>
           ],
         ),
         SizedBox(
-          height: 440,
+          height: 420,
           child: TabBarView(
             controller: tabController,
             children: [
-              const Column(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('You don’t have any loyalty points. Visit a cafe near you '),
-                  Text(
-                    'Find a Cafe near you!',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
+                  const Text(
+                      'You don’t have any loyalty points. Visit a cafe near you '),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text(
+                      'Find a Cafe near you!',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
                 ],
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Row(
-                    children: [
-                      Text('Name'),
-                      Expanded(
-                        child: TextField(),
-                      ),
-                    ],
-                  ),
-                  const Text('Description'),
-                  const Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          minLines: 5,
-                          maxLines: 5,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Text('Coffees'),
-                  FutureBuilder<List<CoffeeModel>>(
-                      future: database.getCoffeeList(),
-                      builder: (context, data) {
-                        if (data.hasData) {
-                          List<Widget> list = List.empty(growable: true);
-
-                          for (int i = 0; i < data.data!.length; i++) {
-                            list.add(TextButton(
-                                onPressed: null,
-                                child: Text(data.data![i].name)));
-                          }
-                          return Wrap(
-                            spacing: 0,
-                            runSpacing: 16,
-                            alignment: WrapAlignment.start,
-                            children: list,
-                          );
-                        } else {
-                          return const Center(
-                            child: Text("Error"),
-                          );
-                        }
-                      }),
-                  const Text('Locations'),
-                ],
-              ),
+              CafeTab(),
               const Center(child: Text('Roaster')),
             ],
           ),

@@ -46,6 +46,10 @@ class DatabaseService {
     }
   }
 
+  Future<bool> getCafeData() async {
+    return false;
+  }
+
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
   }
@@ -87,7 +91,6 @@ class DatabaseService {
         'max_lat': bounds.northEast.latitude,
         'max_long': bounds.northEast.longitude,
       });
-      debugPrint(data.toString());
       cafes.clear();
       cafes = CafeappUtils.cafesFromJson(data);
 
