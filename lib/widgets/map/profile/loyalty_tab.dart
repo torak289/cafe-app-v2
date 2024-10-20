@@ -12,7 +12,8 @@ class LoyaltyTab extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Text(
-            'You don’t have any loyalty points. Visit a cafe near you '),
+          'You don’t have any loyalty points. Visit a cafe near you ',
+        ),
         GestureDetector(
           onTap: () {
             Navigator.pop(context);

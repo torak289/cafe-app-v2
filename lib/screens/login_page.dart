@@ -16,99 +16,84 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = Provider.of(context, listen: false);
-    if (authService.appState == AppState.Authenticated) {
-      return Scaffold(
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const LoyaltyCard(),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              const ProfileTabs(),
-              TextButton(
-                onPressed: () {
-                  authService.signOut();
-                  Navigator.pop(context);
-                },
-                child: const Text('Logout'),
-              ),
-              Text('${authService.appState}', textAlign: TextAlign.center),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Scaffold(
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Image.asset('assets/images/Cafe_Logo.png', scale: 2),
-              const Text(
-                "Welcome!",
-                style: TextStyle(
+    return Scaffold(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+            vertical: CafeAppUI.screenVertical,
+            horizontal: CafeAppUI.screenHorizontal),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Image.asset('assets/images/Cafe_Logo.png', scale: 2),
+            const Text(
+              "Welcome back!",
+              style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.italic),
+              textAlign: TextAlign.left,
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextField(
+              controller: emailController,
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextButton(
+              onPressed: () async => {
+                await authService.emailLogin(
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
                 ),
-                textAlign: TextAlign.left,
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              TextField(
-                controller: emailController,
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              TextButton(
-                onPressed: () async => {
-                  await authService.emailLogin(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
-                  ),
-                  if (context.mounted)
-                    {
-                      Navigator.pop(context),
-                    }
-                },
-                child: const Text("Login"),
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
-              const Row(
-                children: [
-                  Expanded(child: Divider(color: Colors.black)),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left: CafeAppUI.screenHorizontal,
-                        right: CafeAppUI.screenHorizontal),
-                    child: Text("Or", textAlign: TextAlign.center),
-                  ),
-                  Expanded(child: Divider(color: Colors.black)),
-                ],
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
-              TextButton(
-                onPressed: () => {},
-                child: const Text("Login with Facebook"),
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              TextButton(
-                onPressed: () => {},
-                child: const Text("Login with Google"),
-              ),
-              const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              TextButton(
-                onPressed: () => {},
-                child: const Text("Login with X"),
-              )
-            ],
-          ),
+                if (context.mounted)
+                  {
+                    Navigator.pop(context),
+                  }
+              },
+              child: const Text("Login"),
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+            const Row(
+              children: [
+                Expanded(child: Divider(color: Colors.black)),
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: CafeAppUI.screenHorizontal,
+                      right: CafeAppUI.screenHorizontal),
+                  child: Text("Or", textAlign: TextAlign.center),
+                ),
+                Expanded(child: Divider(color: Colors.black)),
+              ],
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+            TextButton(
+              onPressed: () => {},
+              child: const Text("Login with Facebook"),
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextButton(
+              onPressed: () => {},
+              child: const Text("Login with Google"),
+            ),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextButton(
+              onPressed: () => {},
+              child: const Text("Login with X"),
+            )
+          ],
         ),
-      );
-    }
+      ),
+    );
   }
 }
