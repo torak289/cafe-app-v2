@@ -49,7 +49,8 @@ class DatabaseService {
   Future<List<CafeModel>> getCafeData() async {
     try {
       final data = await _selectUsingFunc(func: 'get_owned_cafes');
-      List<CafeModel> cafes = CafeappUtils.cafesFromJson(data);
+      List<CafeModel> cafes = List.empty(growable: true);
+      cafes  = CafeappUtils.cafesFromJson(data);
       debugPrint(data.toString());
       return cafes;
     } catch (e) {

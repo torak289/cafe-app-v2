@@ -21,7 +21,8 @@ class CafeModel {
     this.rating,
   });
 
-  Map<String, dynamic> toJson() { //TODO: Fix null issue in database when passed or create better toJson() functions...
+  Map<String, dynamic> toJson() {
+    //TODO: Fix null issue in database when passed or create better toJson() functions...
     return {
       //'uid': uid,
       //'created_at': created_at,
@@ -42,7 +43,9 @@ class CafeModel {
       //created_at: data['created_at'], TODO: Parse Date Time
       coffees: data['coffees'],
       owner: data['owner'],
-      location: LatLng(data['lat'], data['lng']),
+      location: data['lat'] == null || data['lng'] == null
+          ? const LatLng(0, 0)
+          : LatLng(data['lat'], data['lng']),
     );
   }
   @override
