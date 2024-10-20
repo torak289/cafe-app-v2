@@ -21,78 +21,88 @@ class LoginPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(
             vertical: CafeAppUI.screenVertical,
             horizontal: CafeAppUI.screenHorizontal),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Image.asset('assets/images/Cafe_Logo.png', scale: 2),
-            const Text(
-              "Welcome back!",
-              style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic),
-              textAlign: TextAlign.left,
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-            TextField(
-              controller: emailController,
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-            TextButton(
-              onPressed: () async => {
-                await authService.emailLogin(
-                  emailController.text.trim(),
-                  passwordController.text.trim(),
-                ),
-                if (context.mounted)
-                  {
-                    Navigator.pop(context),
-                  }
-              },
-              child: const Text("Login"),
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
-            const Row(
+        child: Builder(builder: (context) {
+          if (authService.appState == AppState.Authenticating) {
+            return const Center( //TODO: Improve look/feel of progress indicator
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
+            );
+          } else {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(child: Divider(color: Colors.black)),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: CafeAppUI.screenHorizontal,
-                      right: CafeAppUI.screenHorizontal),
-                  child: Text("Or", textAlign: TextAlign.center),
+                Image.asset('assets/images/Cafe_Logo.png', scale: 2),
+                const Text(
+                  "Welcome back!",
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic),
+                  textAlign: TextAlign.left,
                 ),
-                Expanded(child: Divider(color: Colors.black)),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                TextField(
+                  controller: emailController,
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                TextButton(
+                  onPressed: () async => {
+                    await authService.emailLogin(
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    ),
+                    if (context.mounted)
+                      {
+                        Navigator.pop(context),
+                      }
+                  },
+                  child: const Text("Login"),
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                const Row(
+                  children: [
+                    Expanded(child: Divider(color: Colors.black)),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: CafeAppUI.screenHorizontal,
+                          right: CafeAppUI.screenHorizontal),
+                      child: Text("Or", textAlign: TextAlign.center),
+                    ),
+                    Expanded(child: Divider(color: Colors.black)),
+                  ],
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                TextButton(
+                  onPressed: () => {},
+                  child: const Text("Login with Facebook"),
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                TextButton(
+                  onPressed: () => {},
+                  child: const Text("Login with Google"),
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                TextButton(
+                  onPressed: () => {},
+                  child: const Text("Login with X"),
+                )
               ],
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
-            TextButton(
-              onPressed: () => {},
-              child: const Text("Login with Facebook"),
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-            TextButton(
-              onPressed: () => {},
-              child: const Text("Login with Google"),
-            ),
-            const Padding(
-                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-            TextButton(
-              onPressed: () => {},
-              child: const Text("Login with X"),
-            )
-          ],
-        ),
+            );
+          }
+        }),
       ),
     );
   }
