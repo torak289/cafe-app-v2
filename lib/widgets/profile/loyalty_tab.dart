@@ -1,3 +1,4 @@
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/loyalty_card_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,23 @@ class LoyaltyTab extends StatelessWidget {
         if (future.hasData) {
           if (future.data!.isNotEmpty) {
             List<Widget> widgets = List.empty(growable: true);
+            widgets.add(
+              const Padding(
+                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            );
+            widgets.add(
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Text("Cafe"),
+                Text("Current Count"),
+                Text("Total Count")
+              ],)
+            );
+            widgets.add(
+              const Padding(
+                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+            );
             for (int i = 0; i < future.data!.length; i++) {
               widgets.add(Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

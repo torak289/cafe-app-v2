@@ -36,6 +36,8 @@ class CafeTab extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -47,6 +49,8 @@ class CafeTab extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                   Text('${future.data![0].description}'),
                   /*const Row(
                     children: [
@@ -58,7 +62,11 @@ class CafeTab extends StatelessWidget {
                       ),
                     ],
                   ),*/
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   const Text('Coffees'),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                   FutureBuilder<List<CoffeeModel>>(
                       future: database.getCoffeeList(),
                       builder: (context, future) {
@@ -82,6 +90,8 @@ class CafeTab extends StatelessWidget {
                           );
                         }
                       }),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   const Text('Locations'),
                 ],
               );
