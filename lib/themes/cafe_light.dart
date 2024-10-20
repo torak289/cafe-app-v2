@@ -49,9 +49,26 @@ ThemeData cafeLightTheme = ThemeData(
       fontFamily: _fontFamily,
       fontSize: CafeAppUI.textSize,
     ),
+    errorBorder: OutlineInputBorder(
+      gapPadding: _searchGapPadding,
+      borderSide: BorderSide(
+        color: Colors.red,
+        width: _searchBorderWidth,
+      ),
+      borderRadius: _searchBorderRadius,
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      gapPadding: _searchGapPadding,
+      borderSide: BorderSide(
+        color: Colors.red,
+        width: _searchBorderWidth,
+      ),
+      borderRadius: _searchBorderRadius,
+    ),
     focusedBorder: OutlineInputBorder(
       gapPadding: _searchGapPadding,
       borderSide: BorderSide(
+        color: Colors.pinkAccent,
         width: _searchBorderWidth,
         strokeAlign: BorderSide.strokeAlignCenter,
       ),
