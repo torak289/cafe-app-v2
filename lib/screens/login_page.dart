@@ -4,7 +4,7 @@ import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/widgets/loyalty_card.dart';
-import 'package:cafeapp_v2/widgets/profile_tabs.dart';
+import 'package:cafeapp_v2/widgets/map/profile/profile_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -41,7 +41,7 @@ class _ProfileTabs extends State<ProfileTabs>
           tabs: const [
             Tab(text: 'Loyalty'),
             Tab(text: 'Cafe'),
-            Tab(text: 'Roaster'),
+            //Tab(text: 'Roaster'),
           ],
         ),
         SizedBox(
@@ -51,7 +51,7 @@ class _ProfileTabs extends State<ProfileTabs>
             children: [
               LoyaltyTab(),
               CafeTab(),
-              const Center(child: Text('Roaster')),
+              //const Center(child: Text('Roaster')),
             ],
           ),
         )
