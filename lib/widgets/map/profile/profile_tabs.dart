@@ -1,6 +1,7 @@
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
-import 'package:cafeapp_v2/widgets/cafe_tab.dart';
+import 'package:cafeapp_v2/widgets/map/profile/cafe_tab.dart';
+import 'package:cafeapp_v2/widgets/map/profile/loyalty_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -48,25 +49,7 @@ class _ProfileTabs extends State<ProfileTabs>
           child: TabBarView(
             controller: tabController,
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                      'You don’t have any loyalty points. Visit a cafe near you '),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Text(
-                      'Find a Cafe near you!',
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              LoyaltyTab(),
               CafeTab(),
               const Center(child: Text('Roaster')),
             ],

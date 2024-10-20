@@ -47,6 +47,7 @@ class DatabaseService {
   }
 
   Future<bool> getCafeData() async {
+    //TODO: Implemement Database functionality to get Cafe Tabs information for user...
     return false;
   }
 
