@@ -35,7 +35,7 @@ class CafeTab extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           //TODO: Implement Edit UI state change for name
-                          debugPrint(await database.editCafeName());
+                          debugPrint(await database.editCafeName('_'));
                         },
                         child: const Icon(
                           Icons.edit_rounded,
@@ -57,7 +57,7 @@ class CafeTab extends StatelessWidget {
                       GestureDetector(
                         onTap: () async {
                           //TODO: Implement Edit UI state change for description
-                          debugPrint(await database.editCafeDescription());
+                          debugPrint(await database.editCafeDescription('_'));
                         },
                         child: const Icon(
                           Icons.edit_rounded,

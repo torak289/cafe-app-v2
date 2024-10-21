@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-
   LoginPage({super.key});
 
   @override
@@ -80,15 +79,27 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  Text(
-                    errorString,
-                    style: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                  Builder(builder: (context) {
+                    if (errorString.isNotEmpty) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            errorString,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.all(
+                                  CafeAppUI.buttonSpacingMedium)),
+                        ],
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
                   TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {

@@ -73,10 +73,10 @@ class DatabaseService {
     }
   }
 
-  Future<String> editCafeName() async{
+  Future<String> editCafeName(String newName) async{
     return 'Success';
   }
-  Future<String> editCafeDescription() async {
+  Future<String> editCafeDescription(String newDescription) async {
     return 'Success';
   }
 
