@@ -27,10 +27,20 @@ class LoyaltyTab extends StatelessWidget {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Text("Cafe"),
-                Text("Current Count"),
-                Text("Total Count")
-              ],)
+                  Text(
+                    "Cafe",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Current Count",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Total Count",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             );
             widgets.add(
               const Padding(

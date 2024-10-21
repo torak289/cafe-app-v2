@@ -27,7 +27,10 @@ class CafeTab extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Name'),
+                      const Text(
+                        'Name',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       Text('${future.data![0].name}'),
                       GestureDetector(
                         onTap: () async {
@@ -47,7 +50,10 @@ class CafeTab extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Description'),
+                      const Text(
+                        'Description',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       GestureDetector(
                         onTap: () async {
                           //TODO: Implement Edit UI state change for description
@@ -76,7 +82,10 @@ class CafeTab extends StatelessWidget {
                   ),*/
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  const Text('Coffees'),
+                  const Text(
+                    'Coffees',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                   FutureBuilder<List<CoffeeModel>>(
@@ -86,14 +95,17 @@ class CafeTab extends StatelessWidget {
                           List<Widget> list = List.empty(growable: true);
 
                           for (int i = 0; i < future.data!.length; i++) {
-                            list.add(TextButton(
-                                onPressed: null,
-                                child: Text(future.data![i].name)));
+                            list.add(SizedBox(
+                              width: 140,
+                              child: TextButton(
+                                  onPressed: null,
+                                  child: Text(future.data![i].name)),
+                            ));
                           }
                           return Wrap(
-                            spacing: 0,
+                            spacing: 32,
                             runSpacing: 16,
-                            alignment: WrapAlignment.start,
+                            alignment: WrapAlignment.center,
                             children: list,
                           );
                         } else {
@@ -104,7 +116,10 @@ class CafeTab extends StatelessWidget {
                       }),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  const Text('Locations'),
+                  const Text(
+                    'Locations',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ],
               );
             } else {
