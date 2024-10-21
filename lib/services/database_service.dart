@@ -73,6 +73,13 @@ class DatabaseService {
     }
   }
 
+  Future<String> editCafeName() async{
+    return 'Success';
+  }
+  Future<String> editCafeDescription() async {
+    return 'Success';
+  }
+
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
   }

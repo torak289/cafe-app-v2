@@ -29,23 +29,35 @@ class CafeTab extends StatelessWidget {
                     children: [
                       const Text('Name'),
                       Text('${future.data![0].name}'),
-                      const Icon(
-                        Icons.edit_rounded,
-                        size: 16,
-                        color: Colors.black,
+                      GestureDetector(
+                        onTap: () async {
+                          //TODO: Implement Edit UI state change for name
+                          debugPrint(await database.editCafeName());
+                        },
+                        child: const Icon(
+                          Icons.edit_rounded,
+                          size: 16,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Description'),
-                      Icon(
-                        Icons.edit_rounded,
-                        size: 16,
-                        color: Colors.black,
+                      const Text('Description'),
+                      GestureDetector(
+                        onTap: () async {
+                          //TODO: Implement Edit UI state change for description
+                          debugPrint(await database.editCafeDescription());
+                        },
+                        child: const Icon(
+                          Icons.edit_rounded,
+                          size: 16,
+                          color: Colors.black,
+                        ),
                       ),
                     ],
                   ),
