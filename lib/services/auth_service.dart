@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService with ChangeNotifier {
   //Restructure???
+  //TODO: Fix app idle & JWT expired
   late SupabaseClient _client;
   AppState _appState = AppState.Uninitialized;
 
@@ -14,6 +15,7 @@ class AuthService with ChangeNotifier {
 
   final StreamController<UserModel> _user = StreamController<UserModel>();
 
+  late bool isAnon = true;
   StreamController<UserModel> get user => _user;
 
   AuthService() {
@@ -26,7 +28,8 @@ class AuthService with ChangeNotifier {
     final Session? session = data.session;
     //debugPrint('Event: $event, Session: $session');
 
-    if (session != null) { //This feels like it's in the wrong place and needs moving...
+    if (session != null) {
+      //This feels like it's in the wrong place and needs moving...
       _user.sink.add(userFromSupabase(session.user));
     }
 
@@ -35,7 +38,15 @@ class AuthService with ChangeNotifier {
         try {
           _client.auth.refreshSession();
         } catch (e) {
-          debugPrint(e.toString());
+          //Not actually sure I need anon users...
+          /*if (_client.auth.currentSession == null) {
+            try {
+              await _client.auth.signInAnonymously();
+              isAnon = true;
+            } catch (e) {
+              debugPrint(e.toString());
+            }
+          }*/
         }
       case AuthChangeEvent.signedIn:
         _appState = AppState.Authenticated;
@@ -44,18 +55,18 @@ class AuthService with ChangeNotifier {
       case AuthChangeEvent.passwordRecovery:
       // handle password recovery
       case AuthChangeEvent.tokenRefreshed:
+        // handle token refreshed
         if (session != null) {
           //TODO: Make this work on app launch/relaunch
           if (session.user.aud == "authenticated") {
             _appState = AppState.Authenticated;
           } else {
+            //TODO: Implement First launch check...
             _appState = AppState.Uninitialized;
           }
         } else {
           _appState = AppState.Uninitialized;
         }
-
-      // handle token refreshed
       case AuthChangeEvent.userUpdated:
       // handle user updated
       case AuthChangeEvent.userDeleted:
@@ -69,10 +80,6 @@ class AuthService with ChangeNotifier {
     return data;
   }
 
-  Future<void> anonRegister() async {
-    await _client.auth.signInAnonymously();
-  }
-
   Future<void> emailRegister(String email, String password) async {
     try {
       _appState = AppState.Registering;
@@ -83,28 +90,30 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  Future<void> googleSSO() async {}
+
   Future<String> emailLogin(String email, String password) async {
     try {
       _appState = AppState.Authenticating;
       notifyListeners();
       await _client.auth
           .signInWithPassword(email: email.trim(), password: password.trim());
-      if (/* TODO: check email verified */ true) {
-        _appState = AppState.Authenticated;
-      } else {
-        _appState = AppState.Unverified; //TODO: Implement email verified checK
-      }
+      _client.auth.startAutoRefresh();
+      _appState = AppState.Authenticated;
       return "Success";
-    } catch (e) {
-      //debugPrint("Error: $e");
+    } on AuthException catch (e) {
+      debugPrint("Error: ${e.message}");
       _appState = AppState.Unauthenticated;
       notifyListeners();
-      return e.toString();
+      return e.message;
+    } catch (e) {
+      return Future.error(e);
     }
   }
 
   Future signOut() async {
     await _client.auth.signOut();
+    _client.auth.startAutoRefresh();
     return Future.delayed(const Duration(microseconds: 1));
   }
 

@@ -4,11 +4,21 @@ import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+class LoginPage extends StatefulWidget {
 
   LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController emailController = TextEditingController();
+
+  TextEditingController passwordController = TextEditingController();
+
+  late String errorString = '';
+
   @override
   Widget build(BuildContext context) {
     final AuthService authService = Provider.of(context, listen: false);
@@ -21,7 +31,7 @@ class LoginPage extends StatelessWidget {
         child: Builder(builder: (context) {
           if (authService.appState == AppState.Authenticating) {
             return const Center(
-              //TODO: Improve look/feel of progress indicator
+              //TODO: Improve look/feel of progress indicator location etc...
               child: CircularProgressIndicator(
                 color: Colors.black,
               ),
@@ -70,6 +80,15 @@ class LoginPage extends StatelessWidget {
                   ),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                  Text(
+                    errorString,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   TextButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
@@ -80,6 +99,10 @@ class LoginPage extends StatelessWidget {
                         if (context.mounted) {
                           if (response == 'Success') {
                             Navigator.pop(context);
+                          } else {
+                            setState(() {
+                              errorString = response;
+                            });
                           }
                         }
                       }
