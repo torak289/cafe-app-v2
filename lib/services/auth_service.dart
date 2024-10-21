@@ -98,7 +98,7 @@ class AuthService with ChangeNotifier {
       notifyListeners();
       await _client.auth
           .signInWithPassword(email: email.trim(), password: password.trim());
-      _client.auth.startAutoRefresh();
+      _client.auth.startAutoRefresh(); //IDK if this is actually working...
       _appState = AppState.Authenticated;
       return "Success";
     } on AuthException catch (e) {
@@ -113,7 +113,7 @@ class AuthService with ChangeNotifier {
 
   Future signOut() async {
     await _client.auth.signOut();
-    _client.auth.startAutoRefresh();
+    _client.auth.stopAutoRefresh(); //IDK if this is actually working...
     return Future.delayed(const Duration(microseconds: 1));
   }
 
