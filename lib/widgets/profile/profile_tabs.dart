@@ -1,5 +1,7 @@
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/widgets/profile/cafe_tab.dart';
 import 'package:cafeapp_v2/widgets/profile/loyalty_tab.dart';
+import 'package:cafeapp_v2/widgets/profile/tab_content_view.dart';
 import 'package:flutter/material.dart';
 
 class ProfileTabs extends StatefulWidget {
@@ -11,14 +13,8 @@ class ProfileTabs extends StatefulWidget {
 
 class _ProfileTabs extends State<ProfileTabs>
     with SingleTickerProviderStateMixin {
-  late TabController tabController;
-
   @override
   void initState() {
-    tabController = TabController(length: 2, vsync: this);
-    tabController.addListener(() {
-      setState(() {});
-    });
     super.initState();
   }
 
@@ -26,31 +22,33 @@ class _ProfileTabs extends State<ProfileTabs>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        TabBar(
-          isScrollable: false,
-          controller: tabController,
-          tabs: const [
-            Tab(text: 'Loyalty'),
-            Tab(text: 'Cafe'),
-            //Tab(text: 'Roaster'),
+    return const DefaultTabController(
+      length: 2,
+      child: Expanded(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TabBar(
+              isScrollable: false,
+              tabs: [
+                Tab(text: 'Loyalty'),
+                Tab(text: 'Cafe'),
+                //Tab(text: 'Roaster'),
+              ],
+            ),
+            SingleChildScrollView(
+              child: TabContentView(
+                children: [
+                  LoyaltyTab(),
+                  CafeTab(),
+                  //const Center(child: Text('Roaster')),
+                ],
+              ),
+            )
           ],
         ),
-        SizedBox(
-          height: 400,
-          child: TabBarView(
-            controller: tabController,
-            children: const [
-              LoyaltyTab(),
-              CafeTab(),
-              //const Center(child: Text('Roaster')),
-            ],
-          ),
-        )
-      ],
+      ),
     );
   }
 }

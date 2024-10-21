@@ -10,13 +10,12 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthService authService = Provider.of(context, listen: false);
     return Scaffold(
-      //TODO: Convert this to a Profiles Page and add better redirects...
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-            vertical: CafeAppUI.screenVertical,
-            horizontal: CafeAppUI.screenHorizontal),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const LoyaltyCard(),
             const Padding(
@@ -29,7 +28,6 @@ class ProfilePage extends StatelessWidget {
               },
               child: const Text('Logout'),
             ),
-            Text('${authService.appState}', textAlign: TextAlign.center),
           ],
         ),
       ),
