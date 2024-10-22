@@ -25,32 +25,33 @@ class CafeApp extends StatelessWidget {
       child: Consumer<AuthService>(
         builder: (context, authService, child) {
           return StreamBuilder<UserModel?>(
-              stream: authService.user.stream,
-              builder: (context, AsyncSnapshot<UserModel?> snapshot) {
-                final UserModel? user = snapshot.data;
-                return MultiProvider(
-                  providers: [
-                    Provider<UserModel?>.value(value: user),
-                    Provider<DatabaseService>(
-                      create: (context) => DatabaseService(uid: user?.uid),
-                    ),
-                    Provider<LocationService>(
-                      create: (context) => LocationService(),
-                    ),
-                  ],
-                  child: SafeArea(
-                    left: false,
-                    right: false,
-                    child: MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      title: 'Cafe App',
-                      theme: cafeLightTheme,
-                      routes: Routes.routes,
-                      initialRoute: Routes.mapPage,
-                    ),
+            stream: authService.user.stream,
+            builder: (context, AsyncSnapshot<UserModel?> snapshot) {
+              final UserModel? user = snapshot.data;
+              return MultiProvider(
+                providers: [
+                  Provider<UserModel?>.value(value: user),
+                  Provider<DatabaseService>(
+                    create: (context) => DatabaseService(uid: user?.uid),
                   ),
-                );
-              });
+                  Provider<LocationService>(
+                    create: (context) => LocationService(),
+                  ),
+                ],
+                child: SafeArea(
+                  left: false,
+                  right: false,
+                  child: MaterialApp(
+                    debugShowCheckedModeBanner: false,
+                    title: 'Cafe App',
+                    theme: cafeLightTheme,
+                    routes: Routes.routes,
+                    initialRoute: Routes.mapPage,
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
     );

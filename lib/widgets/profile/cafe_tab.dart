@@ -14,63 +14,63 @@ class CafeTab extends StatelessWidget {
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
     return FutureBuilder<List<CafeModel>>(
-        future: database.getCafeData(),
-        builder: (context, future) {
-          if (future.hasData) {
-            if (future.data!.isNotEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Name',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+      future: database.getCafeData(),
+      builder: (context, future) {
+        if (future.hasData) {
+          if (future.data!.isNotEmpty) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Name',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text('${future.data![0].name}'),
+                    GestureDetector(
+                      onTap: () async {
+                        //TODO: Implement Edit UI state change for name
+                        debugPrint(await database.editCafeName('_'));
+                      },
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        size: 16,
+                        color: Colors.black,
                       ),
-                      Text('${future.data![0].name}'),
-                      GestureDetector(
-                        onTap: () async {
-                          //TODO: Implement Edit UI state change for name
-                          debugPrint(await database.editCafeName('_'));
-                        },
-                        child: const Icon(
-                          Icons.edit_rounded,
-                          size: 16,
-                          color: Colors.black,
-                        ),
+                    ),
+                  ],
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Description',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        //TODO: Implement Edit UI state change for description
+                        debugPrint(await database.editCafeDescription('_'));
+                      },
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        size: 16,
+                        color: Colors.black,
                       ),
-                    ],
-                  ),
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Description',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          //TODO: Implement Edit UI state change for description
-                          debugPrint(await database.editCafeDescription('_'));
-                        },
-                        child: const Icon(
-                          Icons.edit_rounded,
-                          size: 16,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                  Text('${future.data![0].description}'),
-                  /*const Row(
+                    ),
+                  ],
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                Text('${future.data![0].description}'),
+                /*const Row(
                     children: [
                       Expanded(
                         child: TextField(
@@ -80,71 +80,91 @@ class CafeTab extends StatelessWidget {
                       ),
                     ],
                   ),*/
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  const Text(
-                    'Coffees',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                  FutureBuilder<List<CoffeeModel>>(
-                      future: database.getCoffeeList(),
-                      builder: (context, future) {
-                        if (future.hasData) {
-                          List<Widget> list = List.empty(growable: true);
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                const Text(
+                  'Coffee Card',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Coffee Count'),
+                    Text('6'),
+                    Icon(
+                      Icons.edit_rounded,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                  ],
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                const Text(
+                  'Coffees',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                FutureBuilder<List<CoffeeModel>>(
+                    future: database.getCoffeeList(),
+                    builder: (context, future) {
+                      if (future.hasData) {
+                        List<Widget> list = List.empty(growable: true);
 
-                          for (int i = 0; i < future.data!.length; i++) {
-                            list.add(SizedBox(
-                              width: 140,
-                              child: TextButton(
-                                  onPressed: null,
-                                  child: Text(future.data![i].name)),
-                            ));
-                          }
-                          return Wrap(
-                            spacing: 32,
-                            runSpacing: 16,
-                            alignment: WrapAlignment.center,
-                            children: list,
-                          );
-                        } else {
-                          return const Center(
-                            child: Text("Error"),
-                          );
+                        for (int i = 0; i < future.data!.length; i++) {
+                          list.add(SizedBox(
+                            width: 140,
+                            child: TextButton(
+                                onPressed: null,
+                                child: Text(future.data![i].name)),
+                          ));
                         }
-                      }),
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  const Text(
-                    'Locations',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              );
-            } else {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text("Own a Cafe? Add it to our map!"),
-                  const Padding(
-                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, Routes.addCafePage),
-                    child: const Text("Add Cafe"),
-                  ),
-                ],
-              );
-            }
+                        return Wrap(
+                          runSpacing: 8,
+                          alignment: WrapAlignment.spaceBetween,
+                          children: list,
+                        );
+                      } else {
+                        return const Center(
+                          child: Text("Error"),
+                        );
+                      }
+                    }),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                const Text(
+                  'Locations',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            );
           } else {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: Colors.black,
-              ),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text("Own a Cafe? Add it to our map!"),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                TextButton(
+                  onPressed: () =>
+                      Navigator.pushNamed(context, Routes.addCafePage),
+                  child: const Text("Add Cafe"),
+                ),
+              ],
             );
           }
-        });
+        } else {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Colors.black,
+            ),
+          );
+        }
+      },
+    );
   }
 }

@@ -137,20 +137,20 @@ class _LoginPageState extends State<LoginPage> {
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                   TextButton(
-                    onPressed: () => {},
+                    onPressed: () => authService.facebookSSO(),
                     child: const Text("Login with Facebook"),
                   ),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   TextButton(
-                    onPressed: () => {},
+                    onPressed: () => authService.googleSSO(),
                     child: const Text("Login with Google"),
                   ),
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   TextButton(
-                    onPressed: () => {},
-                    child: const Text("Login with X"),
+                    onPressed: () => authService.twitterSSO(),
+                    child: const Text("Login with Twitter / X"),
                   )
                 ],
               ),

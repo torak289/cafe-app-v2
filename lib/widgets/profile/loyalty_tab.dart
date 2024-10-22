@@ -47,15 +47,38 @@ class LoyaltyTab extends StatelessWidget {
                   padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
             );
             for (int i = 0; i < future.data!.length; i++) {
-              widgets.add(Row(
+              widgets.add(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(future.data![i].cafeName),
+                    Text(future.data![i].currentCount.toString()),
+                    Text(future.data![i].totalCount.toString()),
+                  ],
+                ),
+              );
+              widgets.add(
+                const Padding(
+                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall),
+                ),
+              );
+            }
+            widgets.add(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(future.data![i].cafeName),
-                  Text(future.data![i].currentCount.toString()),
-                  Text(future.data![i].totalCount.toString()),
+                  Text(future.data![0].cafeName),
+                  Text(future.data![0].currentCount.toString()),
+                  TextButton(
+                    onPressed: () {
+                      //TODO: Do claim stuff.. How does this need to work???
+                      debugPrint("Coffee Claimed");
+                    },
+                    child: const Text("Claim"),
+                  ),
                 ],
-              ));
-            }
+              ),
+            );
             return Column(
               children: widgets,
             );
