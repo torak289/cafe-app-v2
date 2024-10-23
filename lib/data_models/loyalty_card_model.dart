@@ -2,7 +2,7 @@ class LoyaltyCardModel {
   String cafeName;
   int currentCount;
   int totalCount;
-  bool hasCoffeeClaim = false;
+  bool hasCoffeeClaim;
 
   LoyaltyCardModel({
     required this.cafeName,

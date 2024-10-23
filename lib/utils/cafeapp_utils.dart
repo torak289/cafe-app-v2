@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
@@ -6,38 +7,27 @@ import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/map/markers/roaster_marker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 
 class CafeappUtils {
 
-  static List<CoffeeModel> coffeesFromJson(List<Map<String,dynamic>> data) { //TODO: Does it make sense to move this into the CoffeeModel?
-  
+  static List<String> stringListFromJson(List<dynamic> data) {
     try {
-      List<CoffeeModel> coffees = List.empty(growable: true);
-      for(int i = 0; i < data.length; i++){
-        coffees.add(CoffeeModel.fromJson(data[i]));
-      }
-      return coffees;
+      List<String> strings = List.from(data);
+      return strings;
+
     } catch (e) {
-      throw Exception(e);
-    }
-  }
-  static List<CafeModel> cafesFromJson(List<Map<String, dynamic>> data) { //TODO: Does it make sense to move this into the CafeModel?
-    try {
-      List<CafeModel> cafes = List.empty(growable: true);
-      for (int i = 0; i < data.length; i++) {
-        cafes.add(CafeModel.fromJson(data[i]));
-      }
-      return cafes;
-    } catch (e) {
-      throw Exception(e);
+      debugPrint("String List From Json ERROR: $e");
+      return List.empty();
     }
   }
   static Future<MarkerLayer> cafeMarkersLayer(Future<List<CafeMarker>> cafeMarkers, AnimatedMapController animatedMapController ) async {
     try {
       return MarkerLayer(markers: await cafeMarkers);
     } catch (e){
+      debugPrint("Cafes Markers Layer ERROR: $e");
       throw Exception(e);
     }
   }
@@ -50,6 +40,7 @@ class CafeappUtils {
       }
       return cafeMarkers;
     } catch (e) {
+      debugPrint("Cafes To Markers ERROR: $e");
       throw Exception(e);
     }
   }

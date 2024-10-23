@@ -17,7 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DatabaseService {
   final String? uid;
 
-  List<CafeModel> cafes = List<CafeModel>.empty(growable: true);
+  //List<CafeModel> cafes = List<CafeModel>.empty(growable: true);
   List<RoasterModel> roaster = List<RoasterModel>.empty(
       growable: true); //TODO: Implement Roasters in App...
 
@@ -66,7 +66,7 @@ class DatabaseService {
       final data = await _selectUsingFunc(func: 'get_owned_cafes');
       debugPrint(data.toString());
       List<CafeModel> cafes = List.empty(growable: true);
-      cafes = CafeappUtils.cafesFromJson(data);
+      cafes = CafeModel.cafesFromJson(data);
       return cafes;
     } catch (e) {
       return Future.error(e);
@@ -88,7 +88,7 @@ class DatabaseService {
     try {
       final data = await database.from('coffees').select('name');
       List<CoffeeModel> coffees = List.empty(growable: true);
-      coffees = CafeappUtils.coffeesFromJson(data);
+      coffees = CoffeeModel.coffeesFromJson(data);
 
       return coffees;
     } catch (e) {
@@ -102,7 +102,7 @@ class DatabaseService {
         'lati': currentPos.latitude,
         'long': currentPos.longitude,
       });
-      List<CafeModel> cafes = CafeappUtils.cafesFromJson(data);
+      List<CafeModel> cafes = CafeModel.cafesFromJson(data);
       return cafes;
     } catch (e) {
       return Future.error(e);
@@ -122,7 +122,7 @@ class DatabaseService {
         'max_long': bounds.northEast.longitude,
       });
       cafes.clear();
-      cafes = CafeappUtils.cafesFromJson(data);
+      cafes = CafeModel.cafesFromJson(data);
 
       markers = CafeappUtils.cafesToMarkers(cafes, mapController);
 
