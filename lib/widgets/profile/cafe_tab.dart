@@ -15,9 +15,9 @@ class CafeTab extends StatelessWidget {
         Provider.of<DatabaseService>(context, listen: false);
     return FutureBuilder<List<CafeModel>>(
       future: database.getCafeData(),
-      builder: (context, future) {
-        if (future.hasData) {
-          if (future.data!.isNotEmpty) {
+      builder: (context, cafeData) {
+        if (cafeData.hasData) {
+          if (cafeData.data!.isNotEmpty) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -31,7 +31,7 @@ class CafeTab extends StatelessWidget {
                       'Name',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text('${future.data![0].name}'),
+                    Text('${cafeData.data![0].name}'),
                     GestureDetector(
                       onTap: () async {
                         //TODO: Implement Edit UI state change for name
@@ -69,7 +69,7 @@ class CafeTab extends StatelessWidget {
                 ),
                 const Padding(
                     padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                Text('${future.data![0].description}'),
+                Text('${cafeData.data![0].description}'),
                 /*const Row(
                     children: [
                       Expanded(
@@ -110,17 +110,36 @@ class CafeTab extends StatelessWidget {
                     padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 FutureBuilder<List<CoffeeModel>>(
                     future: database.getCoffeeList(),
-                    builder: (context, future) {
-                      if (future.hasData) {
+                    builder: (context, coffeesData) {
+                      if (coffeesData.hasData) {
                         List<Widget> list = List.empty(growable: true);
-
-                        for (int i = 0; i < future.data!.length; i++) {
-                          list.add(SizedBox(
-                            width: 140,
-                            child: TextButton(
+                        Color color = Colors.white;
+                        for (int i = 0; i < coffeesData.data!.length; i++) {
+                          for (int j = 0;
+                              j < cafeData.data![0].coffees!.length;
+                              j++) {
+                            if (cafeData.data![0].coffees![j] ==
+                                coffeesData.data![i].name) {
+                              color = Colors.pink;
+                              break;
+                            } else {
+                              color = Colors.white;
+                            }
+                          }
+                          list.add(
+                            SizedBox(
+                              width: 140,
+                              child: TextButton(
                                 onPressed: null,
-                                child: Text(future.data![i].name)),
-                          ));
+                                child: Text(
+                                  coffeesData.data![i].name,
+                                  style: TextStyle(
+                                    color: color,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
                         }
                         return Wrap(
                           runSpacing: 8,
