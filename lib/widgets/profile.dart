@@ -15,15 +15,37 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Color currentColor = Colors.white;
+
   @override
   void initState() {
-    // TODO: implement initState
+    currentColor = Colors.white;
     super.initState();
+  }
+
+  void _authSuccessState() {
+    currentColor = Colors.lightGreen;
+  }
+
+  void _authFailState() {
+    currentColor = Colors.red;
   }
 
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of<AuthService>(context, listen: false);
+
+    authService.addListener(
+      () {
+        setState(() {
+          if (authService.appState == AppState.Authenticated) {
+            _authSuccessState();
+          } else{
+            _authFailState();
+          }
+        });
+      },
+    );
 
     return Positioned(
       right: CafeAppUI.profileRightPadding,
@@ -32,9 +54,9 @@ class _ProfileState extends State<Profile> {
         child: Container(
           width: 48,
           height: 48,
-          decoration: const BoxDecoration(
-            color: CafeAppUI.primaryColor,
-            borderRadius: BorderRadius.all(Radius.circular(100)),
+          decoration: BoxDecoration(
+            color: currentColor,
+            borderRadius: const BorderRadius.all(Radius.circular(100)),
           ),
           child: const Icon(
             Icons.person,

@@ -139,14 +139,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                       MapControls(
                           animatedMapController: animatedMapController,
                           position: position.data!),
-                      //Debug
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          '${authService.appState}',
-                          style: const TextStyle(color: CafeAppUI.errorText),
-                        ),
-                      ),
                       //Profile
                       const Profile(),
                       SearchControls(
