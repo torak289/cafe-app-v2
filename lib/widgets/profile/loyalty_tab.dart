@@ -70,8 +70,12 @@ class LoyaltyTab extends StatelessWidget {
                 ),
               );
             }
-            return Column(
-              children: widgets,
+            return Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: widgets,
+                ),
+              ),
             );
           } else {
             return Column(

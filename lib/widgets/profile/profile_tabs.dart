@@ -24,28 +24,26 @@ class _ProfileTabs extends State<ProfileTabs>
     return const DefaultTabController(
       length: 2,
       child: Expanded(
-        child: SingleChildScrollView( //TODO: Change this to the TabContentView?
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              TabBar(
-                isScrollable: false,
-                tabs: [
-                  Tab(text: 'Loyalty'),
-                  Tab(text: 'Cafe'),
-                  //Tab(text: 'Roaster'),
-                ],
-              ),
-              TabContentView(
-                children: [
-                  LoyaltyTab(),
-                  CafeTab(),
-                  //const Center(child: Text('Roaster')),
-                ],
-              )
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TabBar(
+              isScrollable: false,
+              tabs: [
+                Tab(text: 'Loyalty'),
+                Tab(text: 'Cafe'),
+                //Tab(text: 'Roaster'),
+              ],
+            ),
+            TabContentView(
+              children: [
+                LoyaltyTab(),
+                CafeTab(),
+                //const Center(child: Text('Roaster')),
+              ],
+            )
+          ],
         ),
       ),
     );
