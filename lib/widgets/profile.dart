@@ -24,11 +24,11 @@ class _ProfileState extends State<Profile> {
   }
 
   void _authSuccessState() {
-    currentColor = Colors.lightGreen;
+    currentColor = Colors.pinkAccent;
   }
 
   void _authFailState() {
-    currentColor = Colors.red;
+    currentColor = Colors.black;
   }
 
   @override
