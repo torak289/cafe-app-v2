@@ -63,22 +63,6 @@ class LoyaltyTab extends StatelessWidget {
                 ),
               );
             }
-            widgets.add(
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(future.data![0].cafeName),
-                  Text(future.data![0].currentCount.toString()),
-                  TextButton(
-                    onPressed: () {
-                      //TODO: Do claim stuff.. How does this need to work???
-                      debugPrint("Coffee Claimed");
-                    },
-                    child: const Text("Claim"),
-                  ),
-                ],
-              ),
-            );
             return Column(
               children: widgets,
             );
