@@ -13,7 +13,9 @@ class ProfilePage extends StatelessWidget {
     final AuthService authService = Provider.of(context, listen: false);
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
+        padding: const EdgeInsets.symmetric(
+            vertical: CafeAppUI.screenVertical,
+            horizontal: CafeAppUI.screenHorizontal),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
@@ -23,12 +25,25 @@ class ProfilePage extends StatelessWidget {
             const Padding(
                 padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             const ProfileTabs(),
-            TextButton(
-              onPressed: () {
-                authService.signOut();
-                Navigator.pop(context);
-              },
-              child: const Text('Logout'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    size: 32,
+                    color: Colors.black,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    authService.signOut();
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Logout'),
+                ),
+              ],
             ),
           ],
         ),
