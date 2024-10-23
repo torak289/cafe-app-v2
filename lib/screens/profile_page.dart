@@ -25,6 +25,8 @@ class ProfilePage extends StatelessWidget {
             const Padding(
                 padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             const ProfileTabs(),
+            const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
