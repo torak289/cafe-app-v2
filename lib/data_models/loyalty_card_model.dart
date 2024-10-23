@@ -2,11 +2,13 @@ class LoyaltyCardModel {
   String cafeName;
   int currentCount;
   int totalCount;
+  bool hasCoffeeClaim = false;
 
   LoyaltyCardModel({
     required this.cafeName,
     required this.currentCount,
     required this.totalCount,
+    required this.hasCoffeeClaim,
   });
 
   factory LoyaltyCardModel.fromJson(Map<String, dynamic> data) {
@@ -14,6 +16,7 @@ class LoyaltyCardModel {
       cafeName: data['cafename'],
       currentCount: data['currentcount'],
       totalCount: data['totalcount'],
+      hasCoffeeClaim: data['hascoffeeclaim'] ?? false,
     );
   }
 }

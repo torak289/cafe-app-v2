@@ -52,8 +52,15 @@ class LoyaltyTab extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(future.data![i].cafeName),
-                    Text(future.data![i].currentCount.toString()),
-                    Text(future.data![i].totalCount.toString()),
+                    Text(future.data![i].currentCount.toString(),),
+                    future.data![i].hasCoffeeClaim
+                        ? TextButton(
+                            onPressed: () {},
+                            child: const Text('Claim'),
+                          )
+                        : Text(
+                            future.data![i].totalCount.toString(),
+                          ),
                   ],
                 ),
               );

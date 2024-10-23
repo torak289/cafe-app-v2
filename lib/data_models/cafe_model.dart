@@ -43,9 +43,9 @@ class CafeModel {
       //created_at: data['created_at'], TODO: Parse Date Time
       coffees: data['coffees'],
       owner: data['owner'],
-      location: data['lat'] == null || data['lng'] == null
-          ? const LatLng(0, 0)
-          : LatLng(data['lat'], data['lng']),
+      location: data['lat'] != null || data['lng'] != null
+          ? LatLng(data['lat'], data['lng'])
+          : const LatLng(0, 0),
     );
   }
   @override
