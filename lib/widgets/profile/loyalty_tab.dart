@@ -21,38 +21,18 @@ class LoyaltyTab extends StatelessWidget {
             List<Widget> widgets = List.empty(growable: true);
             widgets.add(
               const Padding(
-                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-            );
-            widgets.add(
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Cafe",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Current Count",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    "Total Count",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            );
-            widgets.add(
-              const Padding(
                   padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
             );
+
             for (int i = 0; i < future.data!.length; i++) {
               widgets.add(
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(future.data![i].cafeName),
-                    Text(future.data![i].currentCount.toString(),),
+                    Text(
+                      future.data![i].currentCount.toString(),
+                    ),
                     future.data![i].hasCoffeeClaim
                         ? TextButton(
                             onPressed: () {},
@@ -66,15 +46,41 @@ class LoyaltyTab extends StatelessWidget {
               );
               widgets.add(
                 const Padding(
-                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall),
-                ),
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
               );
             }
             return Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: widgets,
-                ),
+              child: Column(
+                children: [
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Cafe",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Current Count",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Total Count",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: widgets,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           } else {
@@ -98,9 +104,11 @@ class LoyaltyTab extends StatelessWidget {
             );
           }
         } else {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Colors.black,
+          return const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
             ),
           );
         }

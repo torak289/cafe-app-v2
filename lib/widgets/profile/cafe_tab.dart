@@ -181,9 +181,11 @@ class CafeTab extends StatelessWidget {
             );
           }
         } else {
-          return const Center(
-            child: CircularProgressIndicator(
-              color: Colors.black,
+          return const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
             ),
           );
         }
