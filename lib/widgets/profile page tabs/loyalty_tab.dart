@@ -44,10 +44,15 @@ class LoyaltyTab extends StatelessWidget {
                   ],
                 ),
               );
-              widgets.add(
-                const Padding(
-                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-              );
+              if (!(i >= future.data!.length - 1)) {
+                widgets.add(
+                  const Divider(
+                    height: 8,
+                    thickness: 1.25,
+                    color: Colors.black,
+                  ),
+                );
+              }
             }
             return Expanded(
               child: Column(

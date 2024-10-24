@@ -45,7 +45,7 @@ ThemeData cafeLightTheme = ThemeData(
     floatingLabelBehavior: FloatingLabelBehavior.never,
     labelStyle: TextStyle(
       color: CafeAppUI.secondaryColor,
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.normal,
       fontFamily: _fontFamily,
       fontSize: CafeAppUI.textSize,
     ),

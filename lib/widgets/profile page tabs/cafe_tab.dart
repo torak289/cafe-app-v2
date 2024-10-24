@@ -98,7 +98,22 @@ class CafeTab extends StatelessWidget {
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Coffee Count'),
+                        Row(
+                          children: [
+                            Text('Claim Amount'),
+                            Padding(padding: EdgeInsets.all(8)),
+                            Tooltip(
+                              triggerMode: TooltipTriggerMode.tap,
+                              message:
+                                  'This is the number of Coffees that a user has to purchase for a free coffee!',
+                              child: Icon(
+                                Icons.info_outline_rounded,
+                                color: Colors.black,
+                                size: 18,
+                              ),
+                            ),
+                          ],
+                        ),
                         Row(
                           children: [
                             Text('6'),
@@ -135,7 +150,7 @@ class CafeTab extends StatelessWidget {
                                   color = Colors.pink;
                                   break;
                                 } else {
-                                  color = Colors.white;
+                                  color = CafeAppUI.buttonBackgroundColor;
                                 }
                               }
                               list.add(
@@ -143,10 +158,14 @@ class CafeTab extends StatelessWidget {
                                   width: 140,
                                   child: TextButton(
                                     onPressed: null,
+                                    style: ButtonStyle(
+                                      backgroundColor:
+                                          WidgetStatePropertyAll(color),
+                                    ),
                                     child: Text(
                                       coffeesData.data![i].name,
-                                      style: TextStyle(
-                                        color: color,
+                                      style: const TextStyle(
+                                        color: CafeAppUI.primaryColor,
                                       ),
                                     ),
                                   ),
