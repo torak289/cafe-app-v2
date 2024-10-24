@@ -51,6 +51,7 @@ class LoyaltyTab extends StatelessWidget {
             }
             return Expanded(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),

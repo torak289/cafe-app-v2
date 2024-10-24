@@ -26,7 +26,7 @@ class ProfilePage extends StatelessWidget {
                 padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             const ProfileTabs(),
             const Padding(
-                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -44,6 +44,10 @@ class ProfilePage extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   child: const Text('Logout'),
+                ),
+                const SizedBox(
+                  height: 32,
+                  width: 32,
                 ),
               ],
             ),
