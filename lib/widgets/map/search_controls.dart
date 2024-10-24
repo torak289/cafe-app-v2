@@ -84,24 +84,60 @@ class _SearchControlsState extends State<SearchControls> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(cafeResults[i].name.toString()),
                         Text(
-                            '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
+                          cafeResults[i].name.toString(),
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                                '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
+                            const Padding(padding: EdgeInsets.all(4)),
+                            GestureDetector(
+                              onTap: () => debugPrint("Pop Navigation"),
+                              child: const Icon(
+                                Icons.directions_rounded,
+                                size: 16,
+                                color: Colors.black,
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 );
+                if (!(i >= cafeResults.length - 1)) {
+                  list.add(
+                    const Divider(
+                      height: 4,
+                      thickness: 1.25,
+                      color: Colors.black,
+                    ),
+                  );
+                }
               }
-              return Container(
-                width: 300,
-                height: 100,
-                decoration: const BoxDecoration(
-                  color: CafeAppUI.backgroundColor,
-                  borderRadius: BorderRadius.all(Radius.circular(16)),
-                ),
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  children: list,
+              return Flexible(
+                fit: FlexFit.loose,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: CafeAppUI.backgroundColor,
+                    borderRadius: BorderRadius.all(Radius.circular(16)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
+                    child: Column(
+                      children: list,
+                    ),
+                  ),
                 ),
               );
             } else {
