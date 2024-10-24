@@ -147,7 +147,7 @@ class CafeTab extends StatelessWidget {
                                   j++) {
                                 if (cafeData.data![0].coffees![j] ==
                                     coffeesData.data![i].name) {
-                                  color = Colors.pink;
+                                  color = Colors.pinkAccent;
                                   break;
                                 } else {
                                   color = CafeAppUI.buttonBackgroundColor;
