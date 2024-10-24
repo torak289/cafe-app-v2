@@ -1,7 +1,7 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/widgets/loyalty_card.dart';
-import 'package:cafeapp_v2/widgets/profile/profile_tabs.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/profile_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
