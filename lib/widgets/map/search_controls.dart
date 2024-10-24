@@ -81,6 +81,7 @@ class _SearchControlsState extends State<SearchControls> {
                         dest: cafeResults[i].location,
                         zoom: widget.mapController.mapController.camera.zoom,
                       );
+                      searchController.text = cafeResults[i].name!;
                     },
                     child: Container(
                       //This is being used to make the hit target the full bar
