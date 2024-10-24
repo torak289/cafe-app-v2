@@ -33,17 +33,22 @@ class CafeTab extends StatelessWidget {
                           'Name',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text('${cafeData.data![0].name}'),
-                        GestureDetector(
-                          onTap: () async {
-                            //TODO: Implement Edit UI state change for name
-                            debugPrint(await database.editCafeName('_'));
-                          },
-                          child: const Icon(
-                            Icons.edit_rounded,
-                            size: 16,
-                            color: Colors.black,
-                          ),
+                        Row(
+                          children: [
+                            Text('${cafeData.data![0].name}'),
+                            const Padding(padding: EdgeInsets.all(8)),
+                            GestureDetector(
+                              onTap: () async {
+                                //TODO: Implement Edit UI state change for name
+                                debugPrint(await database.editCafeName('_'));
+                              },
+                              child: const Icon(
+                                Icons.edit_rounded,
+                                size: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -94,11 +99,16 @@ class CafeTab extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Coffee Count'),
-                        Text('6'),
-                        Icon(
-                          Icons.edit_rounded,
-                          color: Colors.black,
-                          size: 16,
+                        Row(
+                          children: [
+                            Text('6'),
+                            Padding(padding: EdgeInsets.all(8)),
+                            Icon(
+                              Icons.edit_rounded,
+                              color: Colors.black,
+                              size: 16,
+                            ),
+                          ],
                         ),
                       ],
                     ),
