@@ -54,13 +54,13 @@ class _ProfileState extends State<Profile> {
         child: Container(
           width: 48,
           height: 48,
-          decoration: BoxDecoration(
-            color: currentColor,
-            borderRadius: const BorderRadius.all(Radius.circular(100)),
+          decoration: const BoxDecoration(
+            color: CafeAppUI.backgroundColor,
+            borderRadius: BorderRadius.all(Radius.circular(100)),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.person,
-            color: CafeAppUI.secondaryColor,
+            color: currentColor,
           ),
         ),
         onTap: () {
