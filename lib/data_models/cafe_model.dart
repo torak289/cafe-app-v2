@@ -1,4 +1,3 @@
-import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:latlong2/latlong.dart';

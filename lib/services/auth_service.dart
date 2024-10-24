@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService with ChangeNotifier {
-  //Restructure???
   //TODO: Fix app idle & JWT expired
   late SupabaseClient _client;
   AppState _appState = AppState.Uninitialized;

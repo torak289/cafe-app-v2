@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:ui';
 
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
-import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/map/markers/roaster_marker.dart';
