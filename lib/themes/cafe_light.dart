@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 String _fontFamily = "Ubuntu";
 BorderRadius _searchBorderRadius = BorderRadius.circular(16);
-double _searchBorderWidth = 2;
+double _searchBorderWidth = 1.5;
 double _searchGapPadding = 0;
 
 ThemeData cafeLightTheme = ThemeData(

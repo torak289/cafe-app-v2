@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:provider/provider.dart';
 
 class SearchControls extends StatefulWidget {
@@ -81,28 +82,35 @@ class _SearchControlsState extends State<SearchControls> {
                         zoom: widget.mapController.mapController.camera.zoom,
                       );
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          cafeResults[i].name.toString(),
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                                '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
-                            const Padding(padding: EdgeInsets.all(4)),
-                            GestureDetector(
-                              onTap: () => debugPrint("Pop Navigation"),
-                              child: const Icon(
-                                Icons.directions_rounded,
-                                size: 16,
-                                color: Colors.black,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
+                    child: Container(
+                      //This is being used to make the hit target the full bar
+                      color: Colors.transparent,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            cafeResults[i].name.toString(),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                  '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
+                              const Padding(padding: EdgeInsets.all(4)),
+                              GestureDetector(
+                                onDoubleTap: () =>
+                                    MapsLauncher.launchCoordinates(
+                                        cafeResults[i].location.latitude,
+                                        cafeResults[i].location.longitude),
+                                child: const Icon(
+                                  Icons.directions_rounded,
+                                  size: 16,
+                                  color: CafeAppUI.iconButtonIconColor,
+                                ),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -119,15 +127,13 @@ class _SearchControlsState extends State<SearchControls> {
               return Flexible(
                 fit: FlexFit.loose,
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: CafeAppUI.backgroundColor,
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 4,
-                      ),
-                    ],
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 1.5,
+                    ),
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
