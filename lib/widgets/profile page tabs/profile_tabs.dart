@@ -1,6 +1,6 @@
-import 'package:cafeapp_v2/widgets/profile/cafe_tab.dart';
-import 'package:cafeapp_v2/widgets/profile/loyalty_tab.dart';
-import 'package:cafeapp_v2/widgets/profile/tab_content_view.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/cafe_tab.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/loyalty_tab.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/tab_content_view.dart';
 import 'package:flutter/material.dart';
 
 class ProfileTabs extends StatefulWidget {
