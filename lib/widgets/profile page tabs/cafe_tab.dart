@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class CafeTab extends StatelessWidget {
@@ -103,7 +104,22 @@ class CafeTab extends StatelessWidget {
                             Text('Claim Amount'),
                             Padding(padding: EdgeInsets.all(8)),
                             Tooltip(
+                              //TODO: Move styling into theme
+                              margin: EdgeInsets.all(32),
                               triggerMode: TooltipTriggerMode.tap,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(16)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    blurRadius: 4,
+                                  )
+                                ],
+                              ),
+                              padding: EdgeInsets.all(16),
+                              textStyle: TextStyle(color: Colors.black),
                               message:
                                   'This is the number of Coffees that a user has to purchase for a free coffee!',
                               child: Icon(
@@ -189,6 +205,9 @@ class CafeTab extends StatelessWidget {
                       'Locations',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    Builder(builder: (context) {
+                      return Text('Lat Lng');
+                    })
                   ],
                 ),
               ),
