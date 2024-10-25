@@ -132,7 +132,7 @@ class CafeTab extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            Text('6'),
+                            Text('___'), //TODO: Implement claim amount
                             Padding(padding: EdgeInsets.all(8)),
                             Icon(
                               Icons.edit_rounded,
@@ -145,9 +145,22 @@ class CafeTab extends StatelessWidget {
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                    const Text(
-                      'Coffees',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Coffees',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        GestureDetector(
+                              onTap: null,
+                              child: const Icon(
+                                Icons.edit_rounded,
+                                size: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                      ],
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
