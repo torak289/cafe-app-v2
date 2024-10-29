@@ -17,8 +17,6 @@ class _ProfileTabs extends State<ProfileTabs>
     super.initState();
   }
 
-  final String _scanBarcode = 'Unknown';
-
   @override
   Widget build(BuildContext context) {
     return const DefaultTabController(

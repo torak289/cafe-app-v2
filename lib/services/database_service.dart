@@ -46,7 +46,14 @@ class DatabaseService {
       return Future.error(e);
     }
   }
-
+  Future<bool> validateLoyaltyCode(String uuid, int count) async {
+    try {
+      debugPrint("UUID: $uuid, COUNT: $count");
+      return true;
+    } catch(e) {
+      return false;
+    }
+  }
   Future<List<LoyaltyCardModel>> getLoyaltyData() async {
     try {
       final data = await _selectUsingFunc(func: 'get_loyalty');

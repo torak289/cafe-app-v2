@@ -1,4 +1,5 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/widgets/loyalty_card.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/profile_tabs.dart';
@@ -24,6 +25,17 @@ class ProfilePage extends StatelessWidget {
             const LoyaltyCard(),
             const Padding(
                 padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextButton(
+              onPressed: () => Navigator.pushNamed(context, Routes.qrCodePage),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.qr_code_rounded),
+                  Padding(padding: EdgeInsets.all(4)),
+                  Text('Scan QR Code')
+                ],
+              ),
+            ),
             const ProfileTabs(),
             const Padding(
                 padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),

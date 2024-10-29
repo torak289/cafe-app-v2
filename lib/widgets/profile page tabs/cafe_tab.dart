@@ -202,8 +202,9 @@ class CafeTab extends StatelessWidget {
                               );
                             }
                             return Wrap(
-                              runSpacing: 8,
                               alignment: WrapAlignment.spaceBetween,
+                              runSpacing: 8,
+                              spacing: 8,
                               children: list,
                             );
                           } else {
