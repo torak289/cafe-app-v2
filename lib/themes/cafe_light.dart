@@ -24,12 +24,18 @@ ThemeData cafeLightTheme = ThemeData(
       borderRadius: BorderRadius.all(Radius.circular(8)),
       borderSide: BorderSide(width: 3),
     ),
+    dividerColor: CafeAppUI.primaryColor,
+    indicatorColor: CafeAppUI.secondaryColor,
+    labelPadding: EdgeInsets.all(0),
     labelStyle: TextStyle(
       fontWeight: FontWeight.bold,
       color: CafeAppUI.secondaryText,
     ),
-    dividerColor: CafeAppUI.primaryColor,
-    indicatorColor: CafeAppUI.secondaryColor,
+    unselectedLabelStyle: TextStyle(
+      fontWeight: FontWeight.bold,
+      color: Colors.grey,
+    ),
+    overlayColor: WidgetStatePropertyAll(Color.fromARGB(255, 226, 226, 226)),
   ),
   //Search
   textSelectionTheme: const TextSelectionThemeData(

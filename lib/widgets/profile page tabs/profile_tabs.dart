@@ -1,3 +1,4 @@
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/cafe_tab.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/loyalty_tab.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/tab_content_view.dart';
@@ -26,11 +27,12 @@ class _ProfileTabs extends State<ProfileTabs>
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Padding(padding: EdgeInsets.all(2)), //TODO: Improve implementation of padding through the app...
             TabBar(
               isScrollable: false,
               tabs: [
-                Tab(text: 'Loyalty'),
-                Tab(text: 'Cafe'),
+                Tab(text: 'Loyalty', height:CafeAppUI.tabHeight),
+                Tab(text: 'Cafe',height: CafeAppUI.tabHeight),
                 //Tab(text: 'Roaster'),
               ],
             ),

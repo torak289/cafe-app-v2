@@ -51,14 +51,24 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                     ),
                     child: MobileScanner(
                       controller: mobileScannerController,
+                      overlayBuilder: (context, constraints) {
+                        return Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red),
+                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                          ),
+                        );
+                      },
                       onDetect: (capture) {
                         final List<Barcode> barcodes = capture.barcodes;
                         RegExp uuid = RegExp(
                             "[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}");
                         for (final barcode in barcodes) {
                           if (uuid.hasMatch(barcode.rawValue!)) {
-                            database.validateLoyaltyCode(
-                                barcode.rawValue!, widget.coffeeCount); //TODO: Implement debounce
+                            database.validateLoyaltyCode(barcode.rawValue!,
+                                widget.coffeeCount); //TODO: Implement debounce
                             setState(() {
                               widget.qrCode = barcode.rawValue!;
                             });
@@ -68,7 +78,7 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                     ),
                   ),
                 ),
-                const Padding(padding: EdgeInsets.all(8)),
+                const Padding(padding: EdgeInsets.all(40)),
                 const Text('How many coffees?'),
                 const Padding(padding: EdgeInsets.all(8)),
                 Row(
@@ -102,7 +112,7 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                         child: const Icon(Icons.arrow_right_rounded)),
                   ],
                 ),
-                const Padding(padding: EdgeInsets.all(16)),
+                const Padding(padding: EdgeInsets.all(32)),
                 Row(
                   children: [
                     GestureDetector(

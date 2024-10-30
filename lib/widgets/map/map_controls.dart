@@ -1,9 +1,12 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:cafeapp_v2/enum/app_states.dart';
+import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:provider/provider.dart';
 
 class MapControls extends StatelessWidget {
   const MapControls({
@@ -17,6 +20,8 @@ class MapControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthService user = Provider.of(context, listen: false);
+
     return Positioned(
       right: CafeAppUI.mapControlsRightPadding,
       bottom: CafeAppUI.mapControlsBottomPadding,
@@ -52,7 +57,7 @@ class MapControls extends StatelessWidget {
             ),
           ),
           Builder(builder: (context) {
-            if (true) { //TODO: Implement a Cafe Owner database check to display.
+            if (user.appState == AppState.Authenticated) { //TODO: Implement a Cafe Owner database check to display.
               return Column(
                 children: [
                   const Padding(
@@ -71,7 +76,7 @@ class MapControls extends StatelessWidget {
                 ],
               );
             } else {
-              return Container();
+              return const SizedBox.shrink();
             }
           })
         ],

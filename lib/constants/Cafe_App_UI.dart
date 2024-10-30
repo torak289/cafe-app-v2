@@ -45,4 +45,7 @@ class CafeAppUI {
   static const Color iconButtonIconColor = Colors.black;
   static const Color iconButtonIconBGColor = Colors.white;
   static const double iconButtonIconSize = 20;
+
+  //Tabs
+  static const double tabHeight = 32;
 }
