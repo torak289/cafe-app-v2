@@ -30,7 +30,8 @@ class CafeMarker extends Marker {
                   );
                 },
                 onLongPress: (() {
-                  MapsLauncher.launchCoordinates(cafe.location.latitude, cafe.location.longitude);
+                  MapsLauncher.launchCoordinates(
+                      cafe.location.latitude, cafe.location.longitude);
                 }),
                 child: const Icon(
                   Icons.location_on_sharp,
@@ -51,14 +52,25 @@ class CafeMarker extends Marker {
                       color: CafeAppUI.secondaryColor,
                     ),
                   ),
-                  const Text(
-                    'Cafe',
-                    style: TextStyle(
-                      fontFamily: "Monospace",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 8,
-                      color: CafeAppUI.secondaryColor,
-                    ),
+                  Row(
+                    children: [
+                      const Text(
+                        'Cafe',
+                        style: TextStyle(
+                          fontFamily: "Monospace",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 8,
+                          color: CafeAppUI.secondaryColor,
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.all(2)),
+                      cafe.verified! ? 
+                      const Icon(
+                        Icons.verified,
+                        color: Colors.pinkAccent,
+                        size: 8,
+                      ) : const SizedBox.shrink(),
+                    ],
                   ),
                 ],
               ),

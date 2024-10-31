@@ -37,6 +37,14 @@ class CafeTab extends StatelessWidget {
                         Row(
                           children: [
                             Text('${cafeData.data![0].name}'),
+                            const Padding(padding: EdgeInsets.all(2)),
+                            cafeData.data![0].verified!
+                                ? const Icon(
+                                    Icons.verified,
+                                    color: Colors.pinkAccent,
+                                    size: 16,
+                                  )
+                                : const SizedBox.shrink(),
                             const Padding(padding: EdgeInsets.all(8)),
                             GestureDetector(
                               onTap: () async {
@@ -153,13 +161,13 @@ class CafeTab extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         GestureDetector(
-                              onTap: null,
-                              child: const Icon(
-                                Icons.edit_rounded,
-                                size: 16,
-                                color: Colors.black,
-                              ),
-                            ),
+                          onTap: null,
+                          child: const Icon(
+                            Icons.edit_rounded,
+                            size: 16,
+                            color: Colors.black,
+                          ),
+                        ),
                       ],
                     ),
                     const Padding(
@@ -220,7 +228,7 @@ class CafeTab extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Builder(builder: (context) {
-                      return Text('Lat Lng');
+                      return const Text('Lat Lng');
                     })
                   ],
                 ),

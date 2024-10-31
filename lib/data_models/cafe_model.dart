@@ -11,6 +11,7 @@ class CafeModel {
   String? owner;
   LatLng location;
   double? rating;
+  bool? verified;
 
   CafeModel({
     this.uid,
@@ -21,6 +22,7 @@ class CafeModel {
     this.coffees,
     this.owner,
     this.rating,
+    this.verified,
   });
 
   Map<String, dynamic> toJson() {
@@ -34,6 +36,7 @@ class CafeModel {
       'owner': owner,
       'location': 'POINT(${location.latitude} ${location.longitude})',
       'rating': rating,
+      'verified': verified,
     };
   }
 
@@ -57,11 +60,14 @@ class CafeModel {
       name: data['name'],
       description: data['description'],
       //created_at: data['created_at'], TODO: Parse Date Time
-      coffees: data['coffeeslist'] != null ? CafeappUtils.stringListFromJson(data['coffeeslist']) : List.empty() ,
+      coffees: data['coffeeslist'] != null
+          ? CafeappUtils.stringListFromJson(data['coffeeslist'])
+          : List.empty(),
       owner: data['owner'],
       location: data['lat'] != null || data['lng'] != null
           ? LatLng(data['lat'], data['lng'])
           : const LatLng(0, 0),
+      verified: data['verified'] ?? false,
     );
   }
   @override

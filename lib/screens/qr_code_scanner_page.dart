@@ -56,8 +56,10 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                           width: 120,
                           height: 120,
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.red),
-                            borderRadius: BorderRadius.all(Radius.circular(8)),
+                            border: Border.all(
+                              color: Colors.pinkAccent,
+                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(8)),
                           ),
                         );
                       },
