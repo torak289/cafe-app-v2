@@ -86,16 +86,6 @@ class CafeTab extends StatelessWidget {
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     Text('${cafeData.data![0].description}'),
-                    /*const Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              minLines: 5,
-                              maxLines: 5,
-                            ),
-                          ),
-                        ],
-                      ),*/
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Text(

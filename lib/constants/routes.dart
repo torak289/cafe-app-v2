@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/screens/map_page.dart';
 import 'package:cafeapp_v2/screens/profile_page.dart';
 import 'package:cafeapp_v2/screens/qr_code_scanner_page.dart';
 import 'package:cafeapp_v2/screens/registration_page.dart';
+import 'package:cafeapp_v2/screens/user_settings_page.dart';
 import 'package:flutter/material.dart';
 
 class Routes {
@@ -15,6 +16,7 @@ class Routes {
   static const String addCafePage = 'addCafePage';
   static const String profilePage = '/profilePage';
   static const String qrCodePage = '/qrCodePage';
+  static const String userSettingsPage = '/userSettingsPage';
 
   static final routes = <String, WidgetBuilder>{
     mapPage: (BuildContext context) => const MapPage(),
@@ -23,5 +25,6 @@ class Routes {
     addCafePage: (BuildContext context) => const AddCafePage(),
     profilePage: (BuildContext context) => const ProfilePage(),
     qrCodePage: (BuildContext context) => QrCodeScannerPage(),
+    userSettingsPage: (BuildContext context) => UserSettingsPage(),
   };
 }
