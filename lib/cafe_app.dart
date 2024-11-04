@@ -43,7 +43,7 @@ class CafeApp extends StatelessWidget {
                   right: false,
                   child: MaterialApp(
                     debugShowCheckedModeBanner: false,
-                    title: 'Cafe App',
+                    title: 'Robusta',
                     theme: cafeLightTheme,
                     routes: Routes.routes,
                     initialRoute: Routes.mapPage,

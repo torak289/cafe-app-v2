@@ -29,7 +29,8 @@ class _AddCafePageState extends State<AddCafePage>
   TextEditingController cafeDescription = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final LatLng? cafeLocation  = ModalRoute.of(context)?.settings.arguments as LatLng?;
+    final LatLng? cafeLocation =
+        ModalRoute.of(context)?.settings.arguments as LatLng?;
     final LocationService location =
         Provider.of<LocationService>(context, listen: false);
     final DatabaseService database =
@@ -41,133 +42,155 @@ class _AddCafePageState extends State<AddCafePage>
         padding: const EdgeInsets.symmetric(
             horizontal: CafeAppUI.screenHorizontal,
             vertical: CafeAppUI.screenVertical),
-        child: Column(
-          children: [
-            FutureBuilder<LocationPermission>(
-              future: location.checkServices(),
-              builder: (context, locationData) {
-                if (locationData.data == LocationPermission.always ||
-                    locationData.data == LocationPermission.whileInUse) {
-                  return StreamBuilder<Position>(
-                    stream: location.positionStream,
-                    builder: (context, AsyncSnapshot<Position> position) {
-                      if (position.hasData) {
-                        return Stack(
-                          alignment: AlignmentDirectional.topCenter,
-                          children: [
-                            //Map
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              clipBehavior: Clip.antiAlias,
-                              height: 374,
-                              child: FlutterMap(
-                                mapController:
-                                    animatedMapController.mapController,
-                                options: MapOptions(
-                                  initialCenter: (cafeLocation == null) ? LatLng(position.data!.latitude,
-                                      position.data!.longitude) : LatLng(cafeLocation.latitude, cafeLocation.longitude),
-                                  initialZoom: 19,
-                                  cameraConstraint: CameraConstraint.contain(
-                                    bounds: LatLngBounds(
-                                      const LatLng(-90, -180),
-                                      const LatLng(90, 180),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1.5,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                clipBehavior: Clip.antiAlias,
+                height: 374,
+                child: FutureBuilder<LocationPermission>(
+                  //Map Element
+                  future: location.checkServices(),
+                  builder: (context, locationData) {
+                    if (locationData.data == LocationPermission.always ||
+                        locationData.data == LocationPermission.whileInUse) {
+                      return StreamBuilder<Position>(
+                        stream: location.positionStream,
+                        builder: (context, AsyncSnapshot<Position> position) {
+                          if (position.hasData) {
+                            return Stack(
+                              alignment: AlignmentDirectional.topCenter,
+                              children: [
+                                //Map
+                                FlutterMap(
+                                  mapController:
+                                      animatedMapController.mapController,
+                                  options: MapOptions(
+                                    initialCenter: (cafeLocation == null)
+                                        ? LatLng(position.data!.latitude,
+                                            position.data!.longitude)
+                                        : LatLng(cafeLocation.latitude,
+                                            cafeLocation.longitude),
+                                    initialZoom: 19,
+                                    cameraConstraint: CameraConstraint.contain(
+                                      bounds: LatLngBounds(
+                                        const LatLng(-90, -180),
+                                        const LatLng(90, 180),
+                                      ),
+                                    ),
+                                  ),
+                                  children: [
+                                    TileLayer(
+                                      urlTemplate:
+                                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                      userAgentPackageName: 'io.cafe-app',
+                                      maxZoom: 25,
+                                    ),
+                                    MarkerLayer(
+                                      markers: [
+                                        UserMarker(
+                                          position: position.data!,
+                                          controller: animatedMapController
+                                              .mapController,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                //Center locator
+                                const SizedBox(
+                                  height: 400,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.location_searching_rounded,
+                                      color: CafeAppUI.iconButtonIconColor,
                                     ),
                                   ),
                                 ),
-                                children: [
-                                  TileLayer(
-                                    urlTemplate:
-                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                    userAgentPackageName: 'io.cafe-app',
-                                    maxZoom: 25,
-                                  ),
-                                  MarkerLayer(
-                                    markers: [
-                                      UserMarker(
-                                        position: position.data!,
-                                        controller:
-                                            animatedMapController.mapController,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            //Center locator
-                            const SizedBox(
-                              height: 400,
-                              child: Center(
-                                child: Icon(
-                                  Icons.location_searching_rounded,
-                                  color: CafeAppUI.iconButtonIconColor,
+                                //Map Controls
+                                MapControls(
+                                  animatedMapController: animatedMapController,
+                                  position: position.data!,
                                 ),
+                              ],
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
                               ),
-                            ),
-                            //Map Controls
-                            MapControls(
-                                animatedMapController: animatedMapController,
-                                position: position.data!),
-                            //Debug
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                '${authService.appState}',
-                                style: const TextStyle(
-                                    color: CafeAppUI.errorText),
-                              ),
+                            );
+                          }
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                          children: [
+                            Text(locationData.error.toString()),
+                            TextButton(
+                              onPressed: () {
+                                location.openLocationSetting();
+                              },
+                              child: const Text('Location Settings'),
                             ),
                           ],
-                        );
-                      } else {
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
-                          ),
-                        );
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+              const Padding(padding: EdgeInsets.all(8)),
+              const Text(
+                'Name',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Padding(padding: EdgeInsets.all(4)),
+              TextField(
+                controller: cafeName,
+              ),
+              const Padding(padding: EdgeInsets.all(8)),
+              const Text(
+                'Description',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const Padding(padding: EdgeInsets.all(4)),
+              TextField(
+                controller: cafeDescription,
+                minLines: 5,
+                maxLines: 5,
+                maxLength: 256,
+              ),
+              const Padding(padding: EdgeInsets.all(8)),
+              Align(
+                child: TextButton(
+                    onPressed: () async {
+                      if (authService.appState == AppState.Authenticated) {
+                        CafeModel newCafe = CafeModel(
+                            name: cafeName.text.trim(),
+                            description: cafeDescription.text.trim(),
+                            location: animatedMapController
+                                .mapController.camera.center);
+                        await database.addCafe(newCafe);
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
                       }
                     },
-                  );
-                } else {
-                  return Center(
-                    child: Column(
-                      children: [
-                        Text(locationData.error.toString()),
-                        TextButton(
-                          onPressed: () {
-                            location.openLocationSetting();
-                          },
-                          child: const Text('Location Settings'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-              },
-            ),
-            TextField(
-              controller: cafeName,
-            ),
-            TextField(
-              controller: cafeDescription,
-            ),
-            TextButton(
-                onPressed: () async {
-                  if (authService.appState == AppState.Authenticated) {
-                    CafeModel newCafe = CafeModel(
-                        name: cafeName.text.trim(),
-                        description: cafeDescription.text.trim(),
-                        location:
-                            animatedMapController.mapController.camera.center);
-                    await database.addCafe(newCafe);
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                    }
-                  }
-                },
-                child: const Text("Submit"))
-          ],
+                    child: const Text("Submit")),
+              )
+            ],
+          ),
         ),
       ),
     );

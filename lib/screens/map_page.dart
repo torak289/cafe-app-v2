@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -84,7 +85,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                               }
                             },
                           ),
-                          onLongPress: (tapPos, latlng) {
+                          onLongPress: (tapPos, latlng) { //This fails silently when location issues appear...
                             if (authService.appState ==
                                 AppState.Authenticated) {
                               Navigator.pushNamed(context, Routes.addCafePage,
@@ -156,10 +157,22 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               },
             );
           } else {
-            return Center(
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: CafeAppUI.screenHorizontal,
+                vertical: CafeAppUI.screenVertical,
+              ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(locationData.error.toString()),
+                  Text(
+                    locationData.error.toString(),
+                    style: const TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(8)),
                   TextButton(
                     onPressed: () {
                       location.openLocationSetting();
