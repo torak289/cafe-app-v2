@@ -21,6 +21,10 @@ class AuthService with ChangeNotifier {
     _client.auth.onAuthStateChange.listen(_onAuthStateChanged);
   }
 
+  Future<void> manualRefresh() async {
+    _client.auth.refreshSession();
+  }
+
   Future<AuthState> _onAuthStateChanged(AuthState data) async {
     final AuthChangeEvent event = data.event;
     final Session? session = data.session;

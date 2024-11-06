@@ -67,6 +67,7 @@ class _ProfileState extends State<Profile> {
           switch (authService.appState) {
             case AppState.Authenticated:
               Navigator.pushNamed(context, Routes.profilePage);
+              authService.manualRefresh();
               break;
             default:
               Navigator.pushNamed(context, Routes.loginPage);
