@@ -17,9 +17,11 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DatabaseService {
   final String? uid;
 
-  //List<CafeModel> cafes = List<CafeModel>.empty(growable: true);
-  List<RoasterModel> roaster = List<RoasterModel>.empty(
-      growable: true); //TODO: Implement Roasters in App...
+  List<CafeModel> cafeMarkers = List<CafeModel>.empty(growable: true);
+  int cafeMarkersLength = 50;
+
+  /*List<RoasterModel> roaster = List<RoasterModel>.empty(
+      growable: true); //TODO: Implement Roasters in App... */
 
   SupabaseClient database = Supabase.instance.client;
 
@@ -46,14 +48,16 @@ class DatabaseService {
       return Future.error(e);
     }
   }
+
   Future<bool> validateLoyaltyCode(String uuid, int count) async {
     try {
       debugPrint("UUID: $uuid, COUNT: $count");
       return true;
-    } catch(e) {
+    } catch (e) {
       return false;
     }
   }
+
   Future<List<LoyaltyCardModel>> getLoyaltyData() async {
     try {
       final data = await _selectUsingFunc(func: 'get_loyalty');
@@ -80,9 +84,10 @@ class DatabaseService {
     }
   }
 
-  Future<String> editCafeName(String newName) async{
+  Future<String> editCafeName(String newName) async {
     return 'Success';
   }
+
   Future<String> editCafeDescription(String newDescription) async {
     return 'Success';
   }
@@ -130,8 +135,10 @@ class DatabaseService {
       });
       cafes.clear();
       cafes = CafeModel.cafesFromJson(data);
-
-      markers = CafeappUtils.cafesToMarkers(cafes, mapController);
+      for (CafeModel c in cafes) {
+        _addCafeToMarkerList(c);
+      }
+      markers = CafeappUtils.cafesToMarkers(cafeMarkers, mapController);
 
       return MarkerLayer(markers: markers);
     } catch (e) {
@@ -141,22 +148,30 @@ class DatabaseService {
     }
   }
 
+//Private Functions
+  void _addCafeToMarkerList(CafeModel cafe) {
+    //TODO: Verify if actual saved caching is required for this... on app reload?
+    if (cafeMarkers.isEmpty) {
+      cafeMarkers.add(cafe);
+    } else {
+      cafeMarkers.removeWhere((c) =>
+          (c.uid != cafe.uid) && (cafeMarkers.length > cafeMarkersLength));
+
+      for (int i = 0; i < cafeMarkers.length; i++) {
+        if (cafeMarkers[i].uid == cafe.uid) {
+          return;
+        }
+      }
+      cafeMarkers.add(cafe);
+    }
+  }
+
 //Abstract Functions for all database access
   Future<void> _add(
       {required String path, required Map<String, dynamic> data}) async {
     final reference = database.from(path);
     debugPrint('$path: $data');
     await reference.insert(data);
-  }
-
-  Future<void> _removebyUID(
-      {required String table, required String uid}) async {
-    await database.from(table).delete().eq('uid', uid);
-  }
-
-  Future<List<Map<String, dynamic>>> _select({required String table}) async {
-    final data = await database.from(table).select();
-    return data;
   }
 
   Future<List<Map<String, dynamic>>> _selectUsingFunc(
