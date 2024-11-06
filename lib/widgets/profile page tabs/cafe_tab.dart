@@ -217,9 +217,41 @@ class CafeTab extends StatelessWidget {
                       'Locations',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Builder(builder: (context) {
-                      return const Text('Lat Lng');
-                    })
+                    Builder(
+                      builder: (context) {
+                        return const Text('Lat Lng');
+                      },
+                    ),
+                    Builder(
+                      builder: (context) {
+                        if (!cafeData.data![0].verified!) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingMedium)),
+                              const Text(
+                                "Verify your Cafe!",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingSmall)),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.cafeVerificationPage);
+                                },
+                                child: const Text("Verify"),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),
