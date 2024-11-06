@@ -146,21 +146,39 @@ class _LoginPageState extends State<LoginPage> {
                                 EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                         TextButton(
                           onPressed: () => authService.facebookSSO(),
-                          child: const Text("Login with Facebook"),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.facebook_rounded),
+                              Padding(padding: EdgeInsets.all(8)),
+                              Text("Login with Facebook"),
+                            ],
+                          ),
                         ),
                         const Padding(
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextButton(
                           onPressed: () => authService.googleSSO(),
-                          child: const Text("Login with Google"),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.circle),
+                              Padding(padding: EdgeInsets.all(8)),
+                              Text("Login with Google"),
+                            ],
+                          ),
                         ),
                         const Padding(
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextButton(
                           onPressed: () => authService.twitterSSO(),
-                          child: const Text("Login with Twitter / X"),
+                          child: const Row(
+                            children: [
+                              Icon(Icons.circle),
+                              Padding(padding: EdgeInsets.all(8)),
+                              Text("Login with Twitter / X"),
+                            ],
+                          ),
                         ),
                         const Padding(
                             padding:
