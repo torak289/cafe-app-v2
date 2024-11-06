@@ -13,7 +13,6 @@ class AuthService with ChangeNotifier {
 
   final StreamController<UserModel> _user = StreamController<UserModel>();
 
-  late bool isAnon = true;
   StreamController<UserModel> get user => _user;
 
   AuthService() {
@@ -96,13 +95,18 @@ class AuthService with ChangeNotifier {
     debugPrint("Google SSO");
   }
 
-  Future<void> facebookSSO() async { //TODO: Finish project setup in Facebook
+  Future<void> facebookSSO() async {
+    //TODO: Finish project setup in Facebook
     await _client.auth.signInWithOAuth(
-    OAuthProvider.facebook,
-    redirectTo: kIsWeb ? null : 'https://rrjzlxmsasoblyirdner.supabase.co/auth/v1/callback', // Optionally set the redirect link to bring back the user via deeplink.
-    authScreenLaunchMode:
-        kIsWeb ? LaunchMode.platformDefault : LaunchMode.externalApplication, // Launch the auth screen in a new webview on mobile.
-  );
+      OAuthProvider.facebook,
+      redirectTo: kIsWeb
+          ? null
+          : 'https://rrjzlxmsasoblyirdner.supabase.co/auth/v1/callback', // Optionally set the redirect link to bring back the user via deeplink.
+      authScreenLaunchMode: kIsWeb
+          ? LaunchMode.platformDefault
+          : LaunchMode
+              .externalApplication, // Launch the auth screen in a new webview on mobile.
+    );
   }
 
   Future<void> twitterSSO() async {
