@@ -4,7 +4,6 @@ import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class CafeTab extends StatelessWidget {
@@ -217,7 +216,7 @@ class CafeTab extends StatelessWidget {
                       'Locations',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Builder(
+                    Builder( //TODO: Implement business logic for locations
                       builder: (context) {
                         return const Text('Lat Lng');
                       },
