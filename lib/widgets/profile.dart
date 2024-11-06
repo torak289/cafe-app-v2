@@ -40,7 +40,7 @@ class _ProfileState extends State<Profile> {
         setState(() {
           if (authService.appState == AppState.Authenticated) {
             _authSuccessState();
-          } else{
+          } else {
             _authFailState();
           }
         });
@@ -63,11 +63,13 @@ class _ProfileState extends State<Profile> {
             color: currentColor,
           ),
         ),
-        onTap: () {
+        onTap: () async {
           switch (authService.appState) {
             case AppState.Authenticated:
-              Navigator.pushNamed(context, Routes.profilePage);
-              authService.manualRefresh();
+              await authService.manualRefresh();
+              if (context.mounted) {
+                Navigator.pushNamed(context, Routes.profilePage);
+              }
               break;
             default:
               Navigator.pushNamed(context, Routes.loginPage);
