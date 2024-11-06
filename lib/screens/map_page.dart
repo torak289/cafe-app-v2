@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
@@ -14,9 +15,14 @@ import 'package:cafeapp_v2/widgets/map/markers/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
+
+import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -32,6 +38,17 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   late DatabaseService database;
   late Future<MarkerLayer> markerLayer =
       database.getCafesInBounds(animatedMapController);
+
+  final Future<CacheStore> _cacheStoreFuture = _getCacheStore();
+
+  /// Get the CacheStore as a Future. This method needs to be static so that it
+  /// can be used to initialize a field variable.
+  static Future<CacheStore> _getCacheStore() async {
+    final dir = await getTemporaryDirectory();
+    // Note, that Platform.pathSeparator from dart:io does not work on web,
+    // import it from dart:html instead.
+    return FileCacheStore('${dir.path}${Platform.pathSeparator}MapTiles');
+  }
 
   @override
   void dispose() {
@@ -58,82 +75,108 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 if (position.hasData) {
                   return Stack(
                     children: [
-                      FlutterMap(
-                        mapController: animatedMapController.mapController,
-                        options: MapOptions(
-                          onMapEvent: (event) => setState(
-                            () {
-                              //TODO: Improve Debounce... >>> Movement based Debounce >>> Location based Debounce
-                              //TODO: Implement Caching...
-                              String evtName = _eventName(event, markerLayer);
-                              final id = AnimationId.fromMapEvent(event);
-                              if (id != null) {
-                                if (id.moveId == AnimatedMoveId.finished) {
-                                  _inBoundsDebouncer.run(() {
-                                    markerLayer = database.getCafesInBounds(
-                                        animatedMapController);
-                                  });
-                                }
-                              }
-                              if (evtName == 'MapEventMoveEnd' ||
-                                  evtName == 'MapEventFlingAnimationEnd' ||
-                                  evtName == 'MapEventNonRotatedSizeChange') {
-                                _inBoundsDebouncer.run(() {
-                                  markerLayer = database
-                                      .getCafesInBounds(animatedMapController);
-                                });
-                              }
-                            },
-                          ),
-                          onLongPress: (tapPos, latlng) { //This fails silently when location issues appear...
-                            if (authService.appState ==
-                                AppState.Authenticated) {
-                              Navigator.pushNamed(context, Routes.addCafePage,
-                                  arguments: latlng);
-                            } else {
-                              debugPrint("Not Authenticated");
-                            }
-                          },
-                          initialCenter: LatLng(position.data!.latitude,
-                              position.data!.longitude),
-                          initialZoom: 16,
-                          maxZoom: 21,
-                          interactionOptions: const InteractionOptions(
-                            flags:
-                                InteractiveFlag.all & ~InteractiveFlag.rotate,
-                          ),
-                          cameraConstraint: CameraConstraint.contain(
-                            bounds: LatLngBounds(
-                              const LatLng(-90, -180),
-                              const LatLng(90, 180),
-                            ),
-                          ),
-                        ),
-                        children: [
-                          TileLayer(
-                            urlTemplate:
-                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                            userAgentPackageName: 'io.cafe-app',
-                            maxZoom: 25,
-                          ),
-                          MarkerLayer(
-                            markers: [
-                              UserMarker(
-                                position: position.data!,
-                                controller: animatedMapController.mapController,
+                      FutureBuilder(
+                        future: _cacheStoreFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final cacheStore = snapshot.data!;
+                            return FlutterMap(
+                              mapController:
+                                  animatedMapController.mapController,
+                              options: MapOptions(
+                                onMapEvent: (event) => setState(
+                                  () {
+                                    //TODO: Improve Debounce... >>> Movement based Debounce >>> Location based Debounce
+                                    //TODO: Implement Caching...
+                                    String evtName =
+                                        _eventName(event, markerLayer);
+                                    final id = AnimationId.fromMapEvent(event);
+                                    if (id != null) {
+                                      if (id.moveId ==
+                                          AnimatedMoveId.finished) {
+                                        _inBoundsDebouncer.run(() {
+                                          markerLayer =
+                                              database.getCafesInBounds(
+                                                  animatedMapController);
+                                        });
+                                      }
+                                    }
+                                    if (evtName == 'MapEventMoveEnd' ||
+                                        evtName ==
+                                            'MapEventFlingAnimationEnd' ||
+                                        evtName ==
+                                            'MapEventNonRotatedSizeChange') {
+                                      _inBoundsDebouncer.run(() {
+                                        markerLayer = database.getCafesInBounds(
+                                            animatedMapController);
+                                      });
+                                    }
+                                  },
+                                ),
+                                onLongPress: (tapPos, latlng) {
+                                  //This fails silently when location issues appear...
+                                  if (authService.appState ==
+                                      AppState.Authenticated) {
+                                    Navigator.pushNamed(
+                                        context, Routes.addCafePage,
+                                        arguments: latlng);
+                                  } else {
+                                    debugPrint("Not Authenticated");
+                                  }
+                                },
+                                initialCenter: LatLng(position.data!.latitude,
+                                    position.data!.longitude),
+                                initialZoom: 16,
+                                maxZoom: 21,
+                                interactionOptions: const InteractionOptions(
+                                  flags: InteractiveFlag.all &
+                                      ~InteractiveFlag.rotate,
+                                ),
+                                cameraConstraint: CameraConstraint.contain(
+                                  bounds: LatLngBounds(
+                                    const LatLng(-90, -180),
+                                    const LatLng(90, 180),
+                                  ),
+                                ),
                               ),
-                            ],
-                          ),
-                          FutureBuilder(
-                              future: markerLayer,
-                              builder: (context, cafeMarkers) {
-                                if (cafeMarkers.hasData) {
-                                  return cafeMarkers.data!;
-                                } else {
-                                  return const MarkerLayer(markers: []);
-                                }
-                              })
-                        ],
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName: 'io.cafe-app',
+                                  maxZoom: 25,
+                                  tileProvider: CachedTileProvider(
+                                    store: cacheStore,
+                                    maxStale: const Duration(days: 2),
+                                  ),
+                                ),
+                                MarkerLayer(
+                                  markers: [
+                                    UserMarker(
+                                      position: position.data!,
+                                      controller:
+                                          animatedMapController.mapController,
+                                    ),
+                                  ],
+                                ),
+                                FutureBuilder(
+                                  future: markerLayer,
+                                  builder: (context, cafeMarkers) {
+                                    if (cafeMarkers.hasData) {
+                                      return cafeMarkers.data!;
+                                    } else {
+                                      return const MarkerLayer(markers: []);
+                                    }
+                                  },
+                                )
+                              ],
+                            );
+                          } else {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        },
                       ),
                       //Map Controls
                       MapControls(
