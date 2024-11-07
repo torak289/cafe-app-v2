@@ -87,12 +87,12 @@ class _CafeTabState extends State<CafeTab> {
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
+                        const Row(
                           children: [
-                            Text('Claim Amount'),
+                            Text('Coffee Count'),
                             Padding(padding: EdgeInsets.all(8)),
                             Tooltip(
                               //TODO: Move styling into theme
@@ -123,9 +123,9 @@ class _CafeTabState extends State<CafeTab> {
                         ),
                         Row(
                           children: [
-                            Text('___'), //TODO: Implement claim amount
-                            Padding(padding: EdgeInsets.all(8)),
-                            Icon(
+                            Text(cafeData.data![0].claimAmount.toString()), //TODO: Implement claim amount
+                            const Padding(padding: EdgeInsets.all(8)),
+                            const Icon(
                               Icons.edit_rounded,
                               color: Colors.black,
                               size: 16,

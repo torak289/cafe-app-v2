@@ -12,6 +12,7 @@ class CafeModel {
   LatLng location;
   double? rating;
   bool? verified;
+  int? claimAmount;
 
   CafeModel({
     this.uid,
@@ -23,6 +24,7 @@ class CafeModel {
     this.owner,
     this.rating,
     this.verified,
+    this.claimAmount,
   });
 
   Map<String, dynamic> toJson() {
@@ -37,6 +39,7 @@ class CafeModel {
       'location': 'POINT(${location.latitude} ${location.longitude})',
       'rating': rating,
       'verified': verified,
+      'claim_amount': claimAmount,
     };
   }
 
@@ -68,6 +71,7 @@ class CafeModel {
           ? LatLng(data['lat'], data['lng'])
           : const LatLng(0, 0),
       verified: data['verified'] ?? false,
+      claimAmount: data['claim_amount'] ?? -1,
     );
   }
   @override
