@@ -141,23 +141,25 @@ class LoyaltyTab extends StatelessWidget {
               ),
             );
           } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "You don’t have any loyalty points. Visit a cafe near you!",
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: const Text(
-                    'Find a cafe near you!',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
+            return Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    "You don’t have any loyalty points. Visit a cafe near you!",
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Text(
+                      'Find a cafe near you!',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           }
         } else {

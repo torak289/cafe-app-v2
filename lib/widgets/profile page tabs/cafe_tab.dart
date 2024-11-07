@@ -253,19 +253,21 @@ class _CafeTabState extends State<CafeTab> {
               ),
             );
           } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text("Own a Cafe? Add it to our map!"),
-                const Padding(
-                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                TextButton(
-                  onPressed: () =>
-                      Navigator.pushNamed(context, Routes.addCafePage),
-                  child: const Text("Add Cafe"),
-                ),
-              ],
+            return Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text("Own a Cafe? Add it to our map!"),
+                  const Padding(
+                      padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, Routes.addCafePage),
+                    child: const Text("Add Cafe"),
+                  ),
+                ],
+              ),
             );
           }
         } else {
