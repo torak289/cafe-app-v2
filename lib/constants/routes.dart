@@ -1,5 +1,4 @@
 import 'package:cafeapp_v2/screens/add_cafe_page.dart';
-import 'package:cafeapp_v2/screens/cafe_verification_page.dart';
 import 'package:cafeapp_v2/screens/login_page.dart';
 import 'package:cafeapp_v2/screens/map_page.dart';
 import 'package:cafeapp_v2/screens/profile_page.dart';
@@ -18,7 +17,6 @@ class Routes {
   static const String profilePage = '/profilePage';
   static const String qrCodePage = '/qrCodePage';
   static const String userSettingsPage = '/userSettingsPage';
-  static const String cafeVerificationPage = '/cafeVerificationPage';
 
   static final routes = <String, WidgetBuilder>{
     mapPage: (BuildContext context) => const MapPage(),
@@ -28,6 +26,5 @@ class Routes {
     profilePage: (BuildContext context) => const ProfilePage(),
     qrCodePage: (BuildContext context) => QrCodeScannerPage(),
     userSettingsPage: (BuildContext context) => UserSettingsPage(),
-    cafeVerificationPage: (BuildContext context) => const CafeVerificationPage(),
   };
 }

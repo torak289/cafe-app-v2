@@ -233,9 +233,11 @@ class _CafeTabState extends State<CafeTab> {
                                   padding: EdgeInsets.all(
                                       CafeAppUI.buttonSpacingSmall)),
                               TextButton(
-                                onPressed: () {
-                                  Navigator.pushNamed(
-                                      context, Routes.cafeVerificationPage);
+                                onPressed: () async {
+                                  bool res = await database.requestVerification();
+                                  if(res) {
+                                    debugPrint(res.toString());
+                                  }
                                 },
                                 child: const Text("Verify"),
                               ),

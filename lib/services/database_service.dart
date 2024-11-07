@@ -100,6 +100,10 @@ class DatabaseService {
   Future<void> addCafe(CafeModel cafe) async {
     await _add(path: 'cafes', data: cafe.toJson());
   }
+  Future<bool> requestVerification() async {
+    throw UnimplementedError('Implement request verification');
+   // return true;
+  }
 
   Future<List<CoffeeModel>> getCoffeeList() async {
     try {
