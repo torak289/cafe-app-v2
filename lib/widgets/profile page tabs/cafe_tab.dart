@@ -3,18 +3,33 @@ import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
+import 'package:cafeapp_v2/widgets/editable_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CafeTab extends StatelessWidget {
+class CafeTab extends StatefulWidget {
   const CafeTab({super.key});
 
+  @override
+  State<CafeTab> createState() => _CafeTabState();
+}
+
+class _CafeTabState extends State<CafeTab> {
   @override
   Widget build(BuildContext context) {
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
+
+    Future<List<CafeModel>> databaseFuture = database.getCafeData();
+
+    void callbackState() {
+      setState(() {
+        databaseFuture = database.getCafeData();
+      });
+    }
+
     return FutureBuilder<List<CafeModel>>(
-      future: database.getCafeData(),
+      future: databaseFuture,
       builder: (context, cafeData) {
         if (cafeData.hasData) {
           if (cafeData.data!.isNotEmpty) {
@@ -33,30 +48,9 @@ class CafeTab extends StatelessWidget {
                           'Name',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Row(
-                          children: [
-                            Text('${cafeData.data![0].name}'),
-                            const Padding(padding: EdgeInsets.all(2)),
-                            cafeData.data![0].verified!
-                                ? const Icon(
-                                    Icons.verified,
-                                    color: Colors.pinkAccent,
-                                    size: 16,
-                                  )
-                                : const SizedBox.shrink(),
-                            const Padding(padding: EdgeInsets.all(8)),
-                            GestureDetector(
-                              onTap: () async {
-                                //TODO: Implement Edit UI state change for name
-                                debugPrint(await database.editCafeName('_'));
-                              },
-                              child: const Icon(
-                                Icons.edit_rounded,
-                                size: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ],
+                        EditableCafeNameField(
+                          cafe: cafeData.data![0],
+                          callback: callbackState,
                         ),
                       ],
                     ),
@@ -216,7 +210,8 @@ class CafeTab extends StatelessWidget {
                       'Locations',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Builder( //TODO: Implement business logic for locations
+                    Builder(
+                      //TODO: Implement business logic for locations
                       builder: (context) {
                         return const Text('Lat Lng');
                       },

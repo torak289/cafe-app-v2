@@ -85,7 +85,12 @@ class DatabaseService {
   }
 
   Future<String> editCafeName(String newName) async {
-    return 'Success';
+    try {
+      await database.rpc('edit_cafe_name', params: {'new_name': newName});
+      return "Success";
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future<String> editCafeDescription(String newDescription) async {
