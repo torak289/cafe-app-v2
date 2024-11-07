@@ -22,11 +22,31 @@ class UserSettingsPage extends StatelessWidget {
             Expanded(
               //TODO: Impement SingleChildScrollView
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text("${user.email}"),
-                  Text(user.uid),
-                  Text("${authService.appState}"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            'Email',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const Padding(padding: EdgeInsets.all(8)),
+                          Text("${user.email}"),
+                        ],
+                      ),
+                      GestureDetector(
+                        child: const Icon(
+                          Icons.edit_rounded,
+                          color: CafeAppUI.iconButtonIconColor,
+                          size: 16,
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -43,7 +63,7 @@ class UserSettingsPage extends StatelessWidget {
                 ),
                 TextButton(
                   style: const ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(Colors.red),
+                    backgroundColor: WidgetStatePropertyAll(Colors.pinkAccent),
                   ),
                   onPressed: () => showDialog<String>(
                     //TODO: Implement Async Stream to listen to database events fired on Scan from Cafe Account...
@@ -64,7 +84,7 @@ class UserSettingsPage extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.warning_rounded,
-                            color: Colors.red,
+                            color: Colors.pinkAccent,
                             size: 96,
                           ),
                           Padding(
@@ -86,7 +106,7 @@ class UserSettingsPage extends StatelessWidget {
                             });
                           },
                           style: const ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(Colors.red),
+                            backgroundColor: WidgetStatePropertyAll(Colors.pinkAccent),
                           ),
                           child: const Text("Yes"),
                         ),
