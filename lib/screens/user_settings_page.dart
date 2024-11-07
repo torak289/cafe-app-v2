@@ -51,15 +51,21 @@ class UserSettingsPage extends StatelessWidget {
                     //TODO: Pop context and update UI state on Scan...
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
+                      title: const Text(
+                        "Are you sure you want to delete your account?",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
                       content: const Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            "Are you sure you want to delete your account?",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Icon(
+                            Icons.warning_rounded,
+                            color: Colors.red,
+                            size: 96,
                           ),
                           Padding(
                             padding:
@@ -69,11 +75,12 @@ class UserSettingsPage extends StatelessWidget {
                               'This is a permanent action and cannot be undone. Make sure you want to do this!'),
                         ],
                       ),
+                      actionsAlignment: MainAxisAlignment.spaceBetween,
                       actions: [
                         TextButton(
                           onPressed: () async {
                             //TODO: Implement authService account deletion...
-                            
+
                             Navigator.popUntil(context, (route) {
                               return route.settings.name == Routes.mapPage;
                             });
