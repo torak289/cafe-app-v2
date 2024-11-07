@@ -2,13 +2,12 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:provider/provider.dart';
 
 class EditableCafeNameField extends StatefulWidget {
-  CafeModel cafe;
-  bool isEditing = false;
-  Function callback;
+  final CafeModel cafe;
+  final Function callback;
+  late bool isEditing = false;
   EditableCafeNameField({
     super.key,
     required this.cafe,

@@ -30,7 +30,7 @@ class CafeModel {
   Map<String, dynamic> toJson() {
     //TODO: Fix null issue in database when passed or create better toJson() functions...
     return {
-      //'uid': uid,
+      'uid': uid,
       //'created_at': created_at,
       'name': name,
       'description': description,
