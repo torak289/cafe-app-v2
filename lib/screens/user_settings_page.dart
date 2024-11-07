@@ -100,13 +100,22 @@ class UserSettingsPage extends StatelessWidget {
                         TextButton(
                           onPressed: () async {
                             //TODO: Implement authService account deletion...
-
-                            Navigator.popUntil(context, (route) {
-                              return route.settings.name == Routes.mapPage;
-                            });
+                            //bool res = await authService.deleteUser(user.uid);
+                            if (context.mounted) {
+                              if (false) {
+                                Navigator.popUntil(context, (route) {
+                                  return route.settings.name == Routes.mapPage;
+                                });
+                              } else {
+                                //TODO: Implement error handling...
+                                //debugPrint(res.toString());
+                                Navigator.pop(context, "Closed");
+                              }
+                            }
                           },
                           style: const ButtonStyle(
-                            backgroundColor: WidgetStatePropertyAll(Colors.pinkAccent),
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.pinkAccent),
                           ),
                           child: const Text("Yes"),
                         ),

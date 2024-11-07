@@ -23,7 +23,14 @@ class AuthService with ChangeNotifier {
   Future<void> manualRefresh() async {
     _client.auth.refreshSession();
   }
-
+  Future<bool> deleteUser(String uid) async { //TOOD: 403 Forbidden this needs to move to a edge function
+    try {
+      await _client.auth.admin.deleteUser(uid);
+      return true;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
   Future<AuthState> _onAuthStateChanged(AuthState data) async {
     final AuthChangeEvent event = data.event;
     final Session? session = data.session;
