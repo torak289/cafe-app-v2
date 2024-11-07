@@ -39,7 +39,9 @@ class _LoginPageState extends State<LoginPage> {
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: CafeAppUI.screenVertical, horizontal: CafeAppUI.screenHorizontal),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: CafeAppUI.screenVertical,
+                        horizontal: CafeAppUI.screenHorizontal),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.end,

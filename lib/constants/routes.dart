@@ -28,6 +28,6 @@ class Routes {
     profilePage: (BuildContext context) => const ProfilePage(),
     qrCodePage: (BuildContext context) => QrCodeScannerPage(),
     userSettingsPage: (BuildContext context) => UserSettingsPage(),
-    cafeVerificationPage: (BuildContext context) => CafeVerificationPage(),
+    cafeVerificationPage: (BuildContext context) => const CafeVerificationPage(),
   };
 }
