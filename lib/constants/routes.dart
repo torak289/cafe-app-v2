@@ -22,7 +22,7 @@ class Routes {
     mapPage: (BuildContext context) => const MapPage(),
     loginPage: (BuildContext context) => const LoginPage(),
     registrationPage: (BuildContext context) => const RegistrationPage(),
-    addCafePage: (BuildContext context) => const AddCafePage(),
+    addCafePage: (BuildContext context) => AddCafePage(),
     profilePage: (BuildContext context) => const ProfilePage(),
     qrCodePage: (BuildContext context) => QrCodeScannerPage(),
     userSettingsPage: (BuildContext context) => UserSettingsPage(),

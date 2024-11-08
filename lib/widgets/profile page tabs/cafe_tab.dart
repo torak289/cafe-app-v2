@@ -3,8 +3,11 @@ import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
-import 'package:cafeapp_v2/widgets/editable_field.dart';
+import 'package:cafeapp_v2/utils/systemui_utils.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/edit_large_text_field.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/editable_field.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class CafeTab extends StatefulWidget {
@@ -56,29 +59,16 @@ class _CafeTabState extends State<CafeTab> {
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Description',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            //TODO: Implement Edit UI state change for description
-                            debugPrint(await database.editCafeDescription('_'));
-                          },
-                          child: const Icon(
-                            Icons.edit_rounded,
-                            size: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
+                    const Text(
+                      "Desription",
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                    Text('${cafeData.data![0].description}'),
+                    EditLargeTextField(
+                      cafe: cafeData.data![0],
+                      callback: callbackState,
+                    ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Text(
@@ -123,7 +113,8 @@ class _CafeTabState extends State<CafeTab> {
                         ),
                         Row(
                           children: [
-                            Text(cafeData.data![0].claimAmount.toString()), //TODO: Implement claim amount
+                            Text(cafeData.data![0].claimAmount
+                                .toString()), //TODO: Implement claim amount
                             const Padding(padding: EdgeInsets.all(8)),
                             const Icon(
                               Icons.edit_rounded,
@@ -234,8 +225,9 @@ class _CafeTabState extends State<CafeTab> {
                                       CafeAppUI.buttonSpacingSmall)),
                               TextButton(
                                 onPressed: () async {
-                                  bool res = await database.requestVerification();
-                                  if(res) {
+                                  bool res =
+                                      await database.requestVerification();
+                                  if (res) {
                                     debugPrint(res.toString());
                                   }
                                 },
@@ -262,8 +254,13 @@ class _CafeTabState extends State<CafeTab> {
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   TextButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, Routes.addCafePage),
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      Routes.addCafePage,
+                      arguments: AddCafeArgs(
+                        isOwner: true,
+                      ),
+                    ),
                     child: const Text("Add Cafe"),
                   ),
                 ],
