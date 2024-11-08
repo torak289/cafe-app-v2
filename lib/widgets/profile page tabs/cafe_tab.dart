@@ -204,7 +204,7 @@ class _CafeTabState extends State<CafeTab> {
                     Builder(
                       //TODO: Implement business logic for locations
                       builder: (context) {
-                        return const Text('Lat Lng');
+                        return Text(cafeData.data![0].location.toString());
                       },
                     ),
                     Builder(
@@ -223,16 +223,20 @@ class _CafeTabState extends State<CafeTab> {
                               const Padding(
                                   padding: EdgeInsets.all(
                                       CafeAppUI.buttonSpacingSmall)),
-                              TextButton(
-                                onPressed: () async {
-                                  bool res =
-                                      await database.requestVerification();
-                                  if (res) {
-                                    debugPrint(res.toString());
-                                  }
-                                },
-                                child: const Text("Verify"),
-                              ),
+                              cafeData.data![0].verificationRequested
+                                  ? const Text(
+                                      "Verification Pending! Please wait for us to review your request.")
+                                  : TextButton(
+                                      onPressed: () async {
+                                        bool res =
+                                            await database.requestVerification(
+                                                cafeData.data![0].uid!);
+                                        if (res) {
+                                          setState(() {});
+                                        }
+                                      },
+                                      child: const Text("Verify"),
+                                    ),
                             ],
                           );
                         } else {

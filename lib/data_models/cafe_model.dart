@@ -12,6 +12,7 @@ class CafeModel {
   LatLng location;
   double? rating;
   bool? verified;
+  bool verificationRequested;
   int? claimAmount;
 
   CafeModel({
@@ -25,21 +26,22 @@ class CafeModel {
     this.rating,
     this.verified,
     this.claimAmount,
+    this.verificationRequested = false,
   });
 
   Map<String, dynamic> toJson() {
     //TODO: Fix null issue in database when passed or create better toJson() functions...
     return {
-      'uid': uid,
+      //'uid': uid,
       //'created_at': created_at,
       'name': name,
       'description': description,
-      'coffees': coffees,
-      'owner': owner,
+      //'coffees': coffees,
+      //'owner': owner,
       'location': 'POINT(${location.latitude} ${location.longitude})',
-      'rating': rating,
-      'verified': verified,
-      'claim_amount': claimAmount,
+      //'rating': rating,
+      //'verified': verified,
+      //'claim_amount': claimAmount,
     };
   }
 
@@ -72,6 +74,7 @@ class CafeModel {
           : const LatLng(0, 0),
       verified: data['verified'] ?? false,
       claimAmount: data['claim_amount'] ?? -1,
+      verificationRequested: data['verification_requested'] ?? false,
     );
   }
   @override

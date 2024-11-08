@@ -23,7 +23,7 @@ class DatabaseService {
   /*List<RoasterModel> roaster = List<RoasterModel>.empty(
       growable: true); //TODO: Implement Roasters in App... */
 
-  SupabaseClient database = Supabase.instance.client;
+  SupabaseClient _database = Supabase.instance.client;
 
   DatabaseService({this.uid});
 
@@ -86,7 +86,7 @@ class DatabaseService {
 
   Future<String> editCafeName(String newName) async {
     try {
-      await database.rpc('edit_cafe_name', params: {'new_name': newName});
+      await _database.rpc('edit_cafe_name', params: {'new_name': newName});
       return "Success";
     } catch (e) {
       return e.toString();
@@ -97,17 +97,32 @@ class DatabaseService {
     return 'Success';
   }
 
-  Future<void> addCafe(CafeModel cafe) async {
+  Future<void> addCafe(CafeModel cafe, bool? cafeOwner,
+      {bool isOwner = false}) async {
+    await _database.rpc('create_new_cafe', params: {
+      'cafe': cafe.toJson(),
+      'is_owner': isOwner,
+    });
     await _add(path: 'cafes', data: cafe.toJson());
   }
-  Future<bool> requestVerification() async {
-    throw UnimplementedError('Implement request verification');
-   // return true;
+
+  Future<bool> requestVerification(String uid) async {
+    try {
+      bool res = await _database.rpc(
+        "request_cafe_verification",
+        params: {'cafe_uid': uid},
+      );
+      return res;
+    } catch (e) {
+      return Future.error(e);
+    }
+
+    // return true;
   }
 
   Future<List<CoffeeModel>> getCoffeeList() async {
     try {
-      final data = await database.from('coffees').select('name');
+      final data = await _database.from('coffees').select('name');
       List<CoffeeModel> coffees = List.empty(growable: true);
       coffees = CoffeeModel.coffeesFromJson(data);
 
@@ -152,7 +167,7 @@ class DatabaseService {
       return MarkerLayer(markers: markers);
     } catch (e) {
       debugPrint(e.toString());
-      database.auth.refreshSession();
+      _database.auth.refreshSession();
       return Future.error(e);
     }
   }
@@ -178,14 +193,14 @@ class DatabaseService {
 //Abstract Functions for all database access
   Future<void> _add(
       {required String path, required Map<String, dynamic> data}) async {
-    final reference = database.from(path);
+    final reference = _database.from(path);
     debugPrint('$path: $data');
     await reference.insert(data);
   }
 
   Future<List<Map<String, dynamic>>> _selectUsingFunc(
       {required String func, Map<String, dynamic>? params}) async {
-    final data = await database.rpc(func, params: params).select();
+    final data = await _database.rpc(func, params: params).select();
     return data;
   }
 }
