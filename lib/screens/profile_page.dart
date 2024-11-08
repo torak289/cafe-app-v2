@@ -57,12 +57,14 @@ class ProfilePage extends StatelessWidget {
                   },
                   child: const Text('Logout'),
                 ),
-                
                 GestureDetector(
                   child: const SizedBox(
                     height: 32,
                     width: 32,
-                    child: Icon(Icons.settings_rounded, color: CafeAppUI.iconButtonIconColor,),
+                    child: Icon(
+                      Icons.settings_rounded,
+                      color: CafeAppUI.iconButtonIconColor,
+                    ),
                   ),
                   onTap: () {
                     Navigator.pushNamed(context, Routes.userSettingsPage);
