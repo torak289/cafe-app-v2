@@ -73,15 +73,6 @@ class _EditableCafeNameFieldState extends State<EditLargeTextField> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('${widget.cafe.description}'),
-          const Padding(padding: EdgeInsets.all(2)),
-          widget.cafe.verified!
-              ? const Icon(
-                  Icons.verified,
-                  color: Colors.pinkAccent,
-                  size: 16,
-                )
-              : const SizedBox.shrink(),
-          const Padding(padding: EdgeInsets.all(8)),
           GestureDetector(
             onTap: () async {
               setState(() {
