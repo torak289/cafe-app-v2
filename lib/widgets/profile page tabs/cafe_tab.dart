@@ -113,8 +113,8 @@ class _CafeTabState extends State<CafeTab> {
                         ),
                         Row(
                           children: [
-                            Text(cafeData.data![0].claimAmount
-                                .toString()), //TODO: Implement claim amount
+                            (cafeData.data![0].claimAmount != -1) ? Text(cafeData.data![0].claimAmount
+                                .toString()) : const Text("__"), //TODO: Implement claim amount
                             const Padding(padding: EdgeInsets.all(8)),
                             const Icon(
                               Icons.edit_rounded,
