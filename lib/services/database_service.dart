@@ -13,7 +13,6 @@ import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseService {
-  final String? uid;
 
   List<CafeModel> cafeMarkers = List<CafeModel>.empty(growable: true); //TODO: look to move out of here and into a provider
   int cafeMarkersLength = 50;
@@ -23,7 +22,7 @@ class DatabaseService {
 
   final SupabaseClient _database = Supabase.instance.client;
 
-  DatabaseService({this.uid});
+  DatabaseService();
 
   Future<bool> deleteSelf() async {
     //TODO: Implment edge function

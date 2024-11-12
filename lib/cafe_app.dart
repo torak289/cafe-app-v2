@@ -32,7 +32,7 @@ class CafeApp extends StatelessWidget {
                 providers: [
                   Provider<UserModel?>.value(value: user),
                   Provider<DatabaseService>(
-                    create: (context) => DatabaseService(uid: user?.uid),
+                    create: (context) => DatabaseService(),
                   ),
                   Provider<LocationService>(
                     create: (context) => LocationService(),
