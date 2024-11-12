@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/data_models/loyalty_card_model.dart';
@@ -7,7 +6,6 @@ import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
@@ -17,15 +15,44 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class DatabaseService {
   final String? uid;
 
-  List<CafeModel> cafeMarkers = List<CafeModel>.empty(growable: true);
+  List<CafeModel> cafeMarkers = List<CafeModel>.empty(growable: true); //TODO: look to move out of here and into a provider
   int cafeMarkersLength = 50;
 
   /*List<RoasterModel> roaster = List<RoasterModel>.empty(
       growable: true); //TODO: Implement Roasters in App... */
 
-  SupabaseClient _database = Supabase.instance.client;
+  final SupabaseClient _database = Supabase.instance.client;
 
   DatabaseService({this.uid});
+
+  Future<bool> deleteSelf() async {
+    //TODO: Implment edge function
+    try {
+      final res = await _database.functions.invoke('delete_user');
+      final data = res.data;
+      if (data) {
+        return data; //TODO: Implement bool in edge function return...
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<bool> changePassword(String newPasswword) async {
+    try {
+      final res = await _database.functions.invoke('change_password');
+      final data = res.data;
+      if (data) {
+        return data;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
 
   Future<List<CafeModel>> search(String text, Position currentPos) async {
     List<CafeModel> results = List.empty(growable: true);
@@ -52,6 +79,9 @@ class DatabaseService {
   Future<bool> validateLoyaltyCode(String uuid, int count) async {
     try {
       debugPrint("UUID: $uuid, COUNT: $count");
+      //TODO: Call and pass args to edge function
+      //TODO: return success or fail from edge function...
+
       return true;
     } catch (e) {
       return false;
