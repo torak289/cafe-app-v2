@@ -31,8 +31,8 @@ class _ProfileTabs extends State<ProfileTabs>
             TabBar(
               isScrollable: false,
               tabs: [
-                Tab(text: 'Loyalty', height:CafeAppUI.tabHeight),
-                Tab(text: 'Cafe',height: CafeAppUI.tabHeight),
+                Tab(text: 'Loyalty Cards', height:CafeAppUI.tabHeight),
+                Tab(text: 'Your Cafe',height: CafeAppUI.tabHeight),
                 //Tab(text: 'Roaster'),
               ],
             ),

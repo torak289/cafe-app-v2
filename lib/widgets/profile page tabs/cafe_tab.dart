@@ -59,7 +59,7 @@ class _CafeTabState extends State<CafeTab> {
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Text(
-                      "Desription",
+                      "Description",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const Padding(
@@ -71,7 +71,7 @@ class _CafeTabState extends State<CafeTab> {
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Text(
-                      'Coffee Card',
+                      'Loyalty Card',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const Padding(
@@ -185,6 +185,7 @@ class _CafeTabState extends State<CafeTab> {
                               mainAxisSpacing: 12,
                               crossAxisSpacing: 12,
                               shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
                               children: list,
                             );
                           } else {
