@@ -1,11 +1,17 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
+import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/widgets/profile%20page%20tabs/editable_field.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class UserSettingsPage extends StatelessWidget {
+  const UserSettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context, listen: false);
@@ -25,6 +31,34 @@ class UserSettingsPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Center(
+                    //TODO: Fix centre align on Profile
+                    child: Container(
+                      width: 128,
+                      height: 128,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black,
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        color: CafeAppUI.roasterMarkerColor,
+                        size: 164,
+                      ),
+                    ),
+                  ),
+                  const Row(
+                    children: [
+                      Text(
+                        "Account Settings",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -38,14 +72,42 @@ class UserSettingsPage extends StatelessWidget {
                           Text("${user.email}"),
                         ],
                       ),
-                      GestureDetector(
+                      /*GestureDetector(
                         child: const Icon(
                           Icons.edit_rounded,
                           color: CafeAppUI.iconButtonIconColor,
                           size: 16,
                         ),
-                      )
+                      )*/
                     ],
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Change Password",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [
+                      Text("New Password"),
+                      Expanded(
+                        child: TextField(),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [
+                      Text("Confirm Password"),
+                      Expanded(
+                        child: TextField(),
+                      ),
+                    ],
+                  ),
+                  const Row(
+                    children: [Text("Privacy Policy")],
                   ),
                 ],
               ),
