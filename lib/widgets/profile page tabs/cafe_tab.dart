@@ -7,7 +7,6 @@ import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/edit_large_text_field.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/editable_field.dart';
 import 'package:flutter/material.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class CafeTab extends StatefulWidget {
@@ -83,7 +82,7 @@ class _CafeTabState extends State<CafeTab> {
                         const Row(
                           children: [
                             Text('Coffee Count'),
-                            Padding(padding: EdgeInsets.all(8)),
+                            Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                             Tooltip(
                               //TODO: Move styling into theme
                               margin: EdgeInsets.all(32),
@@ -114,7 +113,7 @@ class _CafeTabState extends State<CafeTab> {
                         Row(
                           children: [
                             (cafeData.data![0].claimAmount != -1) ? Text(cafeData.data![0].claimAmount
-                                .toString()) : const Text("__"), //TODO: Implement claim amount
+                                .toString()) : const Text("N/A"), //TODO: Implement claim amount
                             const Padding(padding: EdgeInsets.all(8)),
                             const Icon(
                               Icons.edit_rounded,
@@ -165,28 +164,27 @@ class _CafeTabState extends State<CafeTab> {
                                 }
                               }
                               list.add(
-                                SizedBox(
-                                  width: 140,
-                                  child: TextButton(
-                                    onPressed: null,
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          WidgetStatePropertyAll(color),
-                                    ),
-                                    child: Text(
-                                      coffeesData.data![i].name,
-                                      style: const TextStyle(
-                                        color: CafeAppUI.primaryColor,
-                                      ),
+                                TextButton(
+                                  onPressed: null,
+                                  style: ButtonStyle(
+                                    backgroundColor:
+                                        WidgetStatePropertyAll(color),
+                                  ),
+                                  child: Text(
+                                    coffeesData.data![i].name,
+                                    style: const TextStyle(
+                                      color: CafeAppUI.primaryColor,
                                     ),
                                   ),
                                 ),
                               );
                             }
-                            return Wrap(
-                              alignment: WrapAlignment.spaceBetween,
-                              runSpacing: 8,
-                              spacing: 8,
+                            return GridView.count(
+                              crossAxisCount: 2,
+                              childAspectRatio: (140/24),
+                              mainAxisSpacing: 12,
+                              crossAxisSpacing: 12,
+                              shrinkWrap: true,
                               children: list,
                             );
                           } else {
