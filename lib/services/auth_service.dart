@@ -23,7 +23,16 @@ class AuthService with ChangeNotifier {
   Future<void> manualRefresh() async {
     _client.auth.refreshSession();
   }
-  Future<bool> deleteUser(String uid) async { //TOOD: 403 Forbidden this needs to move to a edge function
+  Future<String> changePassword(String newPassword) async {
+    try {
+      await _client.auth.updateUser(UserAttributes(password: newPassword));
+      return "Success";
+
+    } on AuthException catch (e) {
+      return e.message;
+    }
+  }
+  Future<bool> deleteUser(String uid) async { //TODo: 403 Forbidden this needs to move to a edge function
     try {
       await _client.auth.admin.deleteUser(uid);
       return true;

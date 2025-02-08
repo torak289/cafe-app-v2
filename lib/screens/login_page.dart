@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextFormField(
                           controller: passwordController,
-                          validator: (value) {
+                          validator: (value) { //TODO: Implement local password validation???
                             if (value == null || value.isEmpty) {
                               return 'Please enter your password!';
                             }

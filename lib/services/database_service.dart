@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/data_models/loyalty_card_model.dart';
-import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:flutter/foundation.dart';
@@ -31,20 +30,6 @@ class DatabaseService {
       final data = res.data;
       if (data) {
         return data; //TODO: Implement bool in edge function return...
-      } else {
-        return false;
-      }
-    } catch (e) {
-      return Future.error(e);
-    }
-  }
-
-  Future<bool> changePassword(String newPasswword) async {
-    try {
-      final res = await _database.functions.invoke('change_password');
-      final data = res.data;
-      if (data) {
-        return data;
       } else {
         return false;
       }

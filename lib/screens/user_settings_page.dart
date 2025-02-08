@@ -1,26 +1,28 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
-import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
-import 'package:cafeapp_v2/widgets/profile%20page%20tabs/editable_field.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
-class UserSettingsPage extends StatelessWidget {
+class UserSettingsPage extends StatefulWidget {
   const UserSettingsPage({super.key});
 
+  @override
+  State<UserSettingsPage> createState() => _UserSettingsPageState();
+}
+
+class _UserSettingsPageState extends State<UserSettingsPage> {
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context, listen: false);
     final UserModel user = Provider.of<UserModel>(context, listen: false);
+    final TextEditingController newPassword = TextEditingController();
+    final TextEditingController confirmPassword = TextEditingController();
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(
-            CafeAppUI.screenHorizontal,
-            0, CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
+        padding: const EdgeInsets.fromLTRB(CafeAppUI.screenHorizontal, 0,
+            CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,32 +92,60 @@ class UserSettingsPage extends StatelessWidget {
                       ],
                     ),
                     const Padding(padding: EdgeInsets.all(4)),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("New Password"),
+                        const Text("New Password"),
                         SizedBox(
                           width: 220,
-                          child: TextField(),
+                          child: TextFormField(
+                            obscureText: true,
+                            autocorrect: false,
+                            controller: newPassword,
+                            validator: (value) {}, //TODO: Implement local password validation???
+                          ),
                         ),
                       ],
                     ),
                     const Padding(padding: EdgeInsets.all(4)),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Confirm Password"),
+                        const Text("Confirm Password"),
                         SizedBox(
                           width: 220,
-                          child: TextField(),
+                          child: TextFormField(
+                            obscureText: true,
+                            autocorrect: false,
+                            controller: confirmPassword,
+                            validator: (value) {
+                              if (value != newPassword.text) {
+                                return "Ensure both passwords match!";
+                              }
+                              return null;
+                            },
+                          ),
                         ),
                       ],
                     ),
                     const Padding(padding: EdgeInsets.all(16)),
-                    const Center(
+                    Center(
                       child: TextButton(
-                        onPressed: null,
-                        child: Text("Save"),
+                        onPressed: () async {
+                          if (newPassword.text == confirmPassword.text) {
+                            String res = await authService
+                                .changePassword(newPassword.text);
+                            if (res == "Success") {
+                              //TODO: Handle Successful password change...
+                            } else {
+                              setState(() {
+                                String errorString =
+                                    res; //TODO: Implement Error string display
+                              });
+                            }
+                          }
+                        },
+                        child: const Text("Save"),
                       ),
                     ),
                     const Padding(padding: EdgeInsets.all(16)),
@@ -145,6 +175,7 @@ class UserSettingsPage extends StatelessWidget {
                 ),
               ),
             ),
+            const Padding(padding: EdgeInsets.all(4)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -187,7 +218,7 @@ class UserSettingsPage extends StatelessWidget {
                                 EdgeInsets.all(CafeAppUI.buttonSpacingSmall),
                           ),
                           Text(
-                              'This is a permanent action and cannot be undone. Make sure you want to do this!'),
+                              'This is a permanent action and cannot be undone! Are you sure you want to do this?'),
                         ],
                       ),
                       actionsAlignment: MainAxisAlignment.spaceBetween,
