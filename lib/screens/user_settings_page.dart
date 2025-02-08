@@ -34,7 +34,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(padding: EdgeInsets.all(8)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Center(
                       //TODO: Fix centre align on Profile
                       child: Icon(
@@ -43,7 +43,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         size: 164,
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.all(8)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -57,7 +57,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(16)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -67,7 +67,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                               'Email',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const Padding(padding: EdgeInsets.all(8)),
+                            const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                             Text("${user.email}"),
                           ],
                         ),
@@ -80,7 +80,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         )*/
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(16)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -91,7 +91,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(4)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -107,7 +107,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(4)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -128,7 +128,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(16)),
+                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                     Center(
                       child: TextButton(
                         onPressed: () async {
@@ -160,7 +160,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        Padding(padding: EdgeInsets.all(8)),
+                        Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         Text(
                           "Terms & Conditions",
                           style: TextStyle(
