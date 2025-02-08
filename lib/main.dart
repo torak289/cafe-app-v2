@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'cafe_app.dart';
-import 'package:hive/hive.dart';
 
 void main() async {
   await Supabase.initialize(
