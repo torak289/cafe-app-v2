@@ -175,7 +175,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.all(4)),
+            const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
