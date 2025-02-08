@@ -18,98 +18,131 @@ class UserSettingsPage extends StatelessWidget {
     final UserModel user = Provider.of<UserModel>(context, listen: false);
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(
-            vertical: CafeAppUI.screenVertical,
-            horizontal: CafeAppUI.screenHorizontal),
+        padding: const EdgeInsets.fromLTRB(
+            CafeAppUI.screenHorizontal,
+            0, CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               //TODO: Impement SingleChildScrollView
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Center(
-                    //TODO: Fix centre align on Profile
-                    child: Container(
-                      width: 128,
-                      height: 128,
-                      clipBehavior: Clip.hardEdge,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black,
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        color: CafeAppUI.roasterMarkerColor,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(padding: EdgeInsets.all(8)),
+                    const Center(
+                      //TODO: Fix centre align on Profile
+                      child: Icon(
+                        Icons.account_circle_sharp,
+                        color: CafeAppUI.buttonBackgroundColor,
                         size: 164,
                       ),
                     ),
-                  ),
-                  const Row(
-                    children: [
-                      Text(
-                        "Account Settings",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          const Text(
-                            'Email',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                    const Padding(padding: EdgeInsets.all(8)),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Account Settings",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
                           ),
-                          const Padding(padding: EdgeInsets.all(8)),
-                          Text("${user.email}"),
-                        ],
-                      ),
-                      /*GestureDetector(
-                        child: const Icon(
-                          Icons.edit_rounded,
-                          color: CafeAppUI.iconButtonIconColor,
-                          size: 16,
                         ),
-                      )*/
-                    ],
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Change Password",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(16)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'Email',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const Padding(padding: EdgeInsets.all(8)),
+                            Text("${user.email}"),
+                          ],
+                        ),
+                        /*GestureDetector(
+                          child: const Icon(
+                            Icons.edit_rounded,
+                            color: CafeAppUI.iconButtonIconColor,
+                            size: 16,
+                          ),
+                        )*/
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(16)),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Change Password",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(4)),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("New Password"),
+                        SizedBox(
+                          width: 220,
+                          child: TextField(),
+                        ),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(4)),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Confirm Password"),
+                        SizedBox(
+                          width: 220,
+                          child: TextField(),
+                        ),
+                      ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(16)),
+                    const Center(
+                      child: TextButton(
+                        onPressed: null,
+                        child: Text("Save"),
                       ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      Text("New Password"),
-                      Expanded(
-                        child: TextField(),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [
-                      Text("Confirm Password"),
-                      Expanded(
-                        child: TextField(),
-                      ),
-                    ],
-                  ),
-                  const Row(
-                    children: [Text("Privacy Policy")],
-                  ),
-                ],
+                    ),
+                    const Padding(padding: EdgeInsets.all(16)),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Privacy Policy",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.all(8)),
+                        Text(
+                          "Terms & Conditions",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Row(
