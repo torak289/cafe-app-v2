@@ -24,40 +24,61 @@ class LoyaltyCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
+        padding: const EdgeInsets.all(24),
+        child: Column(
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${user.email}'),
-                  Table(
-                    children: const [
-                      TableRow(
-                        children: [Text("Stat"), Text("Data")],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${user.email}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      TableRow(
-                        children: [Text("Stat"), Text("Data")],
-                      ),
-                      TableRow(
-                        children: [Text("Stat"), Text("Data")],
+                      const Padding(
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                      Table(
+                        children: const [
+                          TableRow(
+                            children: [Text("Stat"), Text("Data")],
+                          ),
+                          TableRow(
+                            children: [Text("Stat"), Text("Data")],
+                          ),
+                          TableRow(
+                            children: [Text("Stat"), Text("Data")],
+                          ),
+                        ],
                       ),
                     ],
                   ),
+                ),
+                BarcodeWidget(
+                  data: user.uid,
+                  barcode: Barcode.qrCode(),
+                  width: 100,
+                  height: 100,
+                ),
+              ],
+            ),
+            const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            TextButton(
+              onPressed: () {
+              },
+              child: const Row(
+                children: [
+                  Icon(Icons.wallet_rounded),
+                  Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                  Text("Add to Wallet"),
                 ],
               ),
-            ),
-            const Padding(padding: EdgeInsets.all(8)),
-            BarcodeWidget(
-              data: user.uid,
-              barcode: Barcode.qrCode(),
-              width: 120,
-              height: 120,
-            ),
+            )
           ],
         ),
       ),
