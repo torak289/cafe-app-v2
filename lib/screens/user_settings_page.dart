@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class UserSettingsPage extends StatefulWidget {
-  const UserSettingsPage({super.key});
-
+  UserSettingsPage({super.key});
+  late String errorString = "";
   @override
   State<UserSettingsPage> createState() => _UserSettingsPageState();
 }
@@ -28,22 +28,22 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              //TODO: Impement SingleChildScrollView
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Center(
-                      //TODO: Fix centre align on Profile
                       child: Icon(
                         Icons.account_circle_sharp,
                         color: CafeAppUI.buttonBackgroundColor,
                         size: 164,
                       ),
                     ),
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -57,7 +57,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -67,7 +68,9 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                               'Email',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                            const Padding(
+                                padding: EdgeInsets.all(
+                                    CafeAppUI.buttonSpacingMedium)),
                             Text("${user.email}"),
                           ],
                         ),
@@ -80,7 +83,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         )*/
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -91,7 +95,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -102,19 +107,21 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                             obscureText: true,
                             autocorrect: false,
                             controller: newPassword,
-                            validator: (value) {}, //TODO: Implement local password validation???
+                            validator:
+                                (value) {}, //TODO: Implement local password validation???
                           ),
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text("Confirm Password"),
                         SizedBox(
                           width: 220,
-                          child: TextFormField(
+                          child: TextFormField( //TODO: Implement on keyboard enter action submit
                             obscureText: true,
                             autocorrect: false,
                             controller: confirmPassword,
@@ -128,7 +135,31 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ],
                     ),
-                    const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                    Builder( //TODO: Fix reformatting issue on error text shown...
+                      builder: (context) {
+                        if (widget.errorString.isNotEmpty) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.errorString,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingMedium)),
+                            ],
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
                     Center(
                       child: TextButton(
                         onPressed: () async {
@@ -136,13 +167,24 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                             String res = await authService
                                 .changePassword(newPassword.text);
                             if (res == "Success") {
-                              //TODO: Handle Successful password change...
+                              if (context.mounted) {
+                                //TODO: Handle Successful password change...
+                                Navigator.popUntil(context,
+                                    (Route<dynamic> route) => route.isFirst);
+                                debugPrint("Password Changed");
+                              }
                             } else {
                               setState(() {
-                                String errorString =
+                                debugPrint(res);
+                                widget.errorString =
                                     res; //TODO: Implement Error string display
                               });
                             }
+                          } else {
+                            debugPrint("Passwords do not match!");
+                            setState(() {
+                              widget.errorString = "Passwords do not match!";
+                            });
                           }
                         },
                         child: const Text("Save"),
@@ -160,7 +202,9 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                        Padding(
+                            padding:
+                                EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         Text(
                           "Terms & Conditions",
                           style: TextStyle(
@@ -175,7 +219,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                 ),
               ),
             ),
-            const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+            const Padding(
+                padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
