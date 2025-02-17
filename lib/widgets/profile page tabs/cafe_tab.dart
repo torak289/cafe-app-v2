@@ -82,7 +82,9 @@ class _CafeTabState extends State<CafeTab> {
                         const Row(
                           children: [
                             Text('Coffee Count'),
-                            Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                            Padding(
+                                padding: EdgeInsets.all(
+                                    CafeAppUI.buttonSpacingMedium)),
                             Tooltip(
                               //TODO: Move styling into theme
                               margin: EdgeInsets.all(32),
@@ -112,8 +114,10 @@ class _CafeTabState extends State<CafeTab> {
                         ),
                         Row(
                           children: [
-                            (cafeData.data![0].claimAmount != -1) ? Text(cafeData.data![0].claimAmount
-                                .toString()) : const Text("N/A"), //TODO: Implement claim amount
+                            (cafeData.data![0].claimAmount != -1)
+                                ? Text(cafeData.data![0].claimAmount.toString())
+                                : const Text(
+                                    "N/A"), //TODO: Implement claim amount
                             const Padding(padding: EdgeInsets.all(8)),
                             const Icon(
                               Icons.edit_rounded,
@@ -126,7 +130,7 @@ class _CafeTabState extends State<CafeTab> {
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                    Row(
+                    /*Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
@@ -181,7 +185,7 @@ class _CafeTabState extends State<CafeTab> {
                             }
                             return GridView.count(
                               crossAxisCount: 2,
-                              childAspectRatio: (140/24),
+                              childAspectRatio: (140 / 24),
                               mainAxisSpacing: 12,
                               crossAxisSpacing: 12,
                               shrinkWrap: true,
@@ -195,15 +199,45 @@ class _CafeTabState extends State<CafeTab> {
                           }
                         }),
                     const Padding(
-                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)), */
                     const Text(
                       'Locations',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Builder(
                       //TODO: Implement business logic for locations
+                      //TODO: Implement Table View for locations
+                      //TODO: Add CTAs to add new Location
                       builder: (context) {
-                        return Text(cafeData.data![0].location.toString());
+                        //return ;
+                        return Table(
+                          border: TableBorder.all(color: Colors.black),
+                          defaultVerticalAlignment:
+                              TableCellVerticalAlignment.middle,
+                          children: [
+                            const TableRow(
+                              children: [
+                                Text(
+                                  "Your Locations",
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  "Add",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            TableRow(
+                              children: [
+                                Text(cafeData.data![0].location.toString()),
+                                const Text(
+                                  "Delete",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
                       },
                     ),
                     Builder(
@@ -243,6 +277,13 @@ class _CafeTabState extends State<CafeTab> {
                         }
                       },
                     ),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                    const Text(
+                      'Opening Times',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    OpeningTimes()
                   ],
                 ),
               ),
@@ -280,6 +321,148 @@ class _CafeTabState extends State<CafeTab> {
           );
         }
       },
+    );
+  }
+}
+
+class OpeningTimes extends StatelessWidget {
+  const OpeningTimes({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Table(
+      columnWidths: const <int, TableColumnWidth>{
+        0: FixedColumnWidth(24),
+        1: IntrinsicColumnWidth(),
+        2: FixedColumnWidth(32),
+        3: FixedColumnWidth(64),
+        4: FixedColumnWidth(16),
+        5: FixedColumnWidth(64),
+      },
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: [
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Monday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Tuesday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Wednesday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Thursday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Friday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Saturday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+        TableRow(
+          children: [
+            Checkbox(
+                value: false,
+                onChanged: (bool? value) {
+                  value = !value!;
+                }),
+            const Text(
+              "Sunday",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const Text("From:"),
+            TextFormField(),
+            const Text("To:"),
+            TextFormField()
+          ],
+        ),
+      ],
     );
   }
 }
