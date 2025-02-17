@@ -8,6 +8,7 @@ import 'package:cafeapp_v2/widgets/opening_times_table.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/edit_large_text_field.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/editable_field.dart';
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class CafeTab extends StatefulWidget {
@@ -209,9 +210,14 @@ class _CafeTabState extends State<CafeTab> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         GestureDetector(
-                          onTap: () => {
-                            debugPrint("Add Location"),
-                          },
+                          onTap: () => Navigator.pushNamed(
+                            context,
+                            Routes.addCafePage,
+                            arguments: AddCafeArgs(
+                              cafePosition: LatLng(0, 0), //TODO: Implement current LatLng
+                              isOwner: true,
+                            ),
+                          ),
                           child: const Icon(
                             Icons.add_circle,
                             color: CafeAppUI.iconButtonIconColor,
