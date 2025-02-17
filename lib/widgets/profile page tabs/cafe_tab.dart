@@ -201,33 +201,40 @@ class _CafeTabState extends State<CafeTab> {
                         }),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)), */
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Locations',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Icon(
-                          Icons.add_location_rounded,
-                          color: CafeAppUI.iconButtonIconColor,
-                          size: 16,
+                        GestureDetector(
+                          onTap: () => {
+                            debugPrint("Add Location"),
+                          },
+                          child: const Icon(
+                            Icons.add_circle,
+                            color: CafeAppUI.iconButtonIconColor,
+                            size: 16,
+                          ),
                         ),
                       ],
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     //TODO: Implement business logic for locations
-                    //TODO: Implement Table View for locations
-                    //TODO: Add CTAs to add new Location
-                    const Row(
+                    //TODO: Implement Future Builder
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("10 Business Road, SW6 1AA"),
-                        Icon(
-                          Icons.delete_rounded,
-                          color: CafeAppUI.iconButtonIconColor,
-                          size: 16,
+                        const Text("1 Alpha Bravo Close, AB12 34CD"),
+                        GestureDetector(
+                          onTap: () => {debugPrint("Remove Location")},
+                          child: const Icon(
+                            Icons.delete_rounded,
+                            color: CafeAppUI.iconButtonIconColor,
+                            size: 16,
+                          ),
                         ),
                       ],
                     ),
