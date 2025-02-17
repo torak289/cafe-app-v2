@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class OpeningTimes extends StatefulWidget {
+
+  //TODO: Implement backend 
+  //TODO: Implement future builder
+  //TODO: Impelement local states
   bool monday = false;
 
   bool tuesday = false;

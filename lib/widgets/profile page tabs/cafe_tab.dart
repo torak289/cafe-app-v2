@@ -118,7 +118,7 @@ class _CafeTabState extends State<CafeTab> {
                             (cafeData.data![0].claimAmount != -1)
                                 ? Text(cafeData.data![0].claimAmount.toString())
                                 : const Text(
-                                    "N/A"), //TODO: Implement claim amount
+                                    "N/A"), //TODO: Implement coffee claim amount & backend...
                             const Padding(padding: EdgeInsets.all(8)),
                             const Icon(
                               Icons.edit_rounded,
