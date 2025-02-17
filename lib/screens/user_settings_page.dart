@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UserSettingsPage extends StatefulWidget {
   UserSettingsPage({super.key});
@@ -13,6 +14,15 @@ class UserSettingsPage extends StatefulWidget {
 }
 
 class _UserSettingsPageState extends State<UserSettingsPage> {
+  Future<void> _launchInAppBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppBrowserView,
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context, listen: false);
@@ -121,7 +131,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         const Text("Confirm Password"),
                         SizedBox(
                           width: 220,
-                          child: TextFormField( //TODO: Implement on keyboard enter action submit
+                          child: TextFormField(
+                            //TODO: Implement on keyboard enter action submit
                             obscureText: true,
                             autocorrect: false,
                             controller: confirmPassword,
@@ -137,7 +148,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                    Builder( //TODO: Fix reformatting issue on error text shown...
+                    Builder(
+                      //TODO: Fix reformatting issue on error text shown...
                       builder: (context) {
                         if (widget.errorString.isNotEmpty) {
                           return Column(
@@ -191,26 +203,44 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                       ),
                     ),
                     const Padding(padding: EdgeInsets.all(16)),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Privacy Policy",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
+                        GestureDetector(
+                          onTap: () {
+                            final Uri toLaunch = Uri(
+                                scheme: 'https',
+                                host: 'www.robusta-app.com',
+                                path: '/privacy-policy');
+                            _launchInAppBrowser(toLaunch);
+                          },
+                          child: const Text(
+                            "Privacy Policy",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                        Padding(
+                        const Padding(
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                        Text(
-                          "Terms & Conditions",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
+                        GestureDetector(
+                          onTap: () {
+                            final Uri toLaunch = Uri(
+                                scheme: 'https',
+                                host: 'www.robusta-app.com',
+                                path: '/terms-and-conditions');
+                            _launchInAppBrowser(toLaunch);
+                          },
+                          child: const Text(
+                            "Terms & Conditions",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
                       ],
