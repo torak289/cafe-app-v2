@@ -1,7 +1,7 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
-import 'package:cafeapp_v2/data_models/coffee_model.dart';
+//import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:cafeapp_v2/widgets/opening_times_table.dart';
@@ -82,7 +82,7 @@ class _CafeTabState extends State<CafeTab> {
                       children: [
                         const Row(
                           children: [
-                            Text('Coffee Count'),
+                            Text('Required Stamps'),
                             Padding(
                                 padding: EdgeInsets.all(
                                     CafeAppUI.buttonSpacingMedium)),
@@ -201,47 +201,35 @@ class _CafeTabState extends State<CafeTab> {
                         }),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)), */
-                    const Text(
-                      'Locations',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Locations',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Icon(
+                          Icons.add_location_rounded,
+                          color: CafeAppUI.iconButtonIconColor,
+                          size: 16,
+                        ),
+                      ],
                     ),
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                    Builder(
-                      //TODO: Implement business logic for locations
-                      //TODO: Implement Table View for locations
-                      //TODO: Add CTAs to add new Location
-                      builder: (context) {
-                        //return ;
-                        return Table(
-                          border: TableBorder.all(color: Colors.black),
-                          defaultVerticalAlignment:
-                              TableCellVerticalAlignment.middle,
-                          children: [
-                            const TableRow(
-                              children: [
-                                Text(
-                                  "Your Locations",
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  "Add",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                            TableRow(
-                              children: [
-                                Text(cafeData.data![0].location.toString()),
-                                const Text(
-                                  "Delete",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
+                    //TODO: Implement business logic for locations
+                    //TODO: Implement Table View for locations
+                    //TODO: Add CTAs to add new Location
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("10 Business Road, SW6 1AA"),
+                        Icon(
+                          Icons.delete_rounded,
+                          color: CafeAppUI.iconButtonIconColor,
+                          size: 16,
+                        ),
+                      ],
                     ),
                     Builder(
                       builder: (context) {
