@@ -286,7 +286,7 @@ class _CafeTabState extends State<CafeTab> {
                       'Opening Times',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const  OpeningTimes(),
+                    OpeningTimes(),
                   ],
                 ),
               ),
