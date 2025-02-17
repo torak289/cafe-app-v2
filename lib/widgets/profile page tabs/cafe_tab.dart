@@ -229,6 +229,7 @@ class _CafeTabState extends State<CafeTab> {
                     const Padding(
                         padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     //TODO: Implement business logic for locations
+                    //TODO: Research & Implement 
                     //TODO: Implement Future Builder
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
