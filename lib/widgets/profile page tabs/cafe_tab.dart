@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/coffee_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
+import 'package:cafeapp_v2/widgets/opening_times_table.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/edit_large_text_field.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/editable_field.dart';
 import 'package:flutter/material.dart';
@@ -204,6 +205,8 @@ class _CafeTabState extends State<CafeTab> {
                       'Locations',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    const Padding(
+                        padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                     Builder(
                       //TODO: Implement business logic for locations
                       //TODO: Implement Table View for locations
@@ -283,7 +286,7 @@ class _CafeTabState extends State<CafeTab> {
                       'Opening Times',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    OpeningTimes()
+                    const  OpeningTimes(),
                   ],
                 ),
               ),
@@ -321,148 +324,6 @@ class _CafeTabState extends State<CafeTab> {
           );
         }
       },
-    );
-  }
-}
-
-class OpeningTimes extends StatelessWidget {
-  const OpeningTimes({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Table(
-      columnWidths: const <int, TableColumnWidth>{
-        0: FixedColumnWidth(24),
-        1: IntrinsicColumnWidth(),
-        2: FixedColumnWidth(32),
-        3: FixedColumnWidth(64),
-        4: FixedColumnWidth(16),
-        5: FixedColumnWidth(64),
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Monday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Tuesday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Wednesday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Thursday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Friday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Saturday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-        TableRow(
-          children: [
-            Checkbox(
-                value: false,
-                onChanged: (bool? value) {
-                  value = !value!;
-                }),
-            const Text(
-              "Sunday",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const Text("From:"),
-            TextFormField(),
-            const Text("To:"),
-            TextFormField()
-          ],
-        ),
-      ],
     );
   }
 }
