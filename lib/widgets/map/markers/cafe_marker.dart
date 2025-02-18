@@ -13,10 +13,10 @@ class CafeMarker extends Marker {
   CafeMarker({required this.cafe, required this.mapController})
       : super(
           width: 200,
+          height: 22,
           point: cafe.location,
           rotate: true,
-          alignment: Alignment
-              .topRight, //This needs work to rotate around the marker point properly...
+          alignment: const Alignment(0.8513513514, 1), //TODO: Based on ratio. Confirm working...
           child: Row(
             children: [
               GestureDetector(
@@ -36,7 +36,7 @@ class CafeMarker extends Marker {
                 child: const Icon(
                   Icons.location_on_sharp,
                   color: CafeAppUI.cafeMarkerColor,
-                  size: 20,
+                  size: 22,
                 ),
               ),
               Column(
