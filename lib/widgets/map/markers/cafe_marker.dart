@@ -16,7 +16,7 @@ class CafeMarker extends Marker {
           height: 22,
           point: cafe.location,
           rotate: true,
-          alignment: const Alignment(0.8513513514, 1), //TODO: Based on ratio. Confirm working...
+          alignment: const Alignment(0.88, -1), //TODO: This works-ish...
           child: Row(
             children: [
               GestureDetector(
