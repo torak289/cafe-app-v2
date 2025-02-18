@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 
 class AddCafePage extends StatefulWidget {
   AddCafePage({super.key});
-  late bool? cafeOwner = false;
+  bool? cafeOwner = false;
 
   @override
   State<AddCafePage> createState() => _AddCafePageState();
@@ -78,7 +78,7 @@ class _AddCafePageState extends State<AddCafePage>
                                   mapController:
                                       animatedMapController.mapController,
                                   options: MapOptions(
-                                    initialCenter: (args!.cafePosition == null)
+                                    initialCenter: (args.cafePosition == null)
                                         ? LatLng(position.data!.latitude,
                                             position.data!.longitude)
                                         : LatLng(args.cafePosition!.latitude,
