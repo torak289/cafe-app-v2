@@ -18,7 +18,7 @@ ThemeData cafeLightTheme = ThemeData(
   //Text
   fontFamily: _fontFamily,
   //Tab
-  tabBarTheme: const TabBarTheme(
+  tabBarTheme: const TabBarThemeData(
     indicatorSize: TabBarIndicatorSize.tab,
     indicator: UnderlineTabIndicator(
       borderRadius: BorderRadius.all(Radius.circular(8)),

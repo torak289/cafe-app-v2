@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 
 class CafeMarker extends Marker {
   final CafeModel cafe;
@@ -29,10 +28,6 @@ class CafeMarker extends Marker {
                     zoom: 16,
                   );
                 },
-                onLongPress: (() {
-                  MapsLauncher.launchCoordinates(
-                      cafe.location.latitude, cafe.location.longitude);
-                }),
                 child: const Icon(
                   Icons.location_on_sharp,
                   color: CafeAppUI.cafeMarkerColor,

@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:provider/provider.dart';
 
 class SearchControls extends StatefulWidget {
-  Future<MarkerLayer> markerLayer;
-  AnimatedMapController mapController;
+  final Future<MarkerLayer> markerLayer;
+  final AnimatedMapController mapController;
+
+  bool showSearch = false;
+  bool hasSearchResults = false;
 
   SearchControls({
     super.key,
@@ -25,8 +27,9 @@ class SearchControls extends StatefulWidget {
 }
 
 class _SearchControlsState extends State<SearchControls> {
-  final TextEditingController searchController = TextEditingController();
   Debouncer searchDebounce = Debouncer(milliseconds: 250);
+  final TextEditingController searchController = TextEditingController();
+
   late DatabaseService database;
   late LocationService location;
   late List<CafeModel> cafeResults = List.empty(growable: true);
@@ -36,20 +39,21 @@ class _SearchControlsState extends State<SearchControls> {
     super.initState();
     database = Provider.of<DatabaseService>(context, listen: false);
     location = Provider.of<LocationService>(context, listen: false);
-    searchController.addListener(_search);
   }
 
-//TODO: Implement hybrid search
+//TODO: Implement hybrid search backend only???
   void _search() async {
     final text = searchController.text;
     try {
       pos = await location.currentPosition;
-
       searchDebounce.run(
         () async {
           final results = await database.search(text, pos);
+
           setState(() {
             cafeResults = results;
+            widget.showSearch = true;
+            widget.hasSearchResults = true;
           });
         },
       );
@@ -69,92 +73,10 @@ class _SearchControlsState extends State<SearchControls> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-          Builder(builder: (context) {
-            if (cafeResults.isNotEmpty) {
-              List<Widget> list = List.empty(growable: true);
-              for (int i = 0; i < cafeResults.length; i++) {
-                list.add(
-                  GestureDetector(
-                    onTap: () {
-                      widget.mapController.animateTo(
-                        duration: const Duration(milliseconds: 200),
-                        dest: cafeResults[i].location,
-                        zoom: widget.mapController.mapController.camera.zoom,
-                      );
-
-                      setState(
-                        () {
-                          searchController.text = cafeResults[i].name!;
-                          cafeResults = List.empty();
-                        },
-                      );
-                    },
-                    child: Container(
-                      //This is being used to make the hit target the full bar
-                      color: Colors.transparent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            cafeResults[i].name.toString(),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                  '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
-                              const Padding(padding: EdgeInsets.all(4)),
-                              GestureDetector(
-                                onDoubleTap: () =>
-                                    MapsLauncher.launchCoordinates(
-                                        cafeResults[i].location.latitude,
-                                        cafeResults[i].location.longitude),
-                                child: const Icon(
-                                  Icons.directions_rounded,
-                                  size: 16,
-                                  color: CafeAppUI.iconButtonIconColor,
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-                if (!(i >= cafeResults.length - 1)) {
-                  list.add(
-                    const Divider(
-                      height: 4,
-                      thickness: 1.25,
-                      color: Colors.black,
-                    ),
-                  );
-                }
-              }
-              return Flexible(
-                fit: FlexFit.loose,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: CafeAppUI.backgroundColor,
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(16)),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 16,
-                    ),
-                    child: Column(
-                      children: list,
-                    ),
-                  ),
-                ),
-              );
-            } else {
-              return TextButton(
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              TextButton(
                 onPressed: () async {
                   List<CafeModel> closestCafes = await database.getClosestCafe(
                       widget.mapController.mapController.camera.center);
@@ -162,16 +84,122 @@ class _SearchControlsState extends State<SearchControls> {
                       .animateTo(dest: closestCafes[0].location, zoom: 18);
                 },
                 child: const Text("Find Cafe"),
-              );
-            }
-          }),
+              ),
+              Builder(
+                builder: (context) {
+                  if (widget.showSearch) {
+                    List<Widget> list = List.empty(growable: true);
+                    if (cafeResults.isEmpty) {
+                      list.add(
+                        Container(
+                          //This is being used to make the hit target the full bar
+                          color: Colors.transparent,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "No Result Found...",
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    for (int i = 0; i < cafeResults.length; i++) {
+                      list.add(
+                        GestureDetector(
+                          onTap: () {
+                            widget.mapController.animateTo(
+                              duration: const Duration(milliseconds: 200),
+                              dest: cafeResults[i].location,
+                              zoom: widget
+                                  .mapController.mapController.camera.zoom,
+                            );
+                            setState(
+                              () {
+                                searchController.text = cafeResults[i].name!;
+                                cafeResults = List.empty();
+                                widget.showSearch = false;
+                              },
+                            );
+                          },
+                          child: Container(
+                            //This is being used to make the hit target the full bar
+                            color: Colors.transparent,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  cafeResults[i].name.toString(),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                        '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
+                                    const Padding(padding: EdgeInsets.all(4)),
+                                    GestureDetector(
+                                      
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                      if (!(i >= cafeResults.length - 1)) {
+                        list.add(
+                          const Divider(
+                            height: 4,
+                            thickness: 1.25,
+                            color: Colors.black,
+                          ),
+                        );
+                      }
+                    }
+                    return Flexible(
+                      fit: FlexFit.loose,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: CafeAppUI.backgroundColor,
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1.5,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(16)),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          child: Column(
+                            children: list,
+                          ),
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      width: 100,
+                      height: 100,
+                      color: Colors.red,
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
           TextField(
             decoration: const InputDecoration(labelText: 'Search a cafe!'),
+            //TODO: meh behavior improve...
             controller: searchController,
-            onTapOutside: (event) {
-              FocusScope.of(context).requestFocus(FocusNode());
-            }, //TODO: meh behavior improve...
+            onSubmitted: (value) {
+              debugPrint("onSubmitted");
+            },
+            onChanged: (value) => _search(),
           )
         ],
       ),
