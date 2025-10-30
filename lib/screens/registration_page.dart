@@ -37,10 +37,9 @@ class RegistrationPage extends StatelessWidget {
               ],
             ),
             TextButton(
-                onPressed: () => {}, child: const Text("Register with Facebook")),
+                onPressed: () => {}, child: const Text("Register with Apple")),
             TextButton(
-                onPressed: () => {}, child: const Text("Register with Google")),
-            TextButton(onPressed: () => {}, child: const Text("Register with X"))
+                onPressed: () => {}, child: const Text("Register with Google"))
           ],
         ),
       ),

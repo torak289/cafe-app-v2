@@ -150,9 +150,9 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () => authService.facebookSSO(),
                           child: const Row(
                             children: [
-                              Icon(Icons.facebook_rounded),
+                              Icon(Icons.apple_rounded),
                               Padding(padding: EdgeInsets.all(8)),
-                              Text("Login with Facebook"),
+                              Text("Login with Apple"),
                             ],
                           ),
                         ),
@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () => authService.googleSSO(),
                           child: const Row(
                             children: [
-                              Icon(Icons.circle),
+                              Icon(Icons.circle_outlined),
                               Padding(padding: EdgeInsets.all(8)),
                               Text("Login with Google"),
                             ],
@@ -171,20 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const Padding(
                             padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                        TextButton(
-                          onPressed: () => authService.twitterSSO(),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.circle),
-                              Padding(padding: EdgeInsets.all(8)),
-                              Text("Login with Twitter / X"),
-                            ],
-                          ),
-                        ),
-                        const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                                EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                         Row(
                           children: [
                             GestureDetector(
