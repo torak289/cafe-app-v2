@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
-class LocationService {
+class LocationService extends ChangeNotifier {
   Future<LocationPermission> checkServices() async {
     bool serviceEnabled;
     LocationPermission permission;

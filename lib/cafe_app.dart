@@ -34,7 +34,7 @@ class CafeApp extends StatelessWidget {
                   Provider<DatabaseService>(
                     create: (context) => DatabaseService(),
                   ),
-                  Provider<LocationService>(
+                  ChangeNotifierProvider<LocationService>(
                     create: (context) => LocationService(),
                   ),
                 ],
@@ -42,7 +42,6 @@ class CafeApp extends StatelessWidget {
                   left: false,
                   right: false,
                   child: MaterialApp(
-                    debugShowCheckedModeBanner: false,
                     title: 'Robusta',
                     theme: cafeLightTheme,
                     routes: Routes.routes,
