@@ -18,6 +18,7 @@ PENDING: You will find the Robusta app on the Google Play Store and Apple App St
 - Implement a wider community feature set which allows users to contribute to the available cafes. When you find one add it!!!
 - Implement a wider Cafe Owner system of Cafe management & Advertisement Stategies
 - Introduct Coffee Roasters to the platform and increase the management capabilities of this so that Cafe's can select their Roaster and Coffee roast
+- Implement Apple/Android Wallet Loyalty Card (Similar to the Tesco Club Card)
 
 # Screenshots of the work in progress App:
 
