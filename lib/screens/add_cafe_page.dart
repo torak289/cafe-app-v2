@@ -66,8 +66,8 @@ class _AddCafePageState extends State<AddCafePage>
                   builder: (context, locationData) {
                     if (locationData.data == LocationPermission.always ||
                         locationData.data == LocationPermission.whileInUse) {
-                      return StreamBuilder<Position>(
-                        stream: location.positionStream,
+                      return FutureBuilder<Position>(
+                        future: location.currentPosition,
                         builder: (context, AsyncSnapshot<Position> position) {
                           if (position.hasData) {
                             return Stack(
