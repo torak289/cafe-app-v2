@@ -16,7 +16,7 @@ class LoyaltyTab extends StatelessWidget {
     final DatabaseService database = Provider.of(context, listen: false);
     final UserModel user = Provider.of(context, listen: false);
 
-    double tableHeight = 40;
+    double tableHeight = 64;
 
     return FutureBuilder<List<LoyaltyCardModel>>(
       //TODO: Change to Loyalty Model

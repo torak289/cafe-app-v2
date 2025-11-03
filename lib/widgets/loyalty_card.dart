@@ -70,6 +70,7 @@ class LoyaltyCard extends StatelessWidget {
             const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
             TextButton(
               onPressed: () {
+                debugPrint('Add to Wallet triggered!');
               },
               child: const Row(
                 children: [
