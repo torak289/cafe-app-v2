@@ -101,8 +101,8 @@ ThemeData cafeLightTheme = ThemeData(
   //Buttons
   textButtonTheme: const TextButtonThemeData(
     style: ButtonStyle(
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      minimumSize: WidgetStatePropertyAll(Size.zero),
+      //tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      //minimumSize: WidgetStatePropertyAll(Size.zero),
       shadowColor: WidgetStatePropertyAll(CafeAppUI.buttonShadowColor),
       elevation: WidgetStatePropertyAll(CafeAppUI.buttonShadowHeight),
       backgroundColor: WidgetStatePropertyAll(CafeAppUI.buttonBackgroundColor),
@@ -117,14 +117,14 @@ ThemeData cafeLightTheme = ThemeData(
   ),
   iconButtonTheme: const IconButtonThemeData(
     style: ButtonStyle(
-      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      //tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       alignment: Alignment.center,
       shadowColor: WidgetStatePropertyAll(CafeAppUI.secondaryColor),
       elevation: WidgetStatePropertyAll(CafeAppUI.buttonShadowHeight),
       backgroundColor: WidgetStatePropertyAll(CafeAppUI.iconButtonIconBGColor),
       iconColor: WidgetStatePropertyAll(CafeAppUI.iconButtonIconColor),
       iconSize: WidgetStatePropertyAll(CafeAppUI.iconButtonIconSize),
-      minimumSize: WidgetStatePropertyAll(Size.zero),
+      //minimumSize: WidgetStatePropertyAll(Size.zero),
       padding: WidgetStatePropertyAll(
         EdgeInsets.all(CafeAppUI.buttonVerticalPadding),
       ),

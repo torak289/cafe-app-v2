@@ -210,8 +210,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                           onTap: () {
                             final Uri toLaunch = Uri(
                                 scheme: 'https',
-                                host: 'www.robusta-app.com',
-                                path: '/privacy-policy');
+                                host: 'robusta-app.com',
+                                path: '/privacy');
                             _launchInAppBrowser(toLaunch);
                           },
                           child: const Text(
@@ -230,8 +230,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                           onTap: () {
                             final Uri toLaunch = Uri(
                                 scheme: 'https',
-                                host: 'www.robusta-app.com',
-                                path: '/terms-and-conditions');
+                                host: 'robusta-app.com',
+                                path: '/terms-conditions');
                             _launchInAppBrowser(toLaunch);
                           },
                           child: const Text(
