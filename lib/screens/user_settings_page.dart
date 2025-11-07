@@ -199,7 +199,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                             });
                           }
                         },
-                        child: const Text("Save"),
+                        child: const Text("Change Password"),
                       ),
                     ),
                     const Padding(padding: EdgeInsets.all(16)),
@@ -262,6 +262,12 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     color: Colors.black,
                   ),
                 ),
+                TextButton(
+                    onPressed: () {
+                      authService.signOut();
+                      Navigator.pop(context);
+                    },
+                    child: Text('Logout')),
                 TextButton(
                   style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.pinkAccent),

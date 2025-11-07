@@ -12,8 +12,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DatabaseService {
-
-  List<CafeModel> cafeMarkers = List<CafeModel>.empty(growable: true); //TODO: look to move out of here and into a provider
+  List<CafeModel> cafeMarkers = List<CafeModel>.empty(
+      growable: true); //TODO: look to move out of here and into a provider
   int cafeMarkersLength = 50;
 
   /*List<RoasterModel> roaster = List<RoasterModel>.empty(
@@ -111,13 +111,13 @@ class DatabaseService {
     return 'Success';
   }
 
-  Future<void> addCafe(CafeModel cafe, bool? cafeOwner,
-      {bool isOwner = false}) async {
-    await _database.rpc('create_new_cafe', params: {
-      'cafe': cafe.toJson(),
-      'is_owner': isOwner,
-    });
-    await _add(path: 'cafes', data: cafe.toJson());
+  Future<void> addCafe(CafeModel cafe) async {
+    try {
+      bool res = await _database
+          .rpc('create_new_cafe', params: {'cafe': cafe.toJson()});
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<bool> requestVerification(String uid) async {

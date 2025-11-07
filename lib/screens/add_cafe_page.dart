@@ -220,7 +220,7 @@ class _AddCafePageState extends State<AddCafePage>
                               description: cafeDescription.text.trim(),
                               location: animatedMapController
                                   .mapController.camera.center);
-                          await database.addCafe(newCafe, widget.cafeOwner!);
+                          await database.addCafe(newCafe);
                           if (context.mounted) {
                             Navigator.pop(context);
                           }

@@ -68,7 +68,7 @@ class _ProfileState extends State<Profile> {
             case AppState.Authenticated:
               await authService.manualRefresh();
               if (context.mounted) {
-                Navigator.pushNamed(context, Routes.profilePage);
+                Navigator.pushNamed(context, Routes.userSettingsPage);
               }
               break;
             default:

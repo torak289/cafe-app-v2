@@ -2,7 +2,7 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:flutter/material.dart';
 
 String _fontFamily = "Ubuntu";
-BorderRadius _searchBorderRadius = BorderRadius.circular(16);
+BorderRadius _searchBorderRadius = BorderRadius.circular(32);
 double _searchBorderWidth = 1.5;
 double _searchGapPadding = 0;
 
@@ -45,7 +45,7 @@ ThemeData cafeLightTheme = ThemeData(
   ),
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-    isDense: true,
+    //isDense: true,
     filled: true,
     fillColor: CafeAppUI.backgroundColor,
     floatingLabelBehavior: FloatingLabelBehavior.never,

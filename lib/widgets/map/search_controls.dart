@@ -181,11 +181,7 @@ class _SearchControlsState extends State<SearchControls> {
                       ),
                     );
                   } else {
-                    return Container(
-                      width: 100,
-                      height: 100,
-                      color: Colors.red,
-                    );
+                    return Container();
                   }
                 },
               ),

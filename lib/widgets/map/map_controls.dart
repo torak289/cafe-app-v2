@@ -56,8 +56,8 @@ class MapControls extends StatelessWidget {
               Icons.my_location_rounded,
             ),
           ),
-          Builder(builder: (context) {
-            if (user.appState == AppState.Authenticated) { //TODO: Implement a Cafe Owner database check to display.
+          /*Builder(builder: (context) { TODO: Reimplement Loyalty System
+            if (user.appState == AppState.Authenticated) { //TODO: Implement a Cafe Owner database check to display. 
               return Column(
                 children: [
                   const Padding(
@@ -78,7 +78,7 @@ class MapControls extends StatelessWidget {
             } else {
               return const SizedBox.shrink();
             }
-          })
+          })*/
         ],
       ),
     );
