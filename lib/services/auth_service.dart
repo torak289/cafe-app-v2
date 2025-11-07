@@ -23,16 +23,18 @@ class AuthService with ChangeNotifier {
   Future<void> manualRefresh() async {
     _client.auth.refreshSession();
   }
+
   Future<String> changePassword(String newPassword) async {
     try {
       await _client.auth.updateUser(UserAttributes(password: newPassword));
       return "Success";
-
     } on AuthException catch (e) {
       return e.message;
     }
   }
-  Future<bool> deleteUser(String uid) async { //TODo: 403 Forbidden this needs to move to a edge function
+
+  Future<bool> deleteUser(String uid) async {
+    //TODo: 403 Forbidden this needs to move to a edge function
     try {
       await _client.auth.admin.deleteUser(uid);
       return true;
@@ -40,6 +42,7 @@ class AuthService with ChangeNotifier {
       return Future.error(e);
     }
   }
+
   Future<AuthState> _onAuthStateChanged(AuthState data) async {
     final AuthChangeEvent event = data.event;
     final Session? session = data.session;
@@ -109,6 +112,19 @@ class AuthService with ChangeNotifier {
 
   Future<void> googleSSO() async {
     debugPrint("Google SSO");
+    await _client.auth.signInWithOAuth(OAuthProvider.google,
+        redirectTo: kIsWeb
+            ? null
+            : 'https://connect.robusta-app.com/auth/v1/callback', // Optionally set the redirect link to bring back the user via deeplink.
+        authScreenLaunchMode: kIsWeb
+            ? LaunchMode.platformDefault
+            : LaunchMode.externalApplication);
+  }
+
+  Future<void> appleSSO() async {
+    debugPrint('Apple SSO');
+    await _client.auth.signInWithOAuth(OAuthProvider.apple,
+    );
   }
 
   Future<void> facebookSSO() async {

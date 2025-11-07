@@ -82,3 +82,20 @@ class CafeModel {
     return 'uid: $uid, name: $name, $location';
   }
 }
+
+class OpeningTimeDayModel {
+  String day = "null";
+  bool isOpen = true;
+  DateTime from = DateTime.now();
+  DateTime to = DateTime.now();
+}
+
+class OpeningTimesModel {
+  OpeningTimeDayModel monday = OpeningTimeDayModel();
+  OpeningTimeDayModel tuesday = OpeningTimeDayModel();
+  OpeningTimeDayModel wednesday = OpeningTimeDayModel();
+  OpeningTimeDayModel thursday = OpeningTimeDayModel();
+  OpeningTimeDayModel friday = OpeningTimeDayModel();
+  OpeningTimeDayModel saturday = OpeningTimeDayModel();
+  OpeningTimeDayModel sunday = OpeningTimeDayModel();
+}
