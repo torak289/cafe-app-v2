@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class CafeMarker extends Marker {
   final CafeModel cafe;
@@ -26,6 +27,16 @@ class CafeMarker extends Marker {
                   mapController.animateTo(
                     dest: cafe.location,
                     zoom: 16,
+                  );
+                },
+                onLongPress: () async {
+                  final availableMaps = await MapLauncher.installedMaps;
+                  print(
+                      availableMaps); // [AvailableMap { mapName: Google Maps, mapType: google }, ...]
+
+                  await availableMaps.first.showMarker(
+                    coords: Coords(cafe.location.latitude, cafe.location.longitude),
+                    title: cafe.name!,
                   );
                 },
                 child: const Icon(
@@ -59,12 +70,13 @@ class CafeMarker extends Marker {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.all(2)),
-                      cafe.verified! ? 
-                      const Icon(
-                        Icons.verified,
-                        color: Colors.pinkAccent,
-                        size: 8,
-                      ) : const SizedBox.shrink(),
+                      cafe.verified!
+                          ? const Icon(
+                              Icons.verified,
+                              color: Colors.pinkAccent,
+                              size: 8,
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ],
