@@ -59,6 +59,7 @@ dependencies:
   flutter_launcher_icons: ^0.14.4
   url_launcher: ^6.3.1
   map_launcher: ^4.4.2
+  connectivity_plus: ^7.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/connectivity_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/themes/cafe_light.dart';
@@ -37,16 +38,15 @@ class CafeApp extends StatelessWidget {
                   ChangeNotifierProvider<LocationService>(
                     create: (context) => LocationService(),
                   ),
+                  ChangeNotifierProvider<ConnectivityService>(
+                    create: (context) => ConnectivityService(),
+                  )
                 ],
-                child: SafeArea(
-                  left: false,
-                  right: false,
-                  child: MaterialApp(
-                    title: 'Robusta',
-                    theme: cafeLightTheme,
-                    routes: Routes.routes,
-                    initialRoute: Routes.mapPage,
-                  ),
+                child: MaterialApp(
+                  title: 'Robusta',
+                  theme: cafeLightTheme,
+                  routes: Routes.routes,
+                  initialRoute: Routes.mapPage,
                 ),
               );
             },

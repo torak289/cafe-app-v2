@@ -15,11 +15,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Color currentColor = Colors.white;
+  Color currentColor = Colors.black;
 
   @override
   void initState() {
-    currentColor = Colors.white;
+    currentColor = Colors.black;
     super.initState();
   }
 
