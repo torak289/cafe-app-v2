@@ -74,171 +74,172 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         builder: (context, locationData) {
           if (locationData.data == LocationPermission.always ||
               locationData.data == LocationPermission.whileInUse) {
-            return SafeArea(
-              child: Stack(children: [
-                StreamBuilder<List<ConnectivityResult>>(
-                    stream: connectivity.connectivityStream,
-                    builder: (context, snapshot) {
-                      final isConnected =
-                          !(snapshot.data?.contains(ConnectivityResult.none) ??
-                              true);
-                      if (!isConnected) {
-                        return SizedBox.shrink();
-                      } else {
-                        return Container(
-                          constraints: BoxConstraints.expand(height: 40),
-                          color: Colors.pinkAccent,
-                          child: Center(
-                            child: Text(
-                              'Check your network connection...',
-                              style:
-                                  TextStyle(color: CafeAppUI.buttonTextColor),
-                            ),
+            return Stack(children: [
+              StreamBuilder<List<ConnectivityResult>>(
+                  stream: connectivity.connectivityStream,
+                  builder: (context, snapshot) {
+                    final isConnected =
+                        !(snapshot.data?.contains(ConnectivityResult.none) ??
+                            true);
+                    if (!isConnected) {
+                      return SizedBox.shrink();
+                    } else {
+                      return Container(
+                        height: 64,
+                        color: Colors.pinkAccent,
+                        child: Center(
+                          child: Text(
+                            'Check your network connection...',
+                            style: TextStyle(color: CafeAppUI.buttonTextColor),
                           ),
-                        );
-                      }
-                    }),
-                StreamBuilder<Position>(
-                  stream: location.positionStream,
-                  builder: (context, AsyncSnapshot<Position> position) {
-                    if (position.hasData) {
-                      return Stack(
-                        children: [
-                          FutureBuilder(
-                            future: _cacheStoreFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final cacheStore = snapshot.data!;
-                                return FlutterMap(
-                                  mapController:
-                                      animatedMapController.mapController,
-                                  options: MapOptions(
-                                    onMapEvent: (event) => setState(
-                                      () {
-                                        //TODO: Improve Debounce... >>> Movement based Debounce >>> Location based Debounce
-                                        //TODO: Implement Caching...
-                                        String evtName =
-                                            _eventName(event, markerLayer);
-                                        final id =
-                                            AnimationId.fromMapEvent(event);
-                                        if (id != null) {
-                                          if (id.moveId ==
-                                              AnimatedMoveId.finished) {
-                                            _inBoundsDebouncer.run(() {
-                                              markerLayer =
-                                                  database.getCafesInBounds(
-                                                      animatedMapController);
-                                            });
-                                          }
-                                        }
-                                        if (evtName == 'MapEventMoveEnd' ||
-                                            evtName ==
-                                                'MapEventFlingAnimationEnd' ||
-                                            evtName ==
-                                                'MapEventNonRotatedSizeChange') {
+                        ),
+                      );
+                    }
+                  }),
+              StreamBuilder<Position>(
+                stream: location.positionStream,
+                builder: (context, AsyncSnapshot<Position> position) {
+                  if (position.hasData) {
+                    return Stack(
+                      children: [
+                        FutureBuilder(
+                          future: _cacheStoreFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              final cacheStore = snapshot.data!;
+                              return FlutterMap(
+                                mapController:
+                                    animatedMapController.mapController,
+                                options: MapOptions(
+                                  onMapEvent: (event) => setState(
+                                    () {
+                                      //TODO: Improve Debounce... >>> Movement based Debounce >>> Location based Debounce
+                                      //TODO: Implement Caching...
+                                      String evtName =
+                                          _eventName(event, markerLayer);
+                                      final id =
+                                          AnimationId.fromMapEvent(event);
+                                      if (id != null) {
+                                        if (id.moveId ==
+                                            AnimatedMoveId.finished) {
                                           _inBoundsDebouncer.run(() {
                                             markerLayer =
                                                 database.getCafesInBounds(
                                                     animatedMapController);
                                           });
                                         }
-                                      },
-                                    ),
-                                    onLongPress: (tapPos, latlng) {
-                                      //This fails silently when location issues appear...
-                                      if (authService.appState ==
-                                          AppState.Authenticated) {
-                                        Navigator.pushNamed(
-                                          context,
-                                          Routes.addCafePage,
-                                          arguments: AddCafeArgs(
-                                            cafePosition: latlng,
-                                            isOwner: false,
-                                          ),
-                                        );
-                                      } else {
-                                        debugPrint("Not Authenticated");
+                                      }
+                                      if (evtName == 'MapEventMoveEnd' ||
+                                          evtName ==
+                                              'MapEventFlingAnimationEnd' ||
+                                          evtName ==
+                                              'MapEventNonRotatedSizeChange') {
+                                        _inBoundsDebouncer.run(() {
+                                          markerLayer =
+                                              database.getCafesInBounds(
+                                                  animatedMapController);
+                                        });
                                       }
                                     },
-                                    initialCenter: LatLng(
-                                        position.data!.latitude,
-                                        position.data!.longitude),
-                                    initialZoom: 16,
-                                    maxZoom: 21,
-                                    interactionOptions:
-                                        const InteractionOptions(
-                                      flags: InteractiveFlag.all &
-                                          ~InteractiveFlag.rotate,
-                                    ),
-                                    cameraConstraint: CameraConstraint.contain(
-                                      bounds: LatLngBounds(
-                                        const LatLng(-90, -180),
-                                        const LatLng(90, 180),
-                                      ),
+                                  ),
+                                  onLongPress: (tapPos, latlng) {
+                                    //This fails silently when location issues appear...
+                                    if (authService.appState ==
+                                        AppState.Authenticated) {
+                                      Navigator.pushNamed(
+                                        context,
+                                        Routes.addCafePage,
+                                        arguments: AddCafeArgs(
+                                          cafePosition: latlng,
+                                          isOwner: false,
+                                        ),
+                                      );
+                                    } else {
+                                      debugPrint("Not Authenticated");
+                                    }
+                                  },
+                                  initialCenter: LatLng(position.data!.latitude,
+                                      position.data!.longitude),
+                                  initialZoom: 16,
+                                  maxZoom: 21,
+                                  interactionOptions: const InteractionOptions(
+                                    flags: InteractiveFlag.all &
+                                        ~InteractiveFlag.rotate,
+                                  ),
+                                  cameraConstraint: CameraConstraint.contain(
+                                    bounds: LatLngBounds(
+                                      const LatLng(-90, -180),
+                                      const LatLng(90, 180),
                                     ),
                                   ),
-                                  children: [
-                                    TileLayer(
-                                      urlTemplate:
-                                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                                      userAgentPackageName: 'io.cafe-app',
-                                      maxZoom: 25,
-                                      tileProvider: CachedTileProvider(
-                                        store: cacheStore,
-                                        maxStale: const Duration(days: 2),
+                                ),
+                                children: [
+                                  TileLayer(
+                                    urlTemplate:
+                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                    userAgentPackageName: 'io.cafe-app',
+                                    maxZoom: 25,
+                                    tileProvider: CachedTileProvider(
+                                      store: cacheStore,
+                                      maxStale: const Duration(days: 2),
+                                    ),
+                                  ),
+                                  MarkerLayer(
+                                    markers: [
+                                      UserMarker(
+                                        position: position.data!,
+                                        controller:
+                                            animatedMapController.mapController,
                                       ),
-                                    ),
-                                    MarkerLayer(
-                                      markers: [
-                                        UserMarker(
-                                          position: position.data!,
-                                          controller: animatedMapController
-                                              .mapController,
-                                        ),
-                                      ],
-                                    ),
-                                    FutureBuilder(
-                                      future: markerLayer,
-                                      builder: (context, cafeMarkers) {
-                                        if (cafeMarkers.hasData) {
-                                          return cafeMarkers.data!;
-                                        } else {
-                                          return const MarkerLayer(markers: []);
-                                        }
-                                      },
-                                    )
-                                  ],
-                                );
-                              } else {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
-                          //Map Controls
-                          MapControls(
-                              animatedMapController: animatedMapController,
-                              position: position.data!),
-                          //Profile
-                          const Profile(),
-                          SearchControls(
-                            markerLayer: markerLayer,
-                            mapController: animatedMapController,
-                          ),
-                        ],
-                      );
-                    } else {
-                      return const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
+                                    ],
+                                  ),
+                                  FutureBuilder(
+                                    future: markerLayer,
+                                    builder: (context, cafeMarkers) {
+                                      if (cafeMarkers.hasData) {
+                                        return cafeMarkers.data!;
+                                      } else {
+                                        return const MarkerLayer(markers: []);
+                                      }
+                                    },
+                                  )
+                                ],
+                              );
+                            } else {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
                         ),
-                      );
-                    }
-                  },
-                ),
-              ]),
-            );
+                        SafeArea(
+                          child: Stack(
+                            children: [
+                              //Map Controls
+                              MapControls(
+                                  animatedMapController: animatedMapController,
+                                  position: position.data!),
+                              //Profile
+                              const Profile(),
+                              SearchControls(
+                                markerLayer: markerLayer,
+                                mapController: animatedMapController,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ]);
           } else {
             return Padding(
               padding: const EdgeInsets.symmetric(
