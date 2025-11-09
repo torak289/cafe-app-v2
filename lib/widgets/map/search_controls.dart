@@ -125,6 +125,7 @@ class _SearchControlsState extends State<SearchControls> {
                           },
                           child: Container(
                             //This is being used to make the hit target the full bar
+                            height: 24,
                             color: Colors.transparent,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,7 +139,7 @@ class _SearchControlsState extends State<SearchControls> {
                                         '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
                                     const Padding(padding: EdgeInsets.all(4)),
                                     GestureDetector(
-                                      
+                                      child: Icon(Icons.explore, color: Colors.black,),
                                     )
                                   ],
                                 ),
