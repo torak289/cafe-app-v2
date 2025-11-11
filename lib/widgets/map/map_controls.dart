@@ -2,6 +2,8 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
@@ -20,7 +22,9 @@ class MapControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthService user = Provider.of(context, listen: false);
+    //AuthService user = Provider.of(context, listen: false);
+    final LocationService location =
+        Provider.of<LocationService>(context, listen: false);
 
     return Positioned(
       right: CafeAppUI.mapControlsRightPadding,
@@ -56,7 +60,32 @@ class MapControls extends StatelessWidget {
               Icons.my_location_rounded,
             ),
           ),
-          /*Builder(builder: (context) { TODO: Reimplement Loyalty System
+          const Padding(
+              padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
+          FutureBuilder(
+              future: location.currentPosition,
+              builder: (context, snapshot) {
+                return IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(
+                      context,
+                      Routes.addCafePage,
+                      arguments: AddCafeArgs(
+                        cafePosition: LatLng(
+                            snapshot.data!.latitude, snapshot.data!.longitude),
+                        isOwner: false,
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.add_rounded,
+                    color: CafeAppUI.iconButtonIconBGColor,
+                  ),
+                  style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(Colors.black)),
+                );
+              })
+          /*Builder(builder: (context) { //TODO: Reimplement Loyalty System
             if (user.appState == AppState.Authenticated) { //TODO: Implement a Cafe Owner database check to display. 
               return Column(
                 children: [
