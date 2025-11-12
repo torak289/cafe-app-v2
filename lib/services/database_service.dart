@@ -38,6 +38,34 @@ class DatabaseService {
     }
   }
 
+  Future<List<CafeModel>> semanticSearch(
+    String text,
+    Position currentPos, {
+    List<double>? embedding, // pass null to skip semantic scoring
+    int radiusM = 2500,
+    int maxResults = 10,
+  }) async {
+    try {
+      final data = await _selectUsingFunc(
+        func: 'search_cafes_hybrid',
+        params: {
+          'q_text': text,
+          'q_embedding': embedding, // List<double>? or null
+          'user_lon': currentPos.latitude, // <-- correct param names
+          'user_lat': currentPos.longitude, //Weirdness for lat long storage in the DB???
+          'radius_m': radiusM,
+          'max_results': maxResults,
+        },
+      );
+
+      return (data as List)
+          .map((row) => CafeModel.fromJson(row as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
   Future<List<CafeModel>> search(String text, Position currentPos) async {
     List<CafeModel> results = List.empty(growable: true);
 

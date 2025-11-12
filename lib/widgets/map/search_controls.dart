@@ -48,7 +48,7 @@ class _SearchControlsState extends State<SearchControls> {
       pos = await location.currentPosition;
       searchDebounce.run(
         () async {
-          final results = await database.search(text, pos);
+          final results = await database.semanticSearch(text, pos);
 
           setState(() {
             cafeResults = results;
