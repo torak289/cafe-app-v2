@@ -217,8 +217,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             children: [
                               //Map Controls
                               MapControls(
-                                  animatedMapController: animatedMapController,
-                                  position: position.data!),
+                                animatedMapController: animatedMapController,
+                                position: position.data!,
+                                isAddCafePage: false,
+                              ),
                               //Profile
                               const Profile(),
                               SearchControls(

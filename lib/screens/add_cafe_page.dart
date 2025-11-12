@@ -121,6 +121,7 @@ class _AddCafePageState extends State<AddCafePage>
                                   MapControls(
                                     animatedMapController: animatedMapController,
                                     position: position.data!,
+                                    isAddCafePage: true,
                                   ),
                                 ],
                               );

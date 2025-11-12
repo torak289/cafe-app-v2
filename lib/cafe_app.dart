@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CafeApp extends StatelessWidget {
-  const CafeApp({super.key});
+  CafeApp({super.key});
 
   // This widget is the root of your application.
   @override

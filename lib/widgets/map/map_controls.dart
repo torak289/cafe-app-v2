@@ -11,14 +11,16 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class MapControls extends StatelessWidget {
-  const MapControls({
+  MapControls({
     super.key,
     required this.animatedMapController,
     required this.position,
+    required this.isAddCafePage,
   });
 
   final AnimatedMapController animatedMapController;
   final Position position;
+  bool isAddCafePage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +64,9 @@ class MapControls extends StatelessWidget {
           ),
           Builder(builder: (context) {
             //TODO: Reimplement Loyalty System
-            if (user.appState == AppState.Authenticated) {
+            if (user.appState == AppState.Authenticated && !isAddCafePage) {
               //TODO: Implement a Cafe Owner database check to display.
+              //TODO: Remove thos when on the add cafe page.
               return Column(
                 children: [
                   const Padding(
