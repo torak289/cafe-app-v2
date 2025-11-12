@@ -176,7 +176,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                 children: [
                                   TileLayer(
                                     urlTemplate:
-                                        'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                        'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
                                     userAgentPackageName: 'io.cafe-app',
                                     maxZoom: 25,
                                     tileProvider: CachedTileProvider(
