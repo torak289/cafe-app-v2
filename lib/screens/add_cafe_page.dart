@@ -51,6 +51,13 @@ class _AddCafePageState extends State<AddCafePage>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Center(
+                  child: const Text(
+                    'Add New Cafe',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
+                Padding(padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
                 Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -95,7 +102,7 @@ class _AddCafePageState extends State<AddCafePage>
                                     children: [
                                       TileLayer(
                                         urlTemplate:
-                                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                            'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
                                         userAgentPackageName: 'io.cafe-app',
                                         maxZoom: 25,
                                       ),
@@ -162,14 +169,14 @@ class _AddCafePageState extends State<AddCafePage>
                   controller: cafeName,
                 ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                /*const Text(
+                const Text(
                   'Instagram',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 TextField(
                   controller: cafeName,
-                ),*/
+                ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 const Text(
                   'Description',
