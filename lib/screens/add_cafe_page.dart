@@ -162,6 +162,15 @@ class _AddCafePageState extends State<AddCafePage>
                   controller: cafeName,
                 ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                /*const Text(
+                  'Instagram',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                TextField(
+                  controller: cafeName,
+                ),*/
+                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 const Text(
                   'Description',
                   style: TextStyle(fontWeight: FontWeight.bold),
