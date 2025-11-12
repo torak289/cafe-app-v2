@@ -22,7 +22,7 @@ class MapControls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //AuthService user = Provider.of(context, listen: false);
+    AuthService user = Provider.of(context, listen: false);
     final LocationService location =
         Provider.of<LocationService>(context, listen: false);
 
@@ -60,54 +60,45 @@ class MapControls extends StatelessWidget {
               Icons.my_location_rounded,
             ),
           ),
-          const Padding(
-              padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
-          FutureBuilder(
-              future: location.currentPosition,
-              builder: (context, snapshot) {
-                return IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      Routes.addCafePage,
-                      arguments: AddCafeArgs(
-                        cafePosition: LatLng(
-                            snapshot.data!.latitude, snapshot.data!.longitude),
-                        isOwner: false,
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.add_rounded,
-                    color: CafeAppUI.iconButtonIconBGColor,
-                  ),
-                  style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.black)),
-                );
-              })
-          /*Builder(builder: (context) { //TODO: Reimplement Loyalty System
-            if (user.appState == AppState.Authenticated) { //TODO: Implement a Cafe Owner database check to display. 
+          Builder(builder: (context) {
+            //TODO: Reimplement Loyalty System
+            if (user.appState == AppState.Authenticated) {
+              //TODO: Implement a Cafe Owner database check to display.
               return Column(
                 children: [
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  IconButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, Routes.qrCodePage),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.black),
-                    ),
-                    icon: const Icon(
-                      Icons.qr_code_rounded,
-                      color: CafeAppUI.buttonTextColor,
-                    ),
+                  StreamBuilder(
+                    stream: location.positionStream,
+                    builder: (context, snapshot) {
+                      return IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.addCafePage,
+                            arguments: AddCafeArgs(
+                              cafePosition: LatLng(snapshot.data!.latitude,
+                                  snapshot.data!.longitude),
+                              isOwner: false,
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.add_rounded,
+                          color: CafeAppUI.iconButtonIconBGColor,
+                        ),
+                        style: ButtonStyle(
+                            backgroundColor:
+                                WidgetStatePropertyAll(Colors.black)),
+                      );
+                    },
                   ),
                 ],
               );
             } else {
               return const SizedBox.shrink();
             }
-          })*/
+          })
         ],
       ),
     );
