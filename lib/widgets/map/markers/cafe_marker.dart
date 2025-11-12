@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:flutter_rating/flutter_rating.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,16 +34,39 @@ class CafeMarker extends Marker {
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text("Star Rating Here..."),
-                              Padding(
-                                  padding: EdgeInsetsGeometry.all(
-                                      CafeAppUI.buttonSpacingMedium)),
-                              Text(cafe.description != null
-                                  ? cafe.description!
-                                  : "This cafe doesn't have a description. If you added this cafe please add one!"),
+                              Row(
+                                children: [
+                                  StarRating(
+                                    color: CafeAppUI.iconButtonIconColor,
+                                    borderColor: CafeAppUI.iconButtonIconColor,
+                                    starCount: 5,
+                                    rating:
+                                        cafe.rating != null ? cafe.rating! : -1,
+                                  ),
+                                  Text(cafe.rating != null
+                                      ? '(${cafe.rating!})'
+                                      : '(No Rating)'),
+                                ],
+                              ),
+                              Builder(builder: (context) {
+                                if (cafe.description != null ||
+                                    cafe.description!.isEmpty) {
+                                  return Column(
+                                    children: [
+                                      Padding(
+                                          padding: EdgeInsetsGeometry.all(
+                                              CafeAppUI.buttonSpacingMedium)),
+                                      Text(cafe.description!),
+                                    ],
+                                  );
+                                } else {
+                                  return SizedBox.shrink();
+                                }
+                              })
                             ],
                           ),
                           actionsAlignment: MainAxisAlignment.center,
+                          actionsOverflowAlignment: OverflowBarAlignment.center,
                           actions: [
                             TextButton(onPressed: null, child: Text('Review')),
                             TextButton(

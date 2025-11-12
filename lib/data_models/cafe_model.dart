@@ -39,7 +39,7 @@ class CafeModel {
       //'coffees': coffees,
       //'owner': owner,
       'location': 'POINT(${location.latitude} ${location.longitude})',
-      //'rating': rating,
+      'rating': rating,
       //'verified': verified,
       //'claim_amount': claimAmount,
     };
