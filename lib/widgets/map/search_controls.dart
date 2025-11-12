@@ -3,6 +3,7 @@ import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
@@ -12,10 +13,6 @@ import 'package:provider/provider.dart';
 class SearchControls extends StatefulWidget {
   final Future<MarkerLayer> markerLayer;
   final AnimatedMapController mapController;
-
-  bool showSearch = false;
-  bool hasSearchResults = false;
-
   SearchControls({
     super.key,
     required this.markerLayer,
@@ -29,36 +26,71 @@ class SearchControls extends StatefulWidget {
 class _SearchControlsState extends State<SearchControls> {
   Debouncer searchDebounce = Debouncer(milliseconds: 250);
   final TextEditingController searchController = TextEditingController();
-
   late DatabaseService database;
   late LocationService location;
-  late List<CafeModel> cafeResults = List.empty(growable: true);
-  late Position pos;
+  List<CafeModel> cafeResults = List.empty(growable: true);
+  Position? pos;
+  bool showSearch = false;
+  // removed pointer-down guards and hide timer — dismissal only on keyboard submit
   @override
   void initState() {
     super.initState();
     database = Provider.of<DatabaseService>(context, listen: false);
     location = Provider.of<LocationService>(context, listen: false);
+    // Show search only when the user interacts; keep collapsed by default.
+    showSearch = false;
+
+    _addSearchListener();
   }
 
-//TODO: Implement hybrid search backend only???
+  void _addSearchListener() {
+    try {
+      searchController.addListener(_search);
+    } catch (_) {}
+  }
+
+  void _removeSearchListener() {
+    try {
+      searchController.removeListener(_search);
+    } catch (_) {}
+  }
+
+  @override
+  void dispose() {
+    _removeSearchListener();
+    searchController.dispose();
+    super.dispose();
+  }
   void _search() async {
     final text = searchController.text;
     try {
-      pos = await location.currentPosition;
+      // If search text is empty, clear results and keep search open.
+      if (text.trim().isEmpty) {
+        setState(() {
+          cafeResults = List.empty(growable: true);
+          showSearch = true;
+        });
+        return;
+      }
+
+      // Acquire current position once (may be cached by the LocationService).
+      final current = await location.currentPosition;
+      pos = current;
+
       searchDebounce.run(
         () async {
-          final results = await database.semanticSearch(text, pos);
+          final results = await database.semanticSearch(text, current);
 
+          if (!mounted) return;
           setState(() {
             cafeResults = results;
-            widget.showSearch = true;
-            widget.hasSearchResults = true;
+            showSearch = true;
           });
         },
       );
     } catch (e) {
-      Future.error(e);
+      // Keep UI stable on errors
+      debugPrint('Search error: $e');
     }
   }
 
@@ -85,107 +117,123 @@ class _SearchControlsState extends State<SearchControls> {
                 },
                 child: const Text("Find Cafe"),
               ),
-              Builder(
-                builder: (context) {
-                  if (widget.showSearch) {
-                    List<Widget> list = List.empty(growable: true);
-                    if (cafeResults.isEmpty) {
-                      list.add(
-                        Container(
-                          //This is being used to make the hit target the full bar
-                          color: Colors.transparent,
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "No Result Found...",
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                    for (int i = 0; i < cafeResults.length; i++) {
-                      list.add(
-                        GestureDetector(
-                          onTap: () {
-                            widget.mapController.animateTo(
-                              duration: const Duration(milliseconds: 200),
-                              dest: cafeResults[i].location,
-                              zoom: widget
-                                  .mapController.mapController.camera.zoom,
-                            );
-                            setState(
-                              () {
-                                searchController.text = cafeResults[i].name!;
-                                cafeResults = List.empty();
-                                widget.showSearch = false;
-                              },
-                            );
-                          },
-                          child: Container(
-                            //This is being used to make the hit target the full bar
-                            height: 24,
-                            color: Colors.transparent,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  cafeResults[i].name.toString(),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                        '${(Geolocator.distanceBetween(pos.latitude, pos.longitude, cafeResults[i].location.latitude, cafeResults[i].location.longitude) / 1000).toStringAsFixed(1)} km'),
-                                    const Padding(padding: EdgeInsets.all(4)),
-                                    GestureDetector(
-                                      child: Icon(Icons.explore, color: Colors.black,),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                      if (!(i >= cafeResults.length - 1)) {
-                        list.add(
-                          const Divider(
-                            height: 4,
-                            thickness: 1.25,
-                            color: Colors.black,
-                          ),
-                        );
-                      }
-                    }
-                    return Flexible(
-                      fit: FlexFit.loose,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: CafeAppUI.backgroundColor,
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1.5,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(16)),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 16,
-                          ),
-                          child: Column(
-                            children: list,
-                          ),
-                        ),
+              Builder(builder: (context) {
+                if (!showSearch) return Container();
+
+                // Build result list
+                if (cafeResults.isEmpty) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: CafeAppUI.backgroundColor,
+                      border: Border.all(color: Colors.black, width: 1.5),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(16)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 16,
                       ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
+                      child: const Text('No Result Found...'),
+                    ),
+                  );
+                }
+
+                return ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 240),
+                  child: Material(
+                    color: CafeAppUI.backgroundColor,
+                    shape: RoundedRectangleBorder(
+                      side: const BorderSide(color: Colors.black, width: 1.5),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: List.generate(cafeResults.length, (i) {
+                          final cafe = cafeResults[i];
+                          final distance = (pos != null)
+                              ? (Geolocator.distanceBetween(
+                                          pos!.latitude,
+                                          pos!.longitude,
+                                          cafe.location.latitude,
+                                          cafe.location.longitude) /
+                                      1000)
+                                  .toStringAsFixed(1)
+                              : '-';
+
+                          return Column(
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  widget.mapController.animateTo(
+                                    duration: const Duration(milliseconds: 200),
+                                    dest: cafe.location,
+                                    zoom: widget.mapController
+                                        .mapController.camera.zoom,
+                                  );
+
+                                  // Remove the listener while we programmatically
+                                  // set the controller text so it doesn't trigger a
+                                  // search. Re-add it shortly after.
+                                  _removeSearchListener();
+                                  searchController.text = cafe.name ?? '';
+                                  setState(() {
+                                    cafeResults = List.empty(growable: true);
+                                    showSearch = false;
+                                  });
+
+                                  Future.delayed(const Duration(milliseconds: 250), () {
+                                    if (mounted) _addSearchListener();
+                                  });
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 12.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          cafe.name.toString(),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text('$distance km'),
+                                          const SizedBox(width: 8),
+                                          IconButton(
+                                            onPressed: () {
+                                              // launch external maps
+                                              CafeappUtils.launchMap(cafe.location);
+                                            },
+                                            icon: const Icon(
+                                              Icons.explore,
+                                              color: Colors.black,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              if (i < cafeResults.length - 1)
+                                const Divider(
+                                  height: 4,
+                                  thickness: 1.25,
+                                  color: Colors.black,
+                                ),
+                            ],
+                          );
+                        }),
+                      ),
+                    ),
+                  ),
+                );
+              }),
             ],
           ),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
@@ -193,10 +241,19 @@ class _SearchControlsState extends State<SearchControls> {
             decoration: const InputDecoration(labelText: 'Search a cafe!'),
             //TODO: meh behavior improve...
             controller: searchController,
-            onSubmitted: (value) {
-              debugPrint("onSubmitted");
+            onTap: () {
+              setState(() {
+                showSearch = true;
+              });
             },
-            onChanged: (value) => _search(),
+            onSubmitted: (_) {
+              // Hide results and dismiss keyboard when user submits
+              FocusScope.of(context).unfocus();
+              setState(() {
+                showSearch = false;
+              });
+            },
+            // dismissal of results is only handled on keyboard submit (onSubmitted)
           )
         ],
       ),
