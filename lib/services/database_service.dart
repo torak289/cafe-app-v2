@@ -5,6 +5,7 @@ import 'package:cafeapp_v2/data_models/loyalty_card_model.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
@@ -188,7 +189,7 @@ class DatabaseService {
   }
 
   Future<MarkerLayer> getCafesInBounds(
-      AnimatedMapController mapController) async {
+      AnimatedMapController mapController, BuildContext context) async {
     List<CafeMarker> markers = List.empty(growable: true);
     try {
       LatLngBounds bounds = mapController.mapController.camera.visibleBounds;
@@ -204,7 +205,7 @@ class DatabaseService {
       for (CafeModel c in cafes) {
         _addCafeToMarkerList(c);
       }
-      markers = CafeappUtils.cafesToMarkers(cafeMarkers, mapController);
+      markers = CafeappUtils.cafesToMarkers(cafeMarkers, mapController, context);
 
       return MarkerLayer(markers: markers);
     } catch (e) {

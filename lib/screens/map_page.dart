@@ -40,7 +40,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   late DatabaseService database;
   late Future<MarkerLayer> markerLayer =
-      database.getCafesInBounds(animatedMapController);
+      database.getCafesInBounds(animatedMapController, context);
 
   final Future<CacheStore> _cacheStoreFuture = _getCacheStore();
 
@@ -125,7 +125,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                           _inBoundsDebouncer.run(() {
                                             markerLayer =
                                                 database.getCafesInBounds(
-                                                    animatedMapController);
+                                                    animatedMapController, context);
                                           });
                                         }
                                       }
@@ -137,7 +137,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                         _inBoundsDebouncer.run(() {
                                           markerLayer =
                                               database.getCafesInBounds(
-                                                  animatedMapController);
+                                                  animatedMapController, context);
                                         });
                                       }
                                     },
