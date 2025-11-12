@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                         TextButton(
-                          onPressed: () => authService.facebookSSO(),
+                          onPressed: () => authService.appleSSO(),
                           child: const Row(
                             children: [
                               Icon(Icons.apple_rounded),
