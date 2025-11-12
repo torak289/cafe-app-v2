@@ -1,5 +1,4 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
-import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -29,6 +28,7 @@ class _AddCafePageState extends State<AddCafePage>
       AnimatedMapController(vsync: this);
   TextEditingController cafeName = TextEditingController();
   TextEditingController cafeDescription = TextEditingController();
+  TextEditingController cafeInstagram = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +74,8 @@ class _AddCafePageState extends State<AddCafePage>
                     builder: (context, locationData) {
                       if (locationData.data == LocationPermission.always ||
                           locationData.data == LocationPermission.whileInUse) {
-                        return FutureBuilder<Position>(
-                          future: location.currentPosition,
+                        return StreamBuilder<Position>(
+                          stream: location.positionStream,
                           builder: (context, AsyncSnapshot<Position> position) {
                             if (position.hasData) {
                               return Stack(
@@ -175,7 +175,7 @@ class _AddCafePageState extends State<AddCafePage>
                 ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 TextField(
-                  controller: cafeName,
+                  controller: cafeInstagram,
                 ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 const Text(
