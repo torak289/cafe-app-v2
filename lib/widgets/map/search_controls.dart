@@ -139,97 +139,95 @@ class _SearchControlsState extends State<SearchControls> {
                   );
                 }
 
-                return ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 240),
-                  child: Material(
-                    color: CafeAppUI.backgroundColor,
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(color: Colors.black, width: 1.5),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: List.generate(cafeResults.length, (i) {
-                          final cafe = cafeResults[i];
-                          final distance = (pos != null)
-                              ? (Geolocator.distanceBetween(
-                                          pos!.latitude,
-                                          pos!.longitude,
-                                          cafe.location.latitude,
-                                          cafe.location.longitude) /
-                                      1000)
-                                  .toStringAsFixed(1)
-                              : '-';
+                return Material(
+                  color: CafeAppUI.backgroundColor,
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Colors.black, width: 1.5),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(cafeResults.length, (i) {
+                        final cafe = cafeResults[i];
+                        final distance = (pos != null)
+                            ? (Geolocator.distanceBetween(
+                                        pos!.latitude,
+                                        pos!.longitude,
+                                        cafe.location.latitude,
+                                        cafe.location.longitude) /
+                                    1000)
+                                .toStringAsFixed(1)
+                            : '-';
 
-                          return Column(
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  widget.mapController.animateTo(
-                                    duration: const Duration(milliseconds: 200),
-                                    dest: cafe.location,
-                                    zoom: widget.mapController
-                                        .mapController.camera.zoom,
-                                  );
+                        return Column(
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                widget.mapController.animateTo(
+                                  duration: const Duration(milliseconds: 200),
+                                  dest: cafe.location,
+                                  zoom: widget.mapController
+                                      .mapController.camera.zoom,
+                                );
 
-                                  // Remove the listener while we programmatically
-                                  // set the controller text so it doesn't trigger a
-                                  // search. Re-add it shortly after.
-                                  _removeSearchListener();
-                                  searchController.text = cafe.name ?? '';
-                                  setState(() {
-                                    cafeResults = List.empty(growable: true);
-                                    showSearch = false;
-                                  });
+                                // Remove the listener while we programmatically
+                                // set the controller text so it doesn't trigger a
+                                // search. Re-add it shortly after.
+                                _removeSearchListener();
+                                searchController.text = cafe.name ?? '';
+                                setState(() {
+                                  cafeResults = List.empty(growable: true);
+                                  showSearch = false;
+                                });
 
-                                  Future.delayed(const Duration(milliseconds: 250), () {
-                                    if (mounted) _addSearchListener();
-                                  });
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 12.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: Text(
-                                          cafe.name.toString(),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
+                                Future.delayed(const Duration(milliseconds: 250), () {
+                                  if (mounted) _addSearchListener();
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 12.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        cafe.name.toString(),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      Row(
-                                        children: [
-                                          Text('$distance km'),
-                                          const SizedBox(width: 8),
-                                          IconButton(
-                                            onPressed: () {
-                                              // launch external maps
-                                              CafeappUtils.launchMap(cafe.location);
-                                            },
-                                            icon: const Icon(
-                                              Icons.explore,
-                                              color: Colors.black,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text('$distance km'),
+                                        const SizedBox(width: 8),
+                                        IconButton(
+                                          onPressed: () {
+                                            // launch external maps
+                                            CafeappUtils.launchMap(cafe.location);
+                                          },
+                                          icon: const Icon(
+                                            Icons.explore,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                              if (i < cafeResults.length - 1)
-                                const Divider(
-                                  height: 4,
-                                  thickness: 1.25,
-                                  color: Colors.black,
-                                ),
-                            ],
-                          );
-                        }),
-                      ),
+                            ),
+                            if (i < cafeResults.length - 1)
+                              const Divider(
+                                height: 4,
+                                thickness: 1.25,
+                                color: Colors.black,
+                              ),
+                          ],
+                        );
+                      }),
                     ),
                   ),
                 );
