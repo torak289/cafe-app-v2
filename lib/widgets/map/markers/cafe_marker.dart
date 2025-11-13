@@ -40,7 +40,6 @@ class CafeMarker extends Marker {
                                     color: CafeAppUI.iconButtonIconColor,
                                     borderColor: CafeAppUI.iconButtonIconColor,
                                     starCount: 5,
-                        
                                     rating:
                                         cafe.rating != null ? cafe.rating! : 0,
                                   ),
@@ -70,13 +69,16 @@ class CafeMarker extends Marker {
                           actionsOverflowAlignment: OverflowBarAlignment.center,
                           actions: [
                             TextButton(
-                                onPressed: () => showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) =>
-                                          rating_popup(
-                                        cafe: cafe,
-                                      ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        rating_popup(
+                                      cafe: cafe,
                                     ),
+                                  );
+                                },
                                 child: Text('Review')),
                             TextButton(
                                 onPressed: () async {
