@@ -1,5 +1,7 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
+import 'package:cafeapp_v2/enum/app_states.dart';
+import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +9,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:cafeapp_v2/widgets/map/markers/rating_popup.dart';
+import 'package:provider/provider.dart';
 
 class CafeMarker extends Marker {
   final CafeModel cafe;
@@ -29,7 +32,9 @@ class CafeMarker extends Marker {
                     builder: (BuildContext context) => AlertDialog(
                           title: Center(
                               child: Text(
-                                  cafe.name != null ? cafe.name! : "NO NAME")),
+                            cafe.name != null ? cafe.name! : "NO NAME",
+                            textAlign: TextAlign.center,
+                          )),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -68,7 +73,10 @@ class CafeMarker extends Marker {
                           actionsAlignment: MainAxisAlignment.center,
                           actionsOverflowAlignment: OverflowBarAlignment.center,
                           actions: [
-                            TextButton(
+                            Builder(builder: (BuildContext context) {
+                              AuthService authService = Provider.of<AuthService>(context, listen: false);
+                              if(authService.appState == AppState.Authenticated) {
+                                return TextButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                   showDialog(
@@ -79,7 +87,11 @@ class CafeMarker extends Marker {
                                     ),
                                   );
                                 },
-                                child: Text('Review')),
+                                child: Text('Review'));
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            }),
                             TextButton(
                                 onPressed: () async {
                                   CafeappUtils.launchMap(cafe.location);
