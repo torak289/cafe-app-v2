@@ -14,6 +14,8 @@ class CafeModel {
   bool? verified;
   bool verificationRequested;
   int? claimAmount;
+  String? instagram;
+  int? totalReviews;
 
   CafeModel({
     this.uid,
@@ -27,6 +29,8 @@ class CafeModel {
     this.verified,
     this.claimAmount,
     this.verificationRequested = false,
+    this.instagram,
+    this.totalReviews,
   });
 
   Map<String, dynamic> toJson() {
@@ -75,6 +79,8 @@ class CafeModel {
       verified: data['verified'] ?? false,
       claimAmount: data['claim_amount'] ?? -1,
       verificationRequested: data['verification_requested'] ?? false,
+      instagram: data['instagram'],
+      totalReviews: data['total_reviews'],
     );
   }
   @override
