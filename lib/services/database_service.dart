@@ -44,7 +44,7 @@ class DatabaseService {
     Position currentPos, {
     List<double>? embedding, // pass null to skip semantic scoring
     int radiusM = 2500,
-    int maxResults = 10,
+    int maxResults = 5,
   }) async {
     try {
       final data = await _selectUsingFunc(
