@@ -8,6 +8,7 @@
         {
             "name": "cafeapp_v2",
             "request": "launch",
+            "flutterMode": "release",
             "type": "dart"
         },
     ]
