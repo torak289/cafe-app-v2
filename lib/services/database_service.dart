@@ -67,28 +67,17 @@ class DatabaseService {
     }
   }
 
-  Future<List<CafeModel>> search(String text, Position currentPos) async {
-    List<CafeModel> results = List.empty(growable: true);
-
+  Future<bool> reviewCafe(String uuid, int score) async {
     try {
-      String modifiedText = text.replaceAll(RegExp(r' '), '+');
-      final data = await _selectUsingFunc(
-        func: 'search_by_name',
-        params: {
-          'searchname': modifiedText,
-          'lati': currentPos.latitude,
-          'long': currentPos.longitude,
-        },
-      );
-      for (int i = 0; i < data.length; i++) {
-        results.add(CafeModel.fromJson(data[i]));
-      }
-      return results;
-    } catch (e) {
+      final data = await _selectUsingFunc(func: 'add_cafe_review', params: {
+        'p_cafe_id': uuid,
+        'p_score': score
+      });
+      return data as bool;
+    } catch(e) {
       return Future.error(e);
     }
   }
-
   Future<bool> validateLoyaltyCode(String uuid, int count) async {
     try {
       debugPrint("UUID: $uuid, COUNT: $count");
