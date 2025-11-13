@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_rating/flutter_rating.dart';
-import 'package:map_launcher/map_launcher.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:cafeapp_v2/widgets/map/markers/rating_popup.dart';
 
 class CafeMarker extends Marker {
   final CafeModel cafe;
@@ -34,14 +33,16 @@ class CafeMarker extends Marker {
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Row(
+                              Column(
                                 children: [
                                   StarRating(
+                                    size: 32,
                                     color: CafeAppUI.iconButtonIconColor,
                                     borderColor: CafeAppUI.iconButtonIconColor,
                                     starCount: 5,
+                        
                                     rating:
-                                        cafe.rating != null ? cafe.rating! : -1,
+                                        cafe.rating != null ? cafe.rating! : 0,
                                   ),
                                   Text(cafe.rating != null
                                       ? '(${cafe.rating!})'
@@ -68,7 +69,15 @@ class CafeMarker extends Marker {
                           actionsAlignment: MainAxisAlignment.center,
                           actionsOverflowAlignment: OverflowBarAlignment.center,
                           actions: [
-                            TextButton(onPressed: null, child: Text('Review')),
+                            TextButton(
+                                onPressed: () => showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          rating_popup(
+                                        cafe: cafe,
+                                      ),
+                                    ),
+                                child: Text('Review')),
                             TextButton(
                                 onPressed: () async {
                                   CafeappUtils.launchMap(cafe.location);
