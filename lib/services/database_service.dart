@@ -67,15 +67,15 @@ class DatabaseService {
     }
   }
 
-  Future<bool> reviewCafe(String uuid, int score) async {
+  Future<bool> reviewCafe(String uuid, double score) async {
     try {
-      final data = await _selectUsingFunc(func: 'add_cafe_review', params: {
+      await _selectUsingFunc(func: 'add_cafe_review', params: {
         'p_cafe_id': uuid,
         'p_score': score
       });
-      return data as bool;
+      return true;
     } catch(e) {
-      return Future.error(e);
+      return false;
     }
   }
   Future<bool> validateLoyaltyCode(String uuid, int count) async {
