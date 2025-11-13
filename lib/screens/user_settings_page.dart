@@ -31,6 +31,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
     final TextEditingController confirmPassword = TextEditingController();
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(CafeAppUI.screenHorizontal, 0,
               CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
