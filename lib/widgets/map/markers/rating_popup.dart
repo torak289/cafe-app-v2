@@ -11,7 +11,8 @@ class rating_popup extends StatefulWidget {
     required this.cafe,
   });
   CafeModel cafe;
-  double rating = 1;
+  double coffeeRating = 0;
+  double pastryRating = 0;
   @override
   State<rating_popup> createState() => _rating_popupState();
 }
@@ -28,16 +29,40 @@ class _rating_popupState extends State<rating_popup> {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          StarRating(
-            size: 32,
-            rating: widget.rating,
-            allowHalfRating: false,
-            color: CafeAppUI.iconButtonIconColor,
-            borderColor: CafeAppUI.iconButtonIconColor,
-            onRatingChanged: (rating) => setState(() {
-              widget.rating = rating;
-            }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Coffee: '),
+              StarRating(
+                size: 32,
+                rating: widget.coffeeRating,
+                allowHalfRating: false,
+                color: CafeAppUI.iconButtonIconColor,
+                borderColor: CafeAppUI.iconButtonIconColor,
+                onRatingChanged: (rating) => setState(() {
+                  widget.coffeeRating = rating;
+                }),
+              ),
+            ],
           ),
+          Padding(
+              padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('Pastry: '),
+              StarRating(
+                size: 32,
+                rating: widget.pastryRating,
+                allowHalfRating: false,
+                color: CafeAppUI.iconButtonIconColor,
+                borderColor: CafeAppUI.iconButtonIconColor,
+                onRatingChanged: (rating) => setState(() {
+                  widget.pastryRating = rating;
+                }),
+              ),
+            ],
+          )
         ],
       ),
       actionsAlignment: MainAxisAlignment.center,
@@ -46,7 +71,7 @@ class _rating_popupState extends State<rating_popup> {
             onPressed: () async {
               try {
                 bool success = await databaseService.reviewCafe(
-                    widget.cafe.uid!, widget.rating);
+                    widget.cafe.uid!, widget.coffeeRating);
                 debugPrint('On Pressed Review: $success');
                 if (context.mounted) {
                   Navigator.pop(context);
