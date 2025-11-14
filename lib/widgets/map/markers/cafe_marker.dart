@@ -35,59 +35,70 @@ class CafeMarker extends Marker {
                             cafe.name != null ? cafe.name! : "NO NAME",
                             textAlign: TextAlign.center,
                           )),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Column(
-                                children: [
-                                  StarRating(
-                                    size: 32,
-                                    color: CafeAppUI.iconButtonIconColor,
-                                    borderColor: CafeAppUI.iconButtonIconColor,
-                                    starCount: 5,
-                                    rating:
-                                        cafe.rating != null ? cafe.rating! : 0,
-                                  ),
-                                  Text(cafe.rating != null
-                                      ? '(${cafe.rating!})'
-                                      : '(No Rating)'),
-                                ],
-                              ),
-                              Builder(builder: (context) {
-                                if (cafe.description != null ||
-                                    cafe.description!.isEmpty) {
-                                  return Column(
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsetsGeometry.all(
-                                              CafeAppUI.buttonSpacingMedium)),
-                                      Text(cafe.description!),
-                                    ],
-                                  );
-                                } else {
-                                  return SizedBox.shrink();
-                                }
-                              })
-                            ],
+                          content: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 32, vertical: 16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Column(
+                                  children: [
+                                    StarRating(
+                                      size: 32,
+                                      color: CafeAppUI.iconButtonIconColor,
+                                      borderColor:
+                                          CafeAppUI.iconButtonIconColor,
+                                      starCount: 5,
+                                      rating: cafe.rating != null
+                                          ? cafe.rating!.toDouble()
+                                          : 0.0,
+                                    ),
+                                    Text(
+                                        "${cafe.rating}/5 from ${cafe.totalReviews} reviews"),
+                                  ],
+                                ),
+                                Builder(builder: (context) {
+                                  if (cafe.description != null ||
+                                      cafe.description!.isEmpty) {
+                                    return Column(
+                                      children: [
+                                        Padding(
+                                            padding: EdgeInsetsGeometry.all(
+                                                CafeAppUI.buttonSpacingMedium)),
+                                        Text(
+                                          cafe.description!,
+                                          textAlign: TextAlign.justify,
+                                        ),
+                                      ],
+                                    );
+                                  } else {
+                                    return SizedBox.shrink();
+                                  }
+                                })
+                              ],
+                            ),
                           ),
                           actionsAlignment: MainAxisAlignment.center,
                           actionsOverflowAlignment: OverflowBarAlignment.center,
                           actions: [
                             Builder(builder: (BuildContext context) {
-                              AuthService authService = Provider.of<AuthService>(context, listen: false);
-                              if(authService.appState == AppState.Authenticated) {
+                              AuthService authService =
+                                  Provider.of<AuthService>(context,
+                                      listen: false);
+                              if (authService.appState ==
+                                  AppState.Authenticated) {
                                 return TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        rating_popup(
-                                      cafe: cafe,
-                                    ),
-                                  );
-                                },
-                                child: Text('Review'));
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            rating_popup(
+                                          cafe: cafe,
+                                        ),
+                                      );
+                                    },
+                                    child: Text('Review'));
                               } else {
                                 return SizedBox.shrink();
                               }

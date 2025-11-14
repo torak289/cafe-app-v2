@@ -10,7 +10,7 @@ class CafeModel {
   List<String>? coffees;
   String? owner;
   LatLng location;
-  double? rating;
+  num? rating;
   bool? verified;
   bool verificationRequested;
   int? claimAmount;
@@ -50,7 +50,6 @@ class CafeModel {
   }
 
   static cafesFromJson(List<Map<String, dynamic>> data) {
-    //TODO: Does it make sense to move this into the CafeModel?
     try {
       List<CafeModel> cafes = List.empty(growable: true);
       for (int i = 0; i < data.length; i++) {
@@ -64,6 +63,8 @@ class CafeModel {
   }
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
+
+    debugPrint(data.toString());
     return CafeModel(
       uid: data['uid'],
       name: data['name'],
@@ -80,6 +81,7 @@ class CafeModel {
       claimAmount: data['claim_amount'] ?? -1,
       verificationRequested: data['verification_requested'] ?? false,
       instagram: data['instagram'],
+      rating: data['rating'],
       totalReviews: data['total_reviews'],
     );
   }

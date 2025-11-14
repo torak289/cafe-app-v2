@@ -2,6 +2,8 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +13,7 @@ class rating_popup extends StatefulWidget {
     required this.cafe,
   });
   CafeModel cafe;
-  double rating = 1;
+  double rating = 0;
   @override
   State<rating_popup> createState() => _rating_popupState();
 }
