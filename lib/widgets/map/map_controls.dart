@@ -71,29 +71,33 @@ class MapControls extends StatelessWidget {
                 children: [
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                  StreamBuilder(
-                    stream: location.positionStream,
+                  FutureBuilder(
+                    future: location.currentPosition,
                     builder: (context, snapshot) {
-                      return IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(
-                            context,
-                            Routes.addCafePage,
-                            arguments: AddCafeArgs(
-                              cafePosition: LatLng(snapshot.data!.latitude,
-                                  snapshot.data!.longitude),
-                              isOwner: false,
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.add_rounded,
-                          color: CafeAppUI.iconButtonIconBGColor,
-                        ),
-                        style: ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(Colors.black)),
-                      );
+                      if (snapshot.hasData) {
+                        return IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              Routes.addCafePage,
+                              arguments: AddCafeArgs(
+                                cafePosition: LatLng(snapshot.data!.latitude,
+                                    snapshot.data!.longitude),
+                                isOwner: false,
+                              ),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.add_rounded,
+                            color: CafeAppUI.iconButtonIconBGColor,
+                          ),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(Colors.black)),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
                     },
                   ),
                 ],
