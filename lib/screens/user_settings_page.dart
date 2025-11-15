@@ -26,7 +26,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of(context, listen: false);
-    final UserModel user = Provider.of<UserModel>(context, listen: false);
+    final UserModel? user = Provider.of<UserModel?>(context, listen: false);
     final TextEditingController newPassword = TextEditingController();
     final TextEditingController confirmPassword = TextEditingController();
     return Scaffold(
@@ -46,7 +46,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                       const Center(
                         child: Icon(
                           Icons.account_circle_sharp,
@@ -55,7 +56,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ),
                       ),
                       const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -70,7 +72,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                         ],
                       ),
                       const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -83,7 +86,7 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                               const Padding(
                                   padding: EdgeInsets.all(
                                       CafeAppUI.buttonSpacingMedium)),
-                              Text("${user.email}"),
+                              Text("${user?.email}"),
                             ],
                           ),
                           /*GestureDetector(
@@ -95,61 +98,112 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                           )*/
                         ],
                       ),
-                      const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Change Password",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("New Password"),
-                          SizedBox(
-                            width: 220,
-                            child: TextFormField(
-                              obscureText: true,
-                              autocorrect: false,
-                              controller: newPassword,
-                              validator:
-                                  (value) {}, //TODO: Implement local password validation???
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Confirm Password"),
-                          SizedBox(
-                            width: 220,
-                            child: TextFormField(
-                              //TODO: Implement on keyboard enter action submit
-                              obscureText: true,
-                              autocorrect: false,
-                              controller: confirmPassword,
-                              validator: (value) {
-                                if (value != newPassword.text) {
-                                  return "Ensure both passwords match!";
-                                }
-                                return null;
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                      Builder(builder: (context) {
+                        if (user?.provider == "email") {
+                          return Column(
+                            children: [
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingLarge)),
+                              const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Change Password",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingSmall)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("New Password"),
+                                  SizedBox(
+                                    width: 220,
+                                    child: TextFormField(
+                                      obscureText: true,
+                                      autocorrect: false,
+                                      controller: newPassword,
+                                      validator:
+                                          (value) {}, //TODO: Implement local password validation???
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingSmall)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text("Confirm Password"),
+                                  SizedBox(
+                                    width: 220,
+                                    child: TextFormField(
+                                      //TODO: Implement on keyboard enter action submit
+                                      obscureText: true,
+                                      autocorrect: false,
+                                      controller: confirmPassword,
+                                      validator: (value) {
+                                        if (value != newPassword.text) {
+                                          return "Ensure both passwords match!";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingMedium)),
+                              Center(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    if (newPassword.text ==
+                                        confirmPassword.text) {
+                                      String res = await authService
+                                          .changePassword(newPassword.text);
+                                      if (res == "Success") {
+                                        if (context.mounted) {
+                                          //TODO: Handle Successful password change...
+                                          Navigator.popUntil(
+                                              context,
+                                              (Route<dynamic> route) =>
+                                                  route.isFirst);
+                                          debugPrint("Password Changed");
+                                        }
+                                      } else {
+                                        setState(() {
+                                          debugPrint(res);
+                                          widget.errorString =
+                                              res; //TODO: Implement Error string display
+                                        });
+                                      }
+                                    } else {
+                                      debugPrint("Passwords do not match!");
+                                      setState(() {
+                                        widget.errorString =
+                                            "Passwords do not match!";
+                                      });
+                                    }
+                                  },
+                                  child: const Text("Change Password"),
+                                ),
+                              ),
+                            ],
+                          );
+                        } else
+                          return SizedBox.shrink();
+                      }),
                       Builder(
                         //TODO: Fix reformatting issue on error text shown...
                         builder: (context) {
@@ -174,36 +228,6 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                           }
                         },
                       ),
-                      Center(
-                        child: TextButton(
-                          onPressed: () async {
-                            if (newPassword.text == confirmPassword.text) {
-                              String res = await authService
-                                  .changePassword(newPassword.text);
-                              if (res == "Success") {
-                                if (context.mounted) {
-                                  //TODO: Handle Successful password change...
-                                  Navigator.popUntil(context,
-                                      (Route<dynamic> route) => route.isFirst);
-                                  debugPrint("Password Changed");
-                                }
-                              } else {
-                                setState(() {
-                                  debugPrint(res);
-                                  widget.errorString =
-                                      res; //TODO: Implement Error string display
-                                });
-                              }
-                            } else {
-                              debugPrint("Passwords do not match!");
-                              setState(() {
-                                widget.errorString = "Passwords do not match!";
-                              });
-                            }
-                          },
-                          child: const Text("Change Password"),
-                        ),
-                      ),
                       const Padding(padding: EdgeInsets.all(16)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -226,8 +250,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                             ),
                           ),
                           const Padding(
-                              padding:
-                                  EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                              padding: EdgeInsets.all(
+                                  CafeAppUI.buttonSpacingMedium)),
                           GestureDetector(
                             onTap: () {
                               final Uri toLaunch = Uri(
@@ -272,7 +296,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                       child: Text('Logout')),
                   TextButton(
                     style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(Colors.pinkAccent),
+                      backgroundColor:
+                          WidgetStatePropertyAll(Colors.pinkAccent),
                     ),
                     onPressed: () => showDialog<String>(
                       //TODO: Implement Async Stream to listen to database events fired on Scan from Cafe Account...
@@ -313,7 +338,8 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                               if (context.mounted) {
                                 if (false) {
                                   Navigator.popUntil(context, (route) {
-                                    return route.settings.name == Routes.mapPage;
+                                    return route.settings.name ==
+                                        Routes.mapPage;
                                   });
                                 } else {
                                   //TODO: Implement error handling...

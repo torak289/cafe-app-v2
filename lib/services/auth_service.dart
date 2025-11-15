@@ -217,9 +217,9 @@ class AuthService with ChangeNotifier {
 
   UserModel userFromSupabase(User? user) {
     if (user == null) {
-      return UserModel(uid: '-1', email: 'null');
+      return UserModel(uid: '-1', email: 'null', provider: 'null');
     } else {
-      return UserModel(uid: user.id, email: user.email);
+      return UserModel(uid: user.id, email: user.email, provider: user.identities![0].provider);
     }
   }
 }
