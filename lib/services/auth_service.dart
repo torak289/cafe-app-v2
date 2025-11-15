@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -113,15 +114,97 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<void> googleSSO() async {
-    debugPrint("Google SSO");
-    await _client.auth.signInWithOAuth(OAuthProvider.google,
-        redirectTo: kIsWeb
-            ? null
-            : 'https://connect.robusta-app.com/auth/v1/callback', // Optionally set the redirect link to bring back the user via deeplink.
-        authScreenLaunchMode: kIsWeb
-            ? LaunchMode.platformDefault
-            : LaunchMode.externalApplication);
+  Future<String> googleSSO() async {
+    try {
+      _appState = AppState.Authenticating;
+      notifyListeners();
+
+      /// Web Client ID that you registered with Google Cloud.
+      const webClientId =
+          '18984321288-u69h4uhnbn2r19te0jr43pndpgt7brnj.apps.googleusercontent.com';
+
+      /// iOS Client ID that you registered with Google Cloud.
+      const iosClientId =
+          '18984321288-vce8hhhblhh588gaa0hg28u2irc0spdi.apps.googleusercontent.com';
+
+      final scopes = ['email', 'profile'];
+      final googleSignIn = GoogleSignIn.instance;
+
+      await googleSignIn.initialize(
+        serverClientId: webClientId,
+        clientId: iosClientId,
+      );
+
+      final googleUser = await googleSignIn.attemptLightweightAuthentication();
+      // or: final googleUser = await googleSignIn.authenticate();
+      debugPrint(googleUser.toString());
+      if (googleUser == null) {
+        throw const AuthException('Failed to sign in with Google.');
+      }
+
+      /// Authorization is required to obtain the access token with the appropriate scopes for Supabase authentication,
+      /// while also granting permission to access user information.
+      final authorization =
+          await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+              await googleUser.authorizationClient.authorizeScopes(scopes);
+
+      final idToken = googleUser.authentication.idToken;
+      if (idToken == null) {
+        throw const AuthException('No ID Token found.');
+      }
+
+      // Sign in with Supabase using the Google ID token
+      await _client.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+        accessToken: authorization.accessToken,
+      );
+
+      // Optionally store user name/email in user metadata, similar to Apple flow
+      // if available on the googleUser instance.
+      if (googleUser.displayName != null || googleUser.email.isNotEmpty) {
+        String? givenName;
+        String? familyName;
+        String? fullName = googleUser.displayName;
+
+        if (fullName != null && fullName.trim().isNotEmpty) {
+          final parts = fullName.trim().split(' ');
+          if (parts.isNotEmpty) {
+            givenName = parts.first;
+            if (parts.length > 1) {
+              familyName = parts.sublist(1).join(' ');
+            }
+          }
+        }
+
+        await _client.auth.updateUser(
+          UserAttributes(
+            data: {
+              'full_name': fullName,
+              'given_name': givenName,
+              'family_name': familyName,
+              'email': googleUser.email,
+            },
+          ),
+        );
+      }
+
+      // Start auto-refresh and update app state
+      _client.auth.startAutoRefresh();
+      _appState = AppState.Authenticated;
+      notifyListeners();
+
+      return "Success";
+    } on AuthException catch (e) {
+      debugPrint("Google Auth Error: ${e.message}");
+      _appState = AppState.Unauthenticated;
+      notifyListeners();
+      return e.message;
+    } catch (e) {
+      _appState = AppState.Unauthenticated;
+      notifyListeners();
+      return Future.error(e);
+    }
   }
 
   Future<String> appleSSO() async {
@@ -219,7 +302,10 @@ class AuthService with ChangeNotifier {
     if (user == null) {
       return UserModel(uid: '-1', email: 'null', provider: 'null');
     } else {
-      return UserModel(uid: user.id, email: user.email, provider: user.identities![0].provider);
+      return UserModel(
+          uid: user.id,
+          email: user.email,
+          provider: user.identities![0].provider);
     }
   }
 }

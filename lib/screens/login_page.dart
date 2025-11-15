@@ -170,7 +170,16 @@ class _LoginPageState extends State<LoginPage> {
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextButton(
-                          onPressed: () => authService.googleSSO(),
+                          onPressed: () async {
+                            final response = await authService.googleSSO();
+                            if (context.mounted) {
+                              if (response == "Success") {
+                                Navigator.pop(context);
+                              } else {
+                                debugPrint(response.toString());
+                              }
+                            }
+                          },
                           child: Row(
                             children: [
                               Image.asset('assets/images/google-logo.png', scale: 24),
