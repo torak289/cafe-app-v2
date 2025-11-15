@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Image.asset('assets/images/Cafe_Logo.png', scale: 2),
                         const Text(
-                          "Welcome back!",
+                          "Welcome!",
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -76,7 +76,8 @@ class _LoginPageState extends State<LoginPage> {
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextFormField(
                           controller: passwordController,
-                          validator: (value) { //TODO: Implement local password validation???
+                          validator: (value) {
+                            //TODO: Implement local password validation???
                             if (value == null || value.isEmpty) {
                               return 'Please enter your password!';
                             }
@@ -147,7 +148,16 @@ class _LoginPageState extends State<LoginPage> {
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
                         TextButton(
-                          onPressed: () => authService.appleSSO(),
+                          onPressed: () async {
+                            final response = await authService.appleSSO();
+                            if (context.mounted) {
+                              if(response == "Success"){
+                                Navigator.pop(context);
+                              } else {
+                                debugPrint(response.toString());
+                              }
+                            }
+                          },
                           child: const Row(
                             children: [
                               Icon(Icons.apple_rounded),

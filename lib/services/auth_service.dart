@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService with ChangeNotifier {
@@ -121,10 +124,70 @@ class AuthService with ChangeNotifier {
             : LaunchMode.externalApplication);
   }
 
-  Future<void> appleSSO() async {
-    debugPrint('Apple SSO');
-    await _client.auth.signInWithOAuth(OAuthProvider.apple,
-    );
+  Future<String> appleSSO() async {
+    try {
+      _appState = AppState.Authenticating;
+      notifyListeners();
+
+      final rawNonce = _client.auth.generateRawNonce();
+      final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+        nonce: hashedNonce,
+      );
+
+      final idToken = credential.identityToken;
+      if (idToken == null) {
+        throw const AuthException(
+          'Could not find ID Token from generated credential.',
+        );
+      }
+
+      // Sign in with Supabase using the Apple ID token
+      await _client.auth.signInWithIdToken(
+        provider: OAuthProvider.apple,
+        idToken: idToken,
+        nonce: rawNonce,
+      );
+
+      // Apple only provides the user's full name on the first sign-in
+      // Save it to user metadata if available
+      if (credential.givenName != null || credential.familyName != null) {
+        final nameParts = <String>[];
+        if (credential.givenName != null) nameParts.add(credential.givenName!);
+        if (credential.familyName != null)
+          nameParts.add(credential.familyName!);
+        final fullName = nameParts.join(' ');
+
+        await _client.auth.updateUser(
+          UserAttributes(
+            data: {
+              'full_name': fullName,
+              'given_name': credential.givenName,
+              'family_name': credential.familyName,
+            },
+          ),
+        );
+      }
+
+      // Start auto-refresh and update app state
+      _client.auth.startAutoRefresh();
+      _appState = AppState.Authenticated;
+      notifyListeners();
+
+      return "Success";
+    } on AuthException catch (e) {
+      debugPrint("Error: ${e.message}");
+      _appState = AppState.Unauthenticated;
+      notifyListeners();
+      return e.message;
+    } catch (e) {
+      return Future.error(e);
+    }
   }
 
   Future<String> emailLogin(String email, String password) async {

@@ -61,6 +61,8 @@ dependencies:
   map_launcher: ^4.4.2
   connectivity_plus: ^7.0.0
   flutter_rating: ^2.0.2
+  sign_in_with_apple: ^7.0.1
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
