@@ -24,11 +24,11 @@ class _CafeTabState extends State<CafeTab> {
     final DatabaseService database =
         Provider.of<DatabaseService>(context, listen: false);
 
-    Future<List<CafeModel>> databaseFuture = database.getCafeData();
+    Future<List<CafeModel>> databaseFuture = database.getOwnedCafeData();
 
     void callbackState() {
       setState(() {
-        databaseFuture = database.getCafeData();
+        databaseFuture = database.getOwnedCafeData();
       });
     }
 

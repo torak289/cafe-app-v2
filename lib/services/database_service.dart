@@ -53,7 +53,8 @@ class DatabaseService {
           'q_text': text,
           'q_embedding': embedding, // List<double>? or null
           'user_lon': currentPos.latitude, // <-- correct param names
-          'user_lat': currentPos.longitude, //Weirdness for lat long storage in the DB???
+          'user_lat': currentPos
+              .longitude, //Weirdness for lat long storage in the DB???
           'radius_m': radiusM,
           'max_results': maxResults,
         },
@@ -69,15 +70,15 @@ class DatabaseService {
 
   Future<bool> reviewCafe(String uuid, double score) async {
     try {
-      await _selectUsingFunc(func: 'add_cafe_review', params: {
-        'p_cafe_id': uuid,
-        'p_score': score
-      });
+      await _selectUsingFunc(
+          func: 'add_cafe_review',
+          params: {'p_cafe_id': uuid, 'p_score': score});
       return true;
-    } catch(e) {
+    } catch (e) {
       return false;
     }
   }
+
   Future<bool> validateLoyaltyCode(String uuid, int count) async {
     try {
       debugPrint("UUID: $uuid, COUNT: $count");
@@ -104,7 +105,7 @@ class DatabaseService {
     }
   }
 
-  Future<List<CafeModel>> getCafeData() async {
+  Future<List<CafeModel>> getOwnedCafeData() async {
     try {
       final data = await _selectUsingFunc(func: 'get_owned_cafes');
       debugPrint(data.toString());
@@ -194,12 +195,26 @@ class DatabaseService {
       for (CafeModel c in cafes) {
         _addCafeToMarkerList(c);
       }
-      markers = CafeappUtils.cafesToMarkers(cafeMarkers, mapController, context);
+      markers =
+          CafeappUtils.cafesToMarkers(cafeMarkers, mapController, context);
 
       return MarkerLayer(markers: markers);
     } catch (e) {
       debugPrint(e.toString());
       _database.auth.refreshSession();
+      return Future.error(e);
+    }
+  }
+
+  Future<CafeModel?> getCafeData(String uuid) async {
+    try {
+      final result = await _selectSingleUsingFunc(func: 'get_cafe_by_uuid', params: {
+        'uuid': uuid,
+      });
+
+      return CafeModel.fromJson(result);
+    } catch (e) {
+      debugPrint(e.toString());
       return Future.error(e);
     }
   }
@@ -234,5 +249,11 @@ class DatabaseService {
       {required String func, Map<String, dynamic>? params}) async {
     final data = await _database.rpc(func, params: params).select();
     return data;
+  }
+
+  Future<Map<String, dynamic>> _selectSingleUsingFunc(
+      {required String func, Map<String, dynamic>? params}) async {
+    final data = await _database.rpc(func, params: params);
+    return data as Map<String, dynamic>;
   }
 }

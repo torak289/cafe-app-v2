@@ -2,6 +2,7 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -28,88 +29,105 @@ class CafeMarker extends Marker {
             children: [
               GestureDetector(
                 onTap: () => showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                          title: Center(
-                              child: Text(
-                            cafe.name != null ? cafe.name! : "NO NAME",
-                            textAlign: TextAlign.center,
-                          )),
-                          content: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 32, vertical: 16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Column(
+                  context: context,
+                  builder: (BuildContext context) {
+                    DatabaseService databaseService =
+                        Provider.of<DatabaseService>(context, listen: false);
+                    return AlertDialog(
+                      title: Center(
+                          child: Text(
+                        cafe.name != null ? cafe.name! : "NO NAME",
+                        textAlign: TextAlign.center,
+                      )),
+                      content: FutureBuilder(
+                          future: databaseService.getCafeData(cafe.uid!),
+                          builder: (BuildContext context, future) {
+                            if (future.hasData) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 32, vertical: 16),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    StarRating(
-                                      size: 32,
-                                      color: CafeAppUI.iconButtonIconColor,
-                                      borderColor:
-                                          CafeAppUI.iconButtonIconColor,
-                                      starCount: 5,
-                                      rating: cafe.rating != null
-                                          ? cafe.rating!.toDouble()
-                                          : 0.0,
+                                    Column(
+                                      children: [
+                                        StarRating(
+                                          size: 32,
+                                          color: CafeAppUI.iconButtonIconColor,
+                                          borderColor:
+                                              CafeAppUI.iconButtonIconColor,
+                                          starCount: 5,
+                                          rating: future.data!.rating != null
+                                              ? future.data!.rating!.round().toDouble()
+                                              : 0.0,
+                                        ),
+                                        Text(
+                                            "${future.data!.rating?.round()}/5 from ${future.data!.totalReviews} reviews"), //This rounding needs to be improved... currently it rounds to .5 or .0
+                                      ],
                                     ),
-                                    Text(
-                                        "${cafe.rating}/5 from ${cafe.totalReviews} reviews"),
+                                    Builder(builder: (context) {
+                                      if (future.data!.description != null ||
+                                          future.data!.description!.isEmpty) {
+                                        return Column(
+                                          children: [
+                                            Padding(
+                                                padding: EdgeInsetsGeometry.all(
+                                                    CafeAppUI
+                                                        .buttonSpacingMedium)),
+                                            Text(
+                                              future.data!.description!,
+                                              textAlign: TextAlign.justify,
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        return SizedBox.shrink();
+                                      }
+                                    })
                                   ],
                                 ),
-                                Builder(builder: (context) {
-                                  if (cafe.description != null ||
-                                      cafe.description!.isEmpty) {
-                                    return Column(
-                                      children: [
-                                        Padding(
-                                            padding: EdgeInsetsGeometry.all(
-                                                CafeAppUI.buttonSpacingMedium)),
-                                        Text(
-                                          cafe.description!,
-                                          textAlign: TextAlign.justify,
-                                        ),
-                                      ],
-                                    );
-                                  } else {
-                                    return SizedBox.shrink();
-                                  }
-                                })
-                              ],
-                            ),
-                          ),
-                          actionsAlignment: MainAxisAlignment.center,
-                          actionsOverflowAlignment: OverflowBarAlignment.center,
-                          actions: [
-                            Builder(builder: (BuildContext context) {
-                              AuthService authService =
-                                  Provider.of<AuthService>(context,
-                                      listen: false);
-                              if (authService.appState ==
-                                  AppState.Authenticated) {
-                                return TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) =>
-                                            rating_popup(
-                                          cafe: cafe,
-                                        ),
-                                      );
-                                    },
-                                    child: Text('Review'));
-                              } else {
-                                return SizedBox.shrink();
-                              }
-                            }),
-                            TextButton(
-                                onPressed: () async {
-                                  CafeappUtils.launchMap(cafe.location);
+                              );
+                            } else {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CircularProgressIndicator(color: CafeAppUI.iconButtonIconColor,),
+                                ],
+                              );
+                            }
+                          }),
+                      actionsAlignment: MainAxisAlignment.center,
+                      actionsOverflowAlignment: OverflowBarAlignment.center,
+                      actions: [
+                        Builder(builder: (BuildContext context) {
+                          AuthService authService =
+                              Provider.of<AuthService>(context, listen: false);
+                          if (authService.appState == AppState.Authenticated) {
+                            return TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        rating_popup(
+                                      cafe: cafe,
+                                    ),
+                                  );
                                 },
-                                child: Text('Navigate')),
-                          ], //TODO: Null because not fetched from DB???
-                        )),
+                                child: Text('Review'));
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        }),
+                        TextButton(
+                            onPressed: () async {
+                              CafeappUtils.launchMap(cafe.location);
+                            },
+                            child: Text('Navigate')),
+                      ], //TODO: Null because not fetched from DB???
+                    );
+                  },
+                ),
                 onDoubleTap: () {
                   mapController.animateTo(
                     dest: cafe.location,
