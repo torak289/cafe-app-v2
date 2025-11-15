@@ -49,22 +49,36 @@ class CafeMarker extends Marker {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Column(
-                                      children: [
-                                        StarRating(
-                                          size: 32,
-                                          color: CafeAppUI.iconButtonIconColor,
-                                          borderColor:
-                                              CafeAppUI.iconButtonIconColor,
-                                          starCount: 5,
-                                          rating: future.data!.rating != null
-                                              ? future.data!.rating!.round().toDouble()
-                                              : 0.0,
-                                        ),
-                                        Text(
-                                            "${future.data!.rating?.round()}/5 from ${future.data!.totalReviews} reviews"), //This rounding needs to be improved... currently it rounds to .5 or .0
-                                      ],
-                                    ),
+                                    Builder(builder: (context) {
+                                      if (future.data!.totalReviews! > 0) {
+                                        return Column(
+                                          children: [
+                                            StarRating(
+                                              size: 32,
+                                              color:
+                                                  CafeAppUI.iconButtonIconColor,
+                                              borderColor:
+                                                  CafeAppUI.iconButtonIconColor,
+                                              starCount: 5,
+                                              rating:
+                                                  future.data!.rating != null
+                                                      ? future.data!.rating!
+                                                          .round()
+                                                          .toDouble()
+                                                      : 0.0,
+                                            ),
+                                            Text(
+                                                "${future.data!.rating?.round()}/5 from ${future.data!.totalReviews} reviews"), //This rounding needs to be improved... currently it rounds to .5 or .0
+                                          ],
+                                        );
+                                      } else {
+                                        return Text(
+                                          'No Rating',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        );
+                                      }
+                                    }),
                                     Builder(builder: (context) {
                                       if (future.data!.description != null ||
                                           future.data!.description!.isEmpty) {
@@ -91,7 +105,9 @@ class CafeMarker extends Marker {
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  CircularProgressIndicator(color: CafeAppUI.iconButtonIconColor,),
+                                  CircularProgressIndicator(
+                                    color: CafeAppUI.iconButtonIconColor,
+                                  ),
                                 ],
                               );
                             }
