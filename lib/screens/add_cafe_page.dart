@@ -197,7 +197,7 @@ class _AddCafePageState extends State<AddCafePage>
                       return null;
                     },
                   ),
-                  const Padding(
+                  /*const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -247,7 +247,7 @@ class _AddCafePageState extends State<AddCafePage>
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                   TextFormField(
                     controller: cafeInstagram,
-                  ),
+                  ),*/
                   const Padding(
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                   Row(

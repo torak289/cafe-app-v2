@@ -39,37 +39,9 @@ class CafeMarker extends Marker {
                     return AlertDialog(
                       backgroundColor: Colors.white,
                       title: Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            cafe.name != null ? cafe.name! : "NO NAME",
-                            textAlign: TextAlign.center,
-                          ),
-                          Builder(builder: (BuildContext context) {
-                            debugPrint('${user!.uid} == ${cafe.addedBy}');
-                            if (user.uid == cafe.addedBy) {
-                              return Row(
-                                children: [
-                                  Padding(
-                                      padding: EdgeInsetsGeometry.all(
-                                          CafeAppUI.buttonSpacingSmall)),
-                                  GestureDetector(
-                                    onTap: () {
-                                      debugPrint("Edit Tapped");
-                                    },
-                                    child: Icon(
-                                      Icons.edit_rounded,
-                                      color: CafeAppUI.iconButtonIconColor,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return SizedBox.shrink();
-                            }
-                          }),
-                        ],
+                          child: Text(
+                        cafe.name != null ? cafe.name! : "NO NAME",
+                        textAlign: TextAlign.center,
                       )),
                       content: FutureBuilder(
                           future: databaseService.getCafeData(cafe.uid!),
@@ -81,6 +53,28 @@ class CafeMarker extends Marker {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    /*Builder(builder: (BuildContext context) {
+                                      debugPrint(
+                                          '${user!.uid} == ${cafe.addedBy}');
+                                      if (user.uid == cafe.addedBy) {
+                                        return Column(
+                                          children: [
+                                            TextButton(
+                                              onPressed: () {
+                                                debugPrint("Edit Tapped");
+                                              },
+                                              child: Text('Edit'),
+                                            ),
+                                            Padding(
+                                                padding: EdgeInsetsGeometry.all(
+                                                    CafeAppUI
+                                                        .buttonSpacingMedium)),
+                                          ],
+                                        );
+                                      } else {
+                                        return SizedBox.shrink();
+                                      }
+                                    }),*/
                                     Builder(builder: (context) {
                                       if (future.data!.totalReviews! > 0) {
                                         return Column(
@@ -94,7 +88,8 @@ class CafeMarker extends Marker {
                                               starCount: 5,
                                               rating:
                                                   future.data!.rating != null
-                                                      ? future.data!.rating!.toDouble()
+                                                      ? future.data!.rating!
+                                                          .toDouble()
                                                       : 0.0,
                                             ),
                                             Text(
@@ -126,7 +121,9 @@ class CafeMarker extends Marker {
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
-                                            Padding(padding: EdgeInsetsGeometry.all(1)),
+                                            Padding(
+                                                padding:
+                                                    EdgeInsetsGeometry.all(1)),
                                             Text(
                                               future.data!.description!,
                                               textAlign: TextAlign.justify,
