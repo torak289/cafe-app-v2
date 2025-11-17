@@ -98,6 +98,22 @@ ThemeData cafeLightTheme = ThemeData(
       borderRadius: _searchBorderRadius,
     ),
   ),
+  //Chips
+  chipTheme: ChipThemeData(side: BorderSide(color: Colors.black)),
+  //Selectables
+  checkboxTheme: CheckboxThemeData(
+    fillColor: WidgetStateProperty.resolveWith<Color>((states){
+      if(states.contains(WidgetState.selected)){
+        return Colors.black;
+      }
+      return Colors.white;
+    }),
+    side: BorderSide(
+      color: Colors.black,
+      width: 2,
+    ),
+    checkColor: WidgetStatePropertyAll(Colors.white),
+  ),
   //Buttons
   textButtonTheme: const TextButtonThemeData(
     style: ButtonStyle(

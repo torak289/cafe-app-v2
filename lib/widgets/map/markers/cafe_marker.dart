@@ -200,7 +200,14 @@ class CafeMarker extends Marker {
                                     ),
                                   );
                                 },
-                                child: Text('Review'));
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text('Review'),
+                                    Padding(padding: EdgeInsetsGeometry.all(2)),
+                                    Icon(Icons.star_rounded)
+                                  ],
+                                ));
                           } else {
                             return SizedBox.shrink();
                           }
@@ -209,7 +216,14 @@ class CafeMarker extends Marker {
                             onPressed: () async {
                               CafeappUtils.launchMap(cafe.location);
                             },
-                            child: Text('Navigate')),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Goto'),
+                                Padding(padding: EdgeInsetsGeometry.all(3)),
+                                Icon(Icons.assistant_navigation),
+                              ],
+                            )),
                       ], //TODO: Null because not fetched from DB???
                     );
                   },
