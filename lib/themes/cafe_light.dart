@@ -104,7 +104,7 @@ ThemeData cafeLightTheme = ThemeData(
   checkboxTheme: CheckboxThemeData(
     fillColor: WidgetStateProperty.resolveWith<Color>((states){
       if(states.contains(WidgetState.selected)){
-        return Colors.black;
+        return Colors.pinkAccent;
       }
       return Colors.white;
     }),

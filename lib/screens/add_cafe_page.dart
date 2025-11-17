@@ -185,18 +185,47 @@ class _AddCafePageState extends State<AddCafePage>
                 const Padding(
                     padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Instagram ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Row(
+                      children: [
+                        const Text(
+                          'Instagram ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const Text(
+                          ' Optional',
+                          style: TextStyle(
+                            color: Colors.pinkAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const Text(
-                      ' Optional',
-                      style: TextStyle(
-                        color: Colors.pinkAccent,
-                        fontWeight: FontWeight.bold,
+                    Tooltip(
+                      //TODO: Move styling into theme
+                      margin: EdgeInsets.all(32),
+                      triggerMode: TooltipTriggerMode.tap,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 4,
+                          )
+                        ],
                       ),
-                    )
+                      padding: EdgeInsets.all(16),
+                      textStyle: TextStyle(color: Colors.black),
+                      message:
+                          'If you know the Instagram for this Cafe, please add it. We can show photos!',
+                      child: Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.black,
+                        size: 18,
+                      ),
+                    ),
                   ],
                 ),
                 const Padding(
@@ -245,18 +274,47 @@ class _AddCafePageState extends State<AddCafePage>
                 const Padding(
                     padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Description ',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Row(
+                      children: [
+                        const Text(
+                          'Description ',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const Text(
+                          ' Required',
+                          style: TextStyle(
+                            color: Colors.pinkAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
-                    const Text(
-                      ' Required',
-                      style: TextStyle(
-                        color: Colors.pinkAccent,
-                        fontWeight: FontWeight.bold,
+                    Tooltip(
+                      //TODO: Move styling into theme
+                      margin: EdgeInsets.all(32),
+                      triggerMode: TooltipTriggerMode.tap,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 4,
+                          )
+                        ],
                       ),
-                    )
+                      padding: EdgeInsets.all(16),
+                      textStyle: TextStyle(color: Colors.black),
+                      message:
+                          'Tell us about this cafe! We require this so that everyone knows how good it is!',
+                      child: Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.black,
+                        size: 18,
+                      ),
+                    ),
                   ],
                 ),
                 const Padding(
@@ -269,7 +327,7 @@ class _AddCafePageState extends State<AddCafePage>
                   keyboardType: TextInputType.text,
                   autocorrect: true,
                 ),
-                args.isOwner!
+                /*args.isOwner!
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -291,7 +349,7 @@ class _AddCafePageState extends State<AddCafePage>
                           ),
                         ],
                       )
-                    : const SizedBox.shrink(),
+                    : const SizedBox.shrink(),*/
                 const Padding(
                     padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 Row(

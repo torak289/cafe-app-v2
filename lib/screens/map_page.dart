@@ -163,8 +163,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                   initialZoom: 16,
                                   maxZoom: 21,
                                   interactionOptions: const InteractionOptions(
-                                    flags: InteractiveFlag.all &
-                                        ~InteractiveFlag.rotate,
+                                    flags: InteractiveFlag.all,
                                   ),
                                   cameraConstraint: CameraConstraint.contain(
                                     bounds: LatLngBounds(
