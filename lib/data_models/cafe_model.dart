@@ -72,7 +72,7 @@ class CafeModel {
   }
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
-    debugPrint(data.toString());
+    //debugPrint(data.toString());
     return CafeModel(
         uid: data['uid'],
         name: data['name'],
