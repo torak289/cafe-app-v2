@@ -17,7 +17,8 @@ import 'package:provider/provider.dart';
 class AddCafePage extends StatefulWidget {
   AddCafePage({super.key});
   bool? cafeOwner = false;
-  bool laptopFriendly = true;
+  bool? laptopFriendly;
+  bool? hasWifi;
   @override
   State<AddCafePage> createState() => _AddCafePageState();
 }
@@ -209,14 +210,33 @@ class _AddCafePageState extends State<AddCafePage>
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Laptop Friendly: ',
+                      'Is this Cafe Laptop Friendly? ',
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Checkbox(
+                      tristate: true,
                       value: widget.laptopFriendly,
                       onChanged: (value) {
                         setState(() {
-                          widget.laptopFriendly = value!;
+                          widget.laptopFriendly = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Does this Cafe have WiFi? ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      tristate: true,
+                      value: widget.hasWifi,
+                      onChanged: (value) {
+                        setState(() {
+                          widget.hasWifi = value;
                         });
                       },
                     ),

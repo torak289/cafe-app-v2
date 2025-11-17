@@ -16,6 +16,8 @@ class CafeModel {
   int? claimAmount;
   String? instagram;
   int? totalReviews;
+  bool? isLaptopFriendly;
+  bool? hasWifi;
 
   CafeModel({
     this.uid,
@@ -31,6 +33,8 @@ class CafeModel {
     this.verificationRequested = false,
     this.instagram,
     this.totalReviews,
+    this.isLaptopFriendly,
+    this.hasWifi,
   });
 
   Map<String, dynamic> toJson() {
@@ -63,7 +67,6 @@ class CafeModel {
   }
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
-
     //debugPrint(data.toString());
     return CafeModel(
       uid: data['uid'],
@@ -83,6 +86,8 @@ class CafeModel {
       instagram: data['instagram'],
       rating: data['rating'],
       totalReviews: data['total_reviews'],
+      isLaptopFriendly: data['laptop_friendly'],
+      hasWifi: data['wifi'],
     );
   }
   @override

@@ -98,7 +98,76 @@ class CafeMarker extends Marker {
                                       } else {
                                         return SizedBox.shrink();
                                       }
-                                    })
+                                    }),
+                                    Padding(
+                                        padding: EdgeInsetsGeometry.all(
+                                            CafeAppUI.buttonSpacingMedium)),
+                                    Chip(
+                                      label: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Laptop Friendly'),
+                                          Builder(
+                                            builder: (BuildContext context) {
+                                              if (future.data!.isLaptopFriendly !=
+                                                  null) {
+                                                return future.data!.isLaptopFriendly!
+                                                    ? Icon(
+                                                        Icons.check_rounded,
+                                                        color: CafeAppUI
+                                                            .iconButtonIconColor,
+                                                      )
+                                                    : Icon(
+                                                        Icons.close_rounded,
+                                                        color: CafeAppUI
+                                                            .iconButtonIconColor,
+                                                      );
+                                              } else {
+                                                return Icon(
+                                                  Icons.question_mark_rounded,
+                                                  color: CafeAppUI
+                                                      .iconButtonIconColor,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Chip(
+                                      label: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('WiFi'),
+                                          Builder(
+                                            builder: (BuildContext context) {
+                                              if (future.data!.hasWifi !=
+                                                  null) {
+                                                return future.data!.hasWifi!
+                                                    ? Icon(
+                                                        Icons.check_rounded,
+                                                        color: CafeAppUI
+                                                            .iconButtonIconColor,
+                                                      )
+                                                    : Icon(
+                                                        Icons.close_rounded,
+                                                        color: CafeAppUI
+                                                            .iconButtonIconColor,
+                                                      );
+                                              } else {
+                                                return Icon(
+                                                  Icons.question_mark_rounded,
+                                                  color: CafeAppUI
+                                                      .iconButtonIconColor,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
