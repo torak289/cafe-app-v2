@@ -57,16 +57,14 @@ class _AddCafePageState extends State<AddCafePage>
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
-                Padding(padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
+                Padding(
+                    padding:
+                        EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
                 Container(
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.5,
-                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  clipBehavior: Clip.hardEdge,
+                  clipBehavior: Clip.antiAlias,
                   height: 374,
                   child: FutureBuilder<LocationPermission>(
                     //Map Element
@@ -92,7 +90,8 @@ class _AddCafePageState extends State<AddCafePage>
                                           : LatLng(args.cafePosition!.latitude,
                                               args.cafePosition!.longitude),
                                       initialZoom: 19,
-                                      cameraConstraint: CameraConstraint.contain(
+                                      cameraConstraint:
+                                          CameraConstraint.contain(
                                         bounds: LatLngBounds(
                                           const LatLng(-90, -180),
                                           const LatLng(90, 180),
@@ -126,7 +125,8 @@ class _AddCafePageState extends State<AddCafePage>
                                   ),
                                   //Map Controls
                                   MapControls(
-                                    animatedMapController: animatedMapController,
+                                    animatedMapController:
+                                        animatedMapController,
                                     position: position.data!,
                                     isAddCafePage: true,
                                   ),
@@ -159,35 +159,75 @@ class _AddCafePageState extends State<AddCafePage>
                     },
                   ),
                 ),
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                const Text(
-                  'Name',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                Row(
+                  children: [
+                    const Text(
+                      'Name ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      ' Required',
+                      style: TextStyle(
+                        color: Colors.pinkAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
                 ),
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 TextField(
                   controller: cafeName,
                 ),
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                /*const Text(
-                  'Instagram',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                Row(
+                  children: [
+                    const Text(
+                      'Instagram ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      ' Optional',
+                      style: TextStyle(
+                        color: Colors.pinkAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
                 ),
                 const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 TextField(
                   controller: cafeInstagram,
-                ),*/
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-                const Text(
-                  'Description',
-                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                Row(
+                  children: [
+                    const Text(
+                      'Description ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const Text(
+                      ' Required',
+                      style: TextStyle(
+                        color: Colors.pinkAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 TextField(
                   controller: cafeDescription,
                   minLines: 5,
                   maxLines: 5,
                   maxLength: 256,
+                  keyboardType: TextInputType.text,
+                  autocorrect: true,
                 ),
                 args.isOwner!
                     ? Row(
@@ -212,7 +252,8 @@ class _AddCafePageState extends State<AddCafePage>
                         ],
                       )
                     : const SizedBox.shrink(),
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
