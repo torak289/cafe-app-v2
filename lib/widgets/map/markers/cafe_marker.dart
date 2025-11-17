@@ -98,7 +98,7 @@ class CafeMarker extends Marker {
                                                       : 0.0,
                                             ),
                                             Text(
-                                                "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews"), //This rounding needs to be improved... currently it rounds to .5 or .0
+                                                "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews"), //TODO: Implement whole number trim of .0
                                           ],
                                         );
                                       } else {
