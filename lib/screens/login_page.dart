@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                           onPressed: () async {
                             final response = await authService.appleSSO();
                             if (context.mounted) {
-                              if(response == "Success"){
+                              if (response == "Success") {
                                 Navigator.pop(context);
                               } else {
                                 debugPrint(response.toString());
@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: const Row(
                             children: [
-                              Icon(Icons.apple_rounded),
+                              Icon(Icons.apple_rounded, size: 24,),
                               Padding(padding: EdgeInsets.all(8)),
                               Text("Login with Apple"),
                             ],
@@ -170,10 +170,19 @@ class _LoginPageState extends State<LoginPage> {
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextButton(
-                          onPressed: () => authService.googleSSO(),
-                          child: const Row(
+                          onPressed: () async {
+                            final response = await authService.googleSSO();
+                            if (context.mounted) {
+                              if (response == "Success") {
+                                Navigator.pop(context);
+                              } else {
+                                debugPrint(response.toString());
+                              }
+                            }
+                          },
+                          child: Row(
                             children: [
-                              Icon(Icons.circle_outlined),
+                              Image.asset('assets/images/google-logo.png', scale: 24),
                               Padding(padding: EdgeInsets.all(8)),
                               Text("Login with Google"),
                             ],

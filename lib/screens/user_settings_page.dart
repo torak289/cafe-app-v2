@@ -278,6 +278,20 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
               const Padding(
                   padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        authService.signOut();
+                        Navigator.pop(context);
+                      },
+                      child: Text('Logout')),
+                ],
+              ),
+              const Padding(
+                  padding:
+                      EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
@@ -288,12 +302,6 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                       color: Colors.black,
                     ),
                   ),
-                  TextButton(
-                      onPressed: () {
-                        authService.signOut();
-                        Navigator.pop(context);
-                      },
-                      child: Text('Logout')),
                   TextButton(
                     style: const ButtonStyle(
                       backgroundColor:
