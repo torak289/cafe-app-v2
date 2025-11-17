@@ -50,6 +50,9 @@ class CafeModel {
       //'owner': owner,
       'location': 'POINT(${location.latitude} ${location.longitude})',
       'rating': rating,
+      'laptop_friendly': isLaptopFriendly,
+      'wifi': hasWifi,
+      'instagram': instagram,
       //'verified': verified,
       //'claim_amount': claimAmount,
     };

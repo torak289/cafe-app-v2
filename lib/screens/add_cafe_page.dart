@@ -17,8 +17,6 @@ import 'package:provider/provider.dart';
 class AddCafePage extends StatefulWidget {
   AddCafePage({super.key});
   bool? cafeOwner = false;
-  bool? laptopFriendly;
-  bool? hasWifi;
   @override
   State<AddCafePage> createState() => _AddCafePageState();
 }
@@ -30,6 +28,8 @@ class _AddCafePageState extends State<AddCafePage>
   TextEditingController cafeName = TextEditingController();
   TextEditingController cafeDescription = TextEditingController();
   TextEditingController cafeInstagram = TextEditingController();
+  bool? laptopFriendly;
+  bool? hasWifi;
 
   @override
   Widget build(BuildContext context) {
@@ -244,10 +244,10 @@ class _AddCafePageState extends State<AddCafePage>
                     ),
                     Checkbox(
                       tristate: true,
-                      value: widget.laptopFriendly,
+                      value: laptopFriendly,
                       onChanged: (value) {
                         setState(() {
-                          widget.laptopFriendly = value;
+                          laptopFriendly = value;
                         });
                       },
                     ),
@@ -262,10 +262,10 @@ class _AddCafePageState extends State<AddCafePage>
                     ),
                     Checkbox(
                       tristate: true,
-                      value: widget.hasWifi,
+                      value: hasWifi,
                       onChanged: (value) {
                         setState(() {
-                          widget.hasWifi = value;
+                          hasWifi = value;
                         });
                       },
                     ),
@@ -373,10 +373,13 @@ class _AddCafePageState extends State<AddCafePage>
                         onPressed: () async {
                           if (authService.appState == AppState.Authenticated) {
                             CafeModel newCafe = CafeModel(
-                                name: cafeName.text.trim(),
-                                description: cafeDescription.text.trim(),
-                                location: animatedMapController
-                                    .mapController.camera.center);
+                              name: cafeName.text.trim(),
+                              description: cafeDescription.text.trim(),
+                              location: animatedMapController
+                                  .mapController.camera.center,
+                              isLaptopFriendly: laptopFriendly,
+                              hasWifi: hasWifi,
+                            );
                             await database.addCafe(newCafe);
                             if (context.mounted) {
                               Navigator.pop(context);
