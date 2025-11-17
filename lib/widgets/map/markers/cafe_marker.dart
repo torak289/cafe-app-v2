@@ -34,6 +34,7 @@ class CafeMarker extends Marker {
                     DatabaseService databaseService =
                         Provider.of<DatabaseService>(context, listen: false);
                     return AlertDialog(
+                      backgroundColor: Colors.white,
                       title: Center(
                           child: Text(
                         cafe.name != null ? cafe.name! : "NO NAME",

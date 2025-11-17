@@ -68,11 +68,15 @@ class DatabaseService {
     }
   }
 
-  Future<bool> reviewCafe(String uuid, double score) async {
+  Future<bool> reviewCafe(String uuid, double coffeeScore, atmosphereScore,
+      serviceScore) async {
     try {
-      await _selectUsingFunc(
-          func: 'add_cafe_review',
-          params: {'p_cafe_id': uuid, 'p_score': score});
+      await _selectUsingFunc(func: 'add_cafe_review', params: {
+        'p_cafe_id': uuid,
+        'p_score': coffeeScore,
+        'p_atmosphere_score': atmosphereScore,
+        'p_service_score': serviceScore,
+      });
       return true;
     } catch (e) {
       return false;
@@ -208,7 +212,8 @@ class DatabaseService {
 
   Future<CafeModel?> getCafeData(String uuid) async {
     try {
-      final result = await _selectSingleUsingFunc(func: 'get_cafe_by_uuid', params: {
+      final result =
+          await _selectSingleUsingFunc(func: 'get_cafe_by_uuid', params: {
         'uuid': uuid,
       });
 

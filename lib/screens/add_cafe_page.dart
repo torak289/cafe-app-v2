@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 class AddCafePage extends StatefulWidget {
   AddCafePage({super.key});
   bool? cafeOwner = false;
-
+  bool laptopFriendly = true;
   @override
   State<AddCafePage> createState() => _AddCafePageState();
 }
@@ -198,9 +198,29 @@ class _AddCafePageState extends State<AddCafePage>
                     )
                   ],
                 ),
-                const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                 TextField(
                   controller: cafeInstagram,
+                ),
+                const Padding(
+                    padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Laptop Friendly: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Checkbox(
+                      value: widget.laptopFriendly,
+                      onChanged: (value) {
+                        setState(() {
+                          widget.laptopFriendly = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 const Padding(
                     padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
