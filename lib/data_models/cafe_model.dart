@@ -18,6 +18,7 @@ class CafeModel {
   int? totalReviews;
   bool? isLaptopFriendly;
   bool? hasWifi;
+  String? addedBy;
 
   CafeModel({
     this.uid,
@@ -35,6 +36,7 @@ class CafeModel {
     this.totalReviews,
     this.isLaptopFriendly,
     this.hasWifi,
+    this.addedBy,
   });
 
   Map<String, dynamic> toJson() {
@@ -67,28 +69,28 @@ class CafeModel {
   }
 
   factory CafeModel.fromJson(Map<String, dynamic> data) {
-    //debugPrint(data.toString());
+    debugPrint(data.toString());
     return CafeModel(
-      uid: data['uid'],
-      name: data['name'],
-      description: data['description'],
-      //created_at: data['created_at'], TODO: Parse Date Time
-      coffees: data['coffeeslist'] != null
-          ? CafeappUtils.stringListFromJson(data['coffeeslist'])
-          : List.empty(),
-      owner: data['owner'],
-      location: data['lat'] != null || data['lng'] != null
-          ? LatLng(data['lat'], data['lng'])
-          : const LatLng(0, 0),
-      verified: data['verified'] ?? false,
-      claimAmount: data['claim_amount'] ?? -1,
-      verificationRequested: data['verification_requested'] ?? false,
-      instagram: data['instagram'],
-      rating: data['rating'],
-      totalReviews: data['total_reviews'],
-      isLaptopFriendly: data['laptop_friendly'],
-      hasWifi: data['wifi'],
-    );
+        uid: data['uid'],
+        name: data['name'],
+        description: data['description'],
+        //created_at: data['created_at'], TODO: Parse Date Time
+        coffees: data['coffeeslist'] != null
+            ? CafeappUtils.stringListFromJson(data['coffeeslist'])
+            : List.empty(),
+        owner: data['owner'],
+        location: data['lat'] != null || data['lng'] != null
+            ? LatLng(data['lat'], data['lng'])
+            : const LatLng(0, 0),
+        verified: data['verified'] ?? false,
+        claimAmount: data['claim_amount'] ?? -1,
+        verificationRequested: data['verification_requested'] ?? false,
+        instagram: data['instagram'],
+        rating: data['rating'],
+        totalReviews: data['total_reviews'],
+        isLaptopFriendly: data['laptop_friendly'],
+        hasWifi: data['wifi'],
+        addedBy: data['add_by']);
   }
   @override
   String toString() {

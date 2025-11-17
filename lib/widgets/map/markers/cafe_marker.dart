@@ -1,5 +1,6 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
+import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
@@ -33,12 +34,42 @@ class CafeMarker extends Marker {
                   builder: (BuildContext context) {
                     DatabaseService databaseService =
                         Provider.of<DatabaseService>(context, listen: false);
+                    UserModel? user =
+                        Provider.of<UserModel?>(context, listen: false);
                     return AlertDialog(
                       backgroundColor: Colors.white,
                       title: Center(
-                          child: Text(
-                        cafe.name != null ? cafe.name! : "NO NAME",
-                        textAlign: TextAlign.center,
+                          child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            cafe.name != null ? cafe.name! : "NO NAME",
+                            textAlign: TextAlign.center,
+                          ),
+                          Builder(builder: (BuildContext context) {
+                            debugPrint('${user!.uid} == ${cafe.addedBy}');
+                            if (user.uid == cafe.addedBy) {
+                              return Row(
+                                children: [
+                                  Padding(
+                                      padding: EdgeInsetsGeometry.all(
+                                          CafeAppUI.buttonSpacingSmall)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      debugPrint("Edit Tapped");
+                                    },
+                                    child: Icon(
+                                      Icons.edit_rounded,
+                                      color: CafeAppUI.iconButtonIconColor,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return SizedBox.shrink();
+                            }
+                          }),
+                        ],
                       )),
                       content: FutureBuilder(
                           future: databaseService.getCafeData(cafe.uid!),
@@ -110,9 +141,11 @@ class CafeMarker extends Marker {
                                           Text('Laptop Friendly'),
                                           Builder(
                                             builder: (BuildContext context) {
-                                              if (future.data!.isLaptopFriendly !=
+                                              if (future
+                                                      .data!.isLaptopFriendly !=
                                                   null) {
-                                                return future.data!.isLaptopFriendly!
+                                                return future
+                                                        .data!.isLaptopFriendly!
                                                     ? Icon(
                                                         Icons.check_rounded,
                                                         color: CafeAppUI
