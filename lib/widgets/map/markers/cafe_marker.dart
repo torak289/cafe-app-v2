@@ -94,13 +94,11 @@ class CafeMarker extends Marker {
                                               starCount: 5,
                                               rating:
                                                   future.data!.rating != null
-                                                      ? future.data!.rating!
-                                                          .round()
-                                                          .toDouble()
+                                                      ? future.data!.rating!.toDouble()
                                                       : 0.0,
                                             ),
                                             Text(
-                                                "${future.data!.rating?.round()}/5 from ${future.data!.totalReviews} reviews"), //This rounding needs to be improved... currently it rounds to .5 or .0
+                                                "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews"), //This rounding needs to be improved... currently it rounds to .5 or .0
                                           ],
                                         );
                                       } else {
@@ -115,11 +113,20 @@ class CafeMarker extends Marker {
                                       if (future.data!.description != null ||
                                           future.data!.description!.isEmpty) {
                                         return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Padding(
                                                 padding: EdgeInsetsGeometry.all(
                                                     CafeAppUI
                                                         .buttonSpacingMedium)),
+                                            Text(
+                                              'About',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Padding(padding: EdgeInsetsGeometry.all(1)),
                                             Text(
                                               future.data!.description!,
                                               textAlign: TextAlign.justify,
