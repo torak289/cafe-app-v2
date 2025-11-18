@@ -17,13 +17,13 @@ def flutterVersionCode = localProperties.getProperty("flutter.versionCode") ?: "
 def flutterVersionName = localProperties.getProperty("flutter.versionName") ?: "1.0"
 
 android {
-    namespace = "com.example.cafeapp_v2"
+    namespace = "com.torak289.cafeappV2"
 
     // ✅ Compile against Android 36
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.cafeapp_v2"
+        applicationId = "com.torak289.cafeappV2"
 
         // ✅ Recommended Flutter minSdk
         minSdkVersion = flutter.minSdkVersion

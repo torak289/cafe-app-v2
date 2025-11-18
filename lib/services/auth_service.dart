@@ -263,7 +263,8 @@ class AuthService with ChangeNotifier {
     } catch (e) {
       _appState = AppState.Unauthenticated;
       notifyListeners();
-      return Future.error(e);
+      debugPrint(e.toString());
+      return "Failure";
     }
   }
 
