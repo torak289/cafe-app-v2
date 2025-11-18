@@ -205,6 +205,19 @@ class CafeMarker extends Marker {
                                         ],
                                       ),
                                     ),
+                                    /*Chip(
+                                      label: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('Verified'),
+                                          Icon(
+                                            Icons.verified_rounded,
+                                            color: Colors.pinkAccent,
+                                          ),
+                                        ],
+                                      ),
+                                    ),*/
                                   ],
                                 ),
                               );
