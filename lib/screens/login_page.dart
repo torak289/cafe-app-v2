@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -144,28 +146,42 @@ class _LoginPageState extends State<LoginPage> {
                             Expanded(child: Divider(color: Colors.black)),
                           ],
                         ),
-                        const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
-                        TextButton(
-                          onPressed: () async {
-                            final response = await authService.appleSSO();
-                            if (context.mounted) {
-                              if (response == "Success") {
-                                Navigator.pop(context);
-                              } else {
-                                debugPrint(response.toString());
-                              }
-                            }
-                          },
-                          child: const Row(
-                            children: [
-                              Icon(Icons.apple_rounded, size: 24,),
-                              Padding(padding: EdgeInsets.all(8)),
-                              Text("Login with Apple"),
-                            ],
-                          ),
-                        ),
+                        Builder(builder: (context) {
+                          if (Platform.isIOS) {
+                            return Column(
+                              children: [
+                                const Padding(
+                                    padding: EdgeInsets.all(
+                                        CafeAppUI.buttonSpacingLarge)),
+                                TextButton(
+                                  onPressed: () async {
+                                    final response =
+                                        await authService.appleSSO();
+                                    if (context.mounted) {
+                                      if (response == "Success") {
+                                        Navigator.pop(context);
+                                      } else {
+                                        debugPrint(response.toString());
+                                      }
+                                    }
+                                  },
+                                  child: const Row(
+                                    children: [
+                                      Icon(
+                                        Icons.apple_rounded,
+                                        size: 24,
+                                      ),
+                                      Padding(padding: EdgeInsets.all(8)),
+                                      Text("Login with Apple"),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        }),
                         const Padding(
                             padding:
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
@@ -182,7 +198,8 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: Row(
                             children: [
-                              Image.asset('assets/images/google-logo.png', scale: 24),
+                              Image.asset('assets/images/google-logo.png',
+                                  scale: 24),
                               Padding(padding: EdgeInsets.all(8)),
                               Text("Login with Google"),
                             ],

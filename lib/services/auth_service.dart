@@ -100,61 +100,68 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<AuthState> _onAuthStateChanged(AuthState data) async {
+  Future<void> _onAuthStateChanged(AuthState data) async {
     final AuthChangeEvent event = data.event;
     final Session? session = data.session;
-    //debugPrint('Event: $event, Session: $session');
 
     if (session != null) {
-      //This feels like it's in the wrong place and needs moving...
       _user.sink.add(userFromSupabase(session.user));
     }
 
     switch (event) {
       case AuthChangeEvent.initialSession:
         try {
-          _client.auth.refreshSession();
-        } catch (e) {
-          //Not actually sure I need anon users...
-          /*if (_client.auth.currentSession == null) {
-            try {
-              await _client.auth.signInAnonymously();
-              isAnon = true;
-            } catch (e) {
-              debugPrint(e.toString());
-            }
-          }*/
-        }
-      case AuthChangeEvent.signedIn:
-        _appState = AppState.Authenticated;
-      case AuthChangeEvent.signedOut:
-        _appState = AppState.Unauthenticated;
-      case AuthChangeEvent.passwordRecovery:
-      // handle password recovery
-      case AuthChangeEvent.tokenRefreshed:
-        // handle token refreshed
-        if (session != null) {
-          //TODO: Make this work on app launch/relaunch
-          if (session.user.aud == "authenticated") {
+          await _client.auth.refreshSession();
+          if (_client.auth.currentSession != null) {
             _appState = AppState.Authenticated;
           } else {
-            //TODO: Implement First launch check...
-            _appState = AppState.Uninitialized;
+            _appState = AppState.Unauthenticated;
           }
-        } else {
-          _appState = AppState.Uninitialized;
+        } catch (e) {
+          _appState = AppState.Unauthenticated;
         }
+        break;
+
+      case AuthChangeEvent.signedIn:
+        _appState = AppState.Authenticated;
+        break;
+
+      case AuthChangeEvent.signedOut:
+        _appState = AppState.Unauthenticated;
+        break;
+
+      case AuthChangeEvent.passwordRecovery:
+        // You can decide how to handle this; for now treat as unauthenticated
+        _appState = AppState.Unauthenticated;
+        break;
+
+      case AuthChangeEvent.tokenRefreshed:
+        if (session != null && session.user.aud == "authenticated") {
+          _appState = AppState.Authenticated;
+        } else {
+          _appState = AppState.Unauthenticated;
+        }
+        break;
+
       case AuthChangeEvent.userUpdated:
-      // handle user updated
+        // Usually keep the current state or mark as authenticated if session exists
+        if (session != null) {
+          _appState = AppState.Authenticated;
+        }
+        break;
+
       case AuthChangeEvent.userDeleted:
-        _appState = AppState.Uninitialized;
+        // Up to you: Unauthenticated may make more sense than Uninitialized
+        _appState = AppState.Unauthenticated;
+        break;
 
       case AuthChangeEvent.mfaChallengeVerified:
-      // handle mfa challenge verified
+        _appState = AppState.Authenticated;
+        break;
     }
+
     debugPrint('App State: $_appState');
     notifyListeners();
-    return data;
   }
 
   Future<void> emailRegister(String email, String password) async {
@@ -174,11 +181,11 @@ class AuthService with ChangeNotifier {
 
       /// Web Client ID that you registered with Google Cloud.
       const webClientId =
-          '18984321288-u69h4uhnbn2r19te0jr43pndpgt7brnj.apps.googleusercontent.com';
+          '423853703530-mlsaqkdb15s0kru1sq1r1sjvg17sosam.apps.googleusercontent.com';
 
       /// iOS Client ID that you registered with Google Cloud.
       const iosClientId =
-          '18984321288-vce8hhhblhh588gaa0hg28u2irc0spdi.apps.googleusercontent.com';
+          '423853703530-25i0dae4m4meneuluenn28l7qqi0rkju.apps.googleusercontent.com';
 
       final scopes = ['email', 'profile'];
       final googleSignIn = GoogleSignIn.instance;
@@ -188,8 +195,8 @@ class AuthService with ChangeNotifier {
         clientId: iosClientId,
       );
 
-      final googleUser = await googleSignIn.attemptLightweightAuthentication();
-      // or: final googleUser = await googleSignIn.authenticate();
+      //final googleUser = await googleSignIn.attemptLightweightAuthentication();
+      final googleUser = await googleSignIn.authenticate();
       debugPrint(googleUser.toString());
       if (googleUser == null) {
         throw const AuthException('Failed to sign in with Google.');
