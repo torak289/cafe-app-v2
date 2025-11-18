@@ -1,6 +1,7 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
+import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -319,17 +320,16 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                                   TextButton(
                                     onPressed: () async {
                                       //TODO: Implement authService account deletion...
-                                      //bool res = await authService.deleteUser(user.uid);
+                                      String res =
+                                          await authService.deleteUser();
                                       if (context.mounted) {
-                                        if (false) {
+                                        if (res == "Success") {
                                           Navigator.popUntil(context, (route) {
                                             return route.settings.name ==
                                                 Routes.mapPage;
                                           });
                                         } else {
-                                          //TODO: Implement error handling...
-                                          //debugPrint(res.toString());
-                                          Navigator.pop(context, "Closed");
+                                          debugPrint(res);
                                         }
                                       }
                                     },

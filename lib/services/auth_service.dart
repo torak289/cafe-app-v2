@@ -37,13 +37,66 @@ class AuthService with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteUser(String uid) async {
-    //TODo: 403 Forbidden this needs to move to a edge function
+  Future<String> deleteUser() async {
     try {
-      await _client.auth.admin.deleteUser(uid);
-      return true;
+      _appState = AppState.Authenticating;
+      notifyListeners();
+
+      final session = _client.auth.currentSession;
+      if (session == null) {
+        // Shouldn't happen if you're guarding the screen, but just in case
+        _appState = AppState.Unauthenticated;
+        notifyListeners();
+        return "Not logged in";
+      }
+
+      final res = await _client.functions.invoke(
+        'self_delete_user',
+        method: HttpMethod.post,
+        headers: {
+          // user is already authenticated; just pass their access token
+          'Authorization': 'Bearer ${session.accessToken}',
+        },
+      );
+
+      if (res.status == 200) {
+        // User deleted successfully on the server → clean up local auth state
+        await _client.auth.signOut();
+        _appState = AppState.Unauthenticated;
+        notifyListeners();
+        return "Success";
+      }
+
+      if (res.status == 401) {
+        // Token invalid/expired; user is effectively logged out anyway
+        await _client.auth.signOut();
+        _appState = AppState.Unauthenticated;
+        notifyListeners();
+        return "Session expired. Please log in again.";
+      }
+
+      // Any other error – user still exists on the server,
+      // so keep them as Authenticated.
+      _appState = AppState.Authenticated;
+      notifyListeners();
+
+      // Try to surface a useful message from the function response
+      String message = "Failed to delete account";
+      final data = res.data;
+      if (data is Map && data['error'] is String) {
+        message = data['error'] as String;
+      }
+
+      return message;
+    } on AuthException catch (e) {
+      // Something went wrong with the local Supabase client
+      _appState = AppState.Authenticated;
+      notifyListeners();
+      return e.message;
     } catch (e) {
-      return Future.error(e);
+      _appState = AppState.Authenticated;
+      notifyListeners();
+      return "Unexpected error while deleting account";
     }
   }
 
@@ -281,6 +334,7 @@ class AuthService with ChangeNotifier {
           .signInWithPassword(email: email.trim(), password: password.trim());
       _client.auth.startAutoRefresh(); //IDK if this is actually working...
       _appState = AppState.Authenticated;
+      notifyListeners();
       return "Success";
     } on AuthException catch (e) {
       debugPrint("Error: ${e.message}");
