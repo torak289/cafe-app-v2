@@ -271,22 +271,89 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                           ),
                         ],
                       ),
+                      const Padding(
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            style: const ButtonStyle(
+                              backgroundColor:
+                                  WidgetStatePropertyAll(Colors.pinkAccent),
+                            ),
+                            onPressed: () => showDialog<String>(
+                              //TODO: Implement Async Stream to listen to database events fired on Scan from Cafe Account...
+                              //TODO: Implement this for both available QR Codes...
+                              //TODO: Pop context and update UI state on Scan...
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text(
+                                  "Are you sure you want to delete your account?",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                content: const Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Icon(
+                                      Icons.warning_rounded,
+                                      color: Colors.pinkAccent,
+                                      size: 96,
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.all(
+                                          CafeAppUI.buttonSpacingSmall),
+                                    ),
+                                    Text(
+                                        'This is a permanent action and cannot be undone! Are you sure you want to do this?'),
+                                  ],
+                                ),
+                                actionsAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      //TODO: Implement authService account deletion...
+                                      //bool res = await authService.deleteUser(user.uid);
+                                      if (context.mounted) {
+                                        if (false) {
+                                          Navigator.popUntil(context, (route) {
+                                            return route.settings.name ==
+                                                Routes.mapPage;
+                                          });
+                                        } else {
+                                          //TODO: Implement error handling...
+                                          //debugPrint(res.toString());
+                                          Navigator.pop(context, "Closed");
+                                        }
+                                      }
+                                    },
+                                    style: const ButtonStyle(
+                                      backgroundColor: WidgetStatePropertyAll(
+                                          Colors.pinkAccent),
+                                    ),
+                                    child: const Text("Yes"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(context, "Closed"),
+                                    child: const Text("No"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            child: const Text('Delete Account'),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ),
-              const Padding(
-                  padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        authService.signOut();
-                        Navigator.pop(context);
-                      },
-                      child: Text('Logout')),
-                ],
               ),
               const Padding(
                   padding:
@@ -303,74 +370,11 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                     ),
                   ),
                   TextButton(
-                    style: const ButtonStyle(
-                      backgroundColor:
-                          WidgetStatePropertyAll(Colors.pinkAccent),
-                    ),
-                    onPressed: () => showDialog<String>(
-                      //TODO: Implement Async Stream to listen to database events fired on Scan from Cafe Account...
-                      //TODO: Implement this for both available QR Codes...
-                      //TODO: Pop context and update UI state on Scan...
-                      context: context,
-                      builder: (BuildContext context) => AlertDialog(
-                        title: const Text(
-                          "Are you sure you want to delete your account?",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        content: const Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Icon(
-                              Icons.warning_rounded,
-                              color: Colors.pinkAccent,
-                              size: 96,
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.all(CafeAppUI.buttonSpacingSmall),
-                            ),
-                            Text(
-                                'This is a permanent action and cannot be undone! Are you sure you want to do this?'),
-                          ],
-                        ),
-                        actionsAlignment: MainAxisAlignment.spaceBetween,
-                        actions: [
-                          TextButton(
-                            onPressed: () async {
-                              //TODO: Implement authService account deletion...
-                              //bool res = await authService.deleteUser(user.uid);
-                              if (context.mounted) {
-                                if (false) {
-                                  Navigator.popUntil(context, (route) {
-                                    return route.settings.name ==
-                                        Routes.mapPage;
-                                  });
-                                } else {
-                                  //TODO: Implement error handling...
-                                  //debugPrint(res.toString());
-                                  Navigator.pop(context, "Closed");
-                                }
-                              }
-                            },
-                            style: const ButtonStyle(
-                              backgroundColor:
-                                  WidgetStatePropertyAll(Colors.pinkAccent),
-                            ),
-                            child: const Text("Yes"),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, "Closed"),
-                            child: const Text("No"),
-                          ),
-                        ],
-                      ),
-                    ),
-                    child: const Text('Delete Account'),
-                  ),
+                      onPressed: () {
+                        authService.signOut();
+                        Navigator.pop(context);
+                      },
+                      child: Text('Logout')),
                   const SizedBox(
                     height: 32,
                     width: 32,
