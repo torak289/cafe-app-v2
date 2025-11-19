@@ -335,22 +335,88 @@ class AuthService with ChangeNotifier {
   }
 
   Future<String> emailLogin(String email, String password) async {
+    final trimmedEmail = email.trim();
+    final trimmedPassword = password.trim();
+
     try {
       _appState = AppState.Authenticating;
       notifyListeners();
-      await _client.auth
-          .signInWithPassword(email: email.trim(), password: password.trim());
-      _client.auth.startAutoRefresh(); //IDK if this is actually working...
-      _appState = AppState.Authenticated;
-      notifyListeners();
-      return "Success";
-    } on AuthException catch (e) {
-      debugPrint("Error: ${e.message}");
+
+      // 1. Check if email exists via Edge Function
+      final checkResponse = await _client.functions.invoke(
+        'check_user',
+        body: {'email': trimmedEmail},
+      );
+
+      // IMPORTANT: response.data is now a Map<String, dynamic>
+      final data = checkResponse.data as Map<String, dynamic>;
+      final result = data['result'] as String?;
+
+      if (result == 'Success') {
+        // ----------------------------------------------------------
+        // EXISTING USER → TRY LOGIN
+        // ----------------------------------------------------------
+        try {
+          await _client.auth.signInWithPassword(
+            email: trimmedEmail,
+            password: trimmedPassword,
+          );
+
+          _client.auth.startAutoRefresh();
+          _appState = AppState.Authenticated;
+          notifyListeners();
+          return "Success";
+        } on AuthException catch (e) {
+          final msg = e.message.toLowerCase();
+
+          if (msg.contains('not confirmed') ||
+              msg.contains('email not confirmed')) {
+            _appState = AppState.Unauthenticated;
+            notifyListeners();
+            return "Email Not Confirmed";
+          }
+
+          debugPrint("Auth error (existing): ${e.message}");
+          _appState = AppState.Unauthenticated;
+          notifyListeners();
+          return e.message;
+        }
+      } else if (result == 'Failure') {
+        // ----------------------------------------------------------
+        // NEW USER → SIGN UP & REQUIRE EMAIL CONFIRMATION
+        // ----------------------------------------------------------
+        try {
+          await _client.auth.signUp(
+            email: trimmedEmail,
+            password: trimmedPassword,
+          );
+
+          _appState = AppState.Unauthenticated;
+          notifyListeners();
+          // User must click the confirmation link to complete login
+          return "Confirmation Email Sent";
+        } on AuthException catch (e) {
+          debugPrint("Auth error (signup): ${e.message}");
+          _appState = AppState.Unauthenticated;
+          notifyListeners();
+          return e.message;
+        }
+      } else {
+        // Unexpected result key/value
+        _appState = AppState.Unauthenticated;
+        notifyListeners();
+        return "Unexpected server response";
+      }
+    } on FunctionException catch (e) {
+      debugPrint("Edge function error: ${e.toString()}");
       _appState = AppState.Unauthenticated;
       notifyListeners();
-      return e.message;
-    } catch (e) {
-      return Future.error(e);
+      return "Failed to check email. Please try again.";
+    } catch (e, st) {
+      debugPrint("Unexpected: $e\n$st");
+      _appState = AppState.Unauthenticated;
+      notifyListeners();
+      return "Unexpected error occurred";
     }
   }
 
