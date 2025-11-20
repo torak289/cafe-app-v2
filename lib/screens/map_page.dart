@@ -8,6 +8,7 @@ import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/connectivity_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:cafeapp_v2/widgets/map/map_controls.dart';
@@ -44,6 +45,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   final Future<CacheStore> _cacheStoreFuture = _getCacheStore();
 
+  final pageController = PageController(viewportFraction: 1, keepPage: true);
+
   /// Get the CacheStore as a Future. This method needs to be static so that it
   /// can be used to initialize a field variable.
   static Future<CacheStore> _getCacheStore() async {
@@ -68,6 +71,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     database = Provider.of<DatabaseService>(context, listen: false);
     final ConnectivityService connectivity =
         Provider.of(context, listen: false);
+    final SharePrefService sharePrefService =
+        Provider.of<SharePrefService>(context, listen: false);
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -125,7 +130,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                           _inBoundsDebouncer.run(() {
                                             markerLayer =
                                                 database.getCafesInBounds(
-                                                    animatedMapController, context);
+                                                    animatedMapController,
+                                                    context);
                                           });
                                         }
                                       }
@@ -137,7 +143,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                         _inBoundsDebouncer.run(() {
                                           markerLayer =
                                               database.getCafesInBounds(
-                                                  animatedMapController, context);
+                                                  animatedMapController,
+                                                  context);
                                         });
                                       }
                                     },
@@ -229,6 +236,82 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             ],
                           ),
                         ),
+                        if (sharePrefService.isFirstLauncher)
+                          Positioned.fill(
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  sharePrefService.hasFirstLaunched();
+                                });
+                              },
+                              child: Container(
+                                color: Colors.black54, // Dim background
+                                child: Center(
+                                  child: AlertDialog(
+                                    backgroundColor: CafeAppUI.backgroundColor,
+                                    content: SizedBox(
+                                      height: 320,
+                                      width: 200,
+                                      child: PageView(
+                                        controller: pageController,
+                                        scrollDirection: Axis.horizontal,
+                                        pageSnapping: true,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/Cafe_Logo.png',
+                                                scale: 2,
+                                              ),
+                                              Padding(
+                                                  padding: EdgeInsetsGeometry
+                                                      .all(CafeAppUI
+                                                          .buttonSpacingMedium)),
+                                              Text(
+                                                  'Welcome to Robusta the community-powered coffee app built for independent coffee lovers.'),
+                                              Padding(
+                                                padding: EdgeInsetsGeometry.all(
+                                                    CafeAppUI
+                                                        .buttonSpacingSmall),
+                                              ),
+                                            ],
+                                          ),
+                                          Center(
+                                            child: Text('Onboarding Page 2'),
+                                          ),
+                                          Center(
+                                            child: Text('Onboarding Page 3'),
+                                          ),
+                                          Center(
+                                            child: Text('Onboarding Page 4'),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    actionsAlignment: MainAxisAlignment.center,
+                                    actions: [
+                                      Column(
+                                        children: [
+                                          TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  sharePrefService
+                                                      .hasFirstLaunched();
+                                                });
+                                              },
+                                              child: Text('Skip Onboarding')),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                       ],
                     );
                   } else {
