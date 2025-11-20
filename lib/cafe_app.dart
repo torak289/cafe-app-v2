@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/connectivity_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:cafeapp_v2/themes/cafe_light.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +36,12 @@ class CafeApp extends StatelessWidget {
                   Provider<DatabaseService>(
                     create: (context) => DatabaseService(),
                   ),
+                  ChangeNotifierProvider<SharePrefService>(
+                      create: (context) => SharePrefService()),
                   ChangeNotifierProvider<LocationService>(
-                    create: (context) => LocationService(),
-                  ),
+                      create: (context) => LocationService()),
                   ChangeNotifierProvider<ConnectivityService>(
-                    create: (context) => ConnectivityService(),
-                  )
+                      create: (context) => ConnectivityService())
                 ],
                 child: MaterialApp(
                   title: 'Robusta',
