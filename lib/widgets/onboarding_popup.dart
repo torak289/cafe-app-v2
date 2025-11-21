@@ -2,6 +2,7 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardingPopup extends StatelessWidget {
   @override
@@ -63,6 +64,19 @@ class OnboardingPopup extends StatelessWidget {
                 actions: [
                   Column(
                     children: [
+                      SmoothPageIndicator(
+                        controller: pageController,
+                        count: 4,
+                        effect: const WormEffect(
+                          activeDotColor: CafeAppUI.iconButtonIconColor,
+                          dotColor: CafeAppUI.iconButtonIconColor,
+                          paintStyle: PaintingStyle.stroke,
+                          dotHeight: 8,
+                          dotWidth: 8,
+                          type: WormType.normal,
+                        ),
+                      ),
+                      Padding(padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
                       TextButton(
                           onPressed: () {
                             sharePrefService.hasFirstLaunched();
