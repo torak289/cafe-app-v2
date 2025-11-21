@@ -63,6 +63,7 @@ dependencies:
   flutter_rating: ^2.0.2
   sign_in_with_apple: ^7.0.1
   crypto: ^3.0.7
+  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
