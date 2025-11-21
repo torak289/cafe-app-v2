@@ -31,294 +31,297 @@ class CafeMarker extends Marker {
               GestureDetector(
                 onTap: () => showModalBottomSheet<void>(
                   context: context,
+                  useSafeArea: true,
+                  isScrollControlled: true,
                   builder: (BuildContext context) {
                     DatabaseService databaseService =
                         Provider.of<DatabaseService>(context, listen: false);
                     /*UserModel? user =
                         Provider.of<UserModel?>(context, listen: false);*/
-                    return SizedBox.expand(
-                      child: SingleChildScrollView(
-                        child: FutureBuilder(
-                            future: databaseService.getCafeData(cafe.uid!),
-                            builder: (BuildContext context, future) {
-                              if (future.hasData) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 32, vertical: 32),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      /*Builder(builder: (BuildContext context) {
-                                        debugPrint(
-                                            '${user!.uid} == ${cafe.addedBy}');
-                                        if (user.uid == cafe.addedBy) {
-                                          return Column(
-                                            children: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  debugPrint("Edit Tapped");
-                                                },
-                                                child: Text('Edit'),
-                                              ),
-                                              Padding(
-                                                  padding: EdgeInsetsGeometry.all(
-                                                      CafeAppUI
-                                                          .buttonSpacingMedium)),
-                                            ],
-                                          );
-                                        } else {
-                                          return SizedBox.shrink();
-                                        }
-                                      }),*/
-                                      Center(
-                                        child: Text(
-                                          cafe.name != null
-                                              ? cafe.name!
-                                              : "NO NAME",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsGeometry.all(
-                                            CafeAppUI.buttonSpacingMedium),
-                                      ),
-                                      Builder(builder: (context) {
-                                        if (future.data!.totalReviews! > 0) {
-                                          return Column(
-                                            children: [
-                                              StarRating(
-                                                size: 32,
-                                                color: CafeAppUI
-                                                    .iconButtonIconColor,
-                                                borderColor: CafeAppUI
-                                                    .iconButtonIconColor,
-                                                starCount: 5,
-                                                rating:
-                                                    future.data!.rating != null
-                                                        ? future.data!.rating!
-                                                            .toDouble()
-                                                        : 0.0,
-                                              ),
-                                              Text(
-                                                  "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews"), //TODO: Implement whole number trim of .0
-                                            ],
-                                          );
-                                        } else {
-                                          return Text(
-                                            'No Rating',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          );
-                                        }
-                                      }),
-                                      Builder(builder: (context) {
-                                        if (future.data!.description != null ||
-                                            future.data!.description!.isEmpty) {
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                  padding: EdgeInsetsGeometry
-                                                      .all(CafeAppUI
-                                                          .buttonSpacingMedium)),
-                                              Text(
-                                                'About',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              Padding(
-                                                  padding:
-                                                      EdgeInsetsGeometry.all(
-                                                          1)),
-                                              Text(
-                                                future.data!.description!,
-                                                textAlign: TextAlign.justify,
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          return SizedBox.shrink();
-                                        }
-                                      }),
-                                      Padding(
-                                        padding: EdgeInsetsGeometry.all(
-                                            CafeAppUI.buttonSpacingMedium),
-                                      ),
-                                      Chip(
-                                        label: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('Laptop Friendly'),
-                                            Builder(
-                                              builder: (BuildContext context) {
-                                                if (future.data!
-                                                        .isLaptopFriendly !=
-                                                    null) {
-                                                  return future.data!
-                                                          .isLaptopFriendly!
-                                                      ? Icon(
-                                                          Icons.check_rounded,
-                                                          color: CafeAppUI
-                                                              .iconButtonIconColor,
-                                                        )
-                                                      : Icon(
-                                                          Icons.close_rounded,
-                                                          color: CafeAppUI
-                                                              .iconButtonIconColor,
-                                                        );
-                                                } else {
-                                                  return Icon(
-                                                    Icons.question_mark_rounded,
-                                                    color: CafeAppUI
-                                                        .iconButtonIconColor,
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Chip(
-                                        label: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('WiFi'),
-                                            Builder(
-                                              builder: (BuildContext context) {
-                                                if (future.data!.hasWifi !=
-                                                    null) {
-                                                  return future.data!.hasWifi!
-                                                      ? Icon(
-                                                          Icons.check_rounded,
-                                                          color: CafeAppUI
-                                                              .iconButtonIconColor,
-                                                        )
-                                                      : Icon(
-                                                          Icons.close_rounded,
-                                                          color: CafeAppUI
-                                                              .iconButtonIconColor,
-                                                        );
-                                                } else {
-                                                  return Icon(
-                                                    Icons.question_mark_rounded,
-                                                    color: CafeAppUI
-                                                        .iconButtonIconColor,
-                                                  );
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsetsGeometry.all(
-                                            CafeAppUI.buttonSpacingMedium),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                    return DraggableScrollableSheet(
+                      expand: false,
+                      builder: (context, scrollController) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: SingleChildScrollView(
+                              controller: scrollController,
+                              child: FutureBuilder(
+                                future: databaseService.getCafeData(cafe.uid!),
+                                builder: (BuildContext context, future) {
+                                  if (future.hasData) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 32, vertical: 32),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Builder(
-                                              builder: (BuildContext context) {
-                                            AuthService authService =
-                                                Provider.of<AuthService>(
-                                                    context,
-                                                    listen: false);
-                                            if (authService.appState ==
-                                                AppState.Authenticated) {
-                                              return TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (BuildContext
-                                                              context) =>
-                                                          rating_popup(
-                                                        cafe: cafe,
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Text('Review'),
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsetsGeometry
-                                                                  .all(2)),
-                                                      Icon(Icons.star_rounded)
-                                                    ],
-                                                  ));
+                                          /*Builder(builder: (BuildContext context) {
+                                              debugPrint(
+                                                  '${user!.uid} == ${cafe.addedBy}');
+                                              if (user.uid == cafe.addedBy) {
+                                                return Column(
+                                                  children: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        debugPrint("Edit Tapped");
+                                                      },
+                                                      child: Text('Edit'),
+                                                    ),
+                                                    Padding(
+                                                        padding: EdgeInsetsGeometry.all(
+                                                            CafeAppUI
+                                                                .buttonSpacingMedium)),
+                                                  ],
+                                                );
+                                              } else {
+                                                return SizedBox.shrink();
+                                              }
+                                            }),*/
+                                          Center(
+                                            child: Text(
+                                              cafe.name != null
+                                                  ? cafe.name!
+                                                  : "NO NAME",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsetsGeometry.all(
+                                                CafeAppUI.buttonSpacingMedium),
+                                          ),
+                                          Builder(builder: (context) {
+                                            if (future.data!.totalReviews! > 0) {
+                                              return Column(
+                                                children: [
+                                                  StarRating(
+                                                    size: 32,
+                                                    color:
+                                                        CafeAppUI.iconButtonIconColor,
+                                                    borderColor:
+                                                        CafeAppUI.iconButtonIconColor,
+                                                    starCount: 5,
+                                                    rating:
+                                                        future.data!.rating != null
+                                                            ? future.data!.rating!
+                                                                .toDouble()
+                                                            : 0.0,
+                                                  ),
+                                                  Text(
+                                                      "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews"), //TODO: Implement whole number trim of .0
+                                                ],
+                                              );
+                                            } else {
+                                              return Text(
+                                                'No Rating',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              );
+                                            }
+                                          }),
+                                          Builder(builder: (context) {
+                                            if (future.data!.description != null ||
+                                                future.data!.description!.isEmpty) {
+                                              return Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                      padding: EdgeInsetsGeometry.all(
+                                                          CafeAppUI
+                                                              .buttonSpacingMedium)),
+                                                  Text(
+                                                    'About',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                      padding:
+                                                          EdgeInsetsGeometry.all(1)),
+                                                  Text(
+                                                    future.data!.description!,
+                                                    textAlign: TextAlign.justify,
+                                                  ),
+                                                ],
+                                              );
                                             } else {
                                               return SizedBox.shrink();
                                             }
                                           }),
                                           Padding(
-                                              padding: EdgeInsetsGeometry.all(
-                                                  CafeAppUI
-                                                      .buttonSpacingMedium)),
-                                          TextButton(
-                                              onPressed: () async {
-                                                CafeappUtils.launchMap(
-                                                    cafe.location);
-                                              },
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
+                                            padding: EdgeInsetsGeometry.all(
+                                                CafeAppUI.buttonSpacingMedium),
+                                          ),
+                                          Chip(
+                                            label: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('Laptop Friendly'),
+                                                Builder(
+                                                  builder: (BuildContext context) {
+                                                    if (future
+                                                            .data!.isLaptopFriendly !=
+                                                        null) {
+                                                      return future
+                                                              .data!.isLaptopFriendly!
+                                                          ? Icon(
+                                                              Icons.check_rounded,
+                                                              color: CafeAppUI
+                                                                  .iconButtonIconColor,
+                                                            )
+                                                          : Icon(
+                                                              Icons.close_rounded,
+                                                              color: CafeAppUI
+                                                                  .iconButtonIconColor,
+                                                            );
+                                                    } else {
+                                                      return Icon(
+                                                        Icons.question_mark_rounded,
+                                                        color: CafeAppUI
+                                                            .iconButtonIconColor,
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Chip(
+                                            label: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text('WiFi'),
+                                                Builder(
+                                                  builder: (BuildContext context) {
+                                                    if (future.data!.hasWifi !=
+                                                        null) {
+                                                      return future.data!.hasWifi!
+                                                          ? Icon(
+                                                              Icons.check_rounded,
+                                                              color: CafeAppUI
+                                                                  .iconButtonIconColor,
+                                                            )
+                                                          : Icon(
+                                                              Icons.close_rounded,
+                                                              color: CafeAppUI
+                                                                  .iconButtonIconColor,
+                                                            );
+                                                    } else {
+                                                      return Icon(
+                                                        Icons.question_mark_rounded,
+                                                        color: CafeAppUI
+                                                            .iconButtonIconColor,
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsetsGeometry.all(
+                                                CafeAppUI.buttonSpacingMedium),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Builder(
+                                                  builder: (BuildContext context) {
+                                                AuthService authService =
+                                                    Provider.of<AuthService>(context,
+                                                        listen: false);
+                                                if (authService.appState ==
+                                                    AppState.Authenticated) {
+                                                  return TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              rating_popup(
+                                                            cafe: cafe,
+                                                          ),
+                                                        );
+                                                      },
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Text('Review'),
+                                                          Padding(
+                                                              padding:
+                                                                  EdgeInsetsGeometry
+                                                                      .all(2)),
+                                                          Icon(Icons.star_rounded)
+                                                        ],
+                                                      ));
+                                                } else {
+                                                  return SizedBox.shrink();
+                                                }
+                                              }),
+                                              Padding(
+                                                  padding: EdgeInsetsGeometry.all(
+                                                      CafeAppUI.buttonSpacingMedium)),
+                                              TextButton(
+                                                onPressed: () async {
+                                                  CafeappUtils.launchMap(
+                                                      cafe.location);
+                                                },
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Text('Goto'),
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsetsGeometry.all(
+                                                                3)),
+                                                    Icon(Icons.assistant_navigation),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          /*Chip(
+                                              label: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceBetween,
                                                 children: [
-                                                  Text('Goto'),
-                                                  Padding(
-                                                      padding:
-                                                          EdgeInsetsGeometry
-                                                              .all(3)),
-                                                  Icon(Icons
-                                                      .assistant_navigation),
+                                                  Text('Verified'),
+                                                  Icon(
+                                                    Icons.verified_rounded,
+                                                    color: Colors.pinkAccent,
+                                                  ),
                                                 ],
-                                              )),
+                                              ),
+                                            ),*/
                                         ],
                                       ),
-                                      /*Chip(
-                                        label: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text('Verified'),
-                                            Icon(
-                                              Icons.verified_rounded,
-                                              color: Colors.pinkAccent,
-                                            ),
-                                          ],
+                                    );
+                                  } else {
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        CircularProgressIndicator(
+                                          color: CafeAppUI.iconButtonIconColor,
                                         ),
-                                      ),*/
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(
-                                      color: CafeAppUI.iconButtonIconColor,
-                                    ),
-                                  ],
-                                );
-                              }
-                            }),
-                      ),
-                      /*actionsAlignment: MainAxisAlignment.center,
-                      actionsOverflowAlignment: OverflowBarAlignment.center,
-                      actions: [
-                      ], //TODO: Null because not fetched from DB??? */
+                                      ],
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          );
+                        }
                     );
                   },
                 ),
