@@ -24,91 +24,135 @@ class _rating_popupState extends State<rating_popup> {
   Widget build(BuildContext context) {
     DatabaseService databaseService =
         Provider.of<DatabaseService>(context, listen: false);
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      title: Center(
-        child: Text(
-          'Rate ${widget.cafe.name}',
-        ),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Coffee: '),
-              StarRating(
-                size: 32,
-                rating: widget.coffeeRating,
-                allowHalfRating: false,
-                color: CafeAppUI.iconButtonIconColor,
-                borderColor: CafeAppUI.iconButtonIconColor,
-                onRatingChanged: (rating) => setState(() {
-                  widget.coffeeRating = rating;
-                }),
+    return DraggableScrollableSheet(
+        //initialChildSize: 1,
+        expand: false,
+        builder: (context, scrollController) {
+          return SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                32,
+                16,
+                48,
+                48,
               ),
-            ],
-          ),
-          Padding(
-              padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Service: '),
-              StarRating(
-                size: 32,
-                rating: widget.serviceRating,
-                allowHalfRating: false,
-                color: CafeAppUI.iconButtonIconColor,
-                borderColor: CafeAppUI.iconButtonIconColor,
-                onRatingChanged: (rating) => setState(() {
-                  widget.serviceRating = rating;
-                }),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Center(
+                    child: Text(
+                      'Rate ${widget.cafe.name}',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Coffee: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      StarRating(
+                        size: 32,
+                        rating: widget.coffeeRating,
+                        allowHalfRating: false,
+                        color: CafeAppUI.iconButtonIconColor,
+                        borderColor: CafeAppUI.iconButtonIconColor,
+                        onRatingChanged: (rating) => setState(() {
+                          widget.coffeeRating = rating;
+                        }),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Service: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      StarRating(
+                        size: 32,
+                        rating: widget.serviceRating,
+                        allowHalfRating: false,
+                        color: CafeAppUI.iconButtonIconColor,
+                        borderColor: CafeAppUI.iconButtonIconColor,
+                        onRatingChanged: (rating) => setState(() {
+                          widget.serviceRating = rating;
+                        }),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Atmosphere: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      StarRating(
+                        size: 32,
+                        rating: widget.atmosphereRating,
+                        allowHalfRating: false,
+                        color: CafeAppUI.iconButtonIconColor,
+                        borderColor: CafeAppUI.iconButtonIconColor,
+                        onRatingChanged: (rating) => setState(
+                          () {
+                            widget.atmosphereRating = rating;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingLarge),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      try {
+                        bool success = await databaseService.reviewCafe(
+                          widget.cafe.uid!,
+                          widget.coffeeRating,
+                          widget.atmosphereRating,
+                          widget.serviceRating,
+                        );
+                        debugPrint('On Pressed Review: $success');
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                        }
+                      } catch (e) {
+                        debugPrint(e.toString());
+                      }
+                    },
+                    child: Text('Review'),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Padding(
-              padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Atmosphere: '),
-              StarRating(
-                size: 32,
-                rating: widget.atmosphereRating,
-                allowHalfRating: false,
-                color: CafeAppUI.iconButtonIconColor,
-                borderColor: CafeAppUI.iconButtonIconColor,
-                onRatingChanged: (rating) => setState(() {
-                  widget.atmosphereRating = rating;
-                }),
-              ),
-            ],
-          ),
-        ],
-      ),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: [
-        TextButton(
-            onPressed: () async {
-              try {
-                bool success = await databaseService.reviewCafe(
-                  widget.cafe.uid!,
-                  widget.coffeeRating,
-                  widget.atmosphereRating,
-                  widget.serviceRating,
-                );
-                debugPrint('On Pressed Review: $success');
-                if (context.mounted) {
-                  Navigator.pop(context);
-                }
-              } catch (e) {
-                debugPrint(e.toString());
-              }
-            },
-            child: Text('Review')),
-      ],
-    );
+            ),
+          );
+        });
   }
 }

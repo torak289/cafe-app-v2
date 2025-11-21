@@ -60,28 +60,6 @@ class CafeMarker extends Marker {
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          /*Builder(builder: (BuildContext context) {
-                                              debugPrint(
-                                                  '${user!.uid} == ${cafe.addedBy}');
-                                              if (user.uid == cafe.addedBy) {
-                                                return Column(
-                                                  children: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        debugPrint("Edit Tapped");
-                                                      },
-                                                      child: Text('Edit'),
-                                                    ),
-                                                    Padding(
-                                                        padding: EdgeInsetsGeometry.all(
-                                                            CafeAppUI
-                                                                .buttonSpacingMedium)),
-                                                  ],
-                                                );
-                                              } else {
-                                                return SizedBox.shrink();
-                                              }
-                                            }),*/
                                           Center(
                                             child: Text(
                                               cafe.name != null
@@ -96,7 +74,7 @@ class CafeMarker extends Marker {
                                           ),
                                           Padding(
                                             padding: EdgeInsetsGeometry.all(
-                                                CafeAppUI.buttonSpacingMedium),
+                                                CafeAppUI.buttonSpacingLarge),
                                           ),
                                           Builder(builder: (context) {
                                             if (future.data!.totalReviews! >
@@ -135,7 +113,7 @@ class CafeMarker extends Marker {
                                                       ),
                                                       Tooltip(
                                                         message:
-                                                            'This is the average across all reviews. The average is calculated based on 3 factors, Coffee, Atmosphere & Service',
+                                                            'This is the average across all reviews. The average is calculated based on 3 factors, Coffee, Atmosphere & Service.',
                                                         child: Icon(
                                                           Icons
                                                               .info_outline_rounded,
@@ -144,7 +122,7 @@ class CafeMarker extends Marker {
                                                         ),
                                                       ),
                                                     ],
-                                                  ), 
+                                                  ),
                                                 ],
                                               );
                                             } else {
@@ -166,9 +144,10 @@ class CafeMarker extends Marker {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                      padding: EdgeInsetsGeometry
-                                                          .all(CafeAppUI
-                                                              .buttonSpacingMedium)),
+                                                    padding: EdgeInsetsGeometry
+                                                        .all(CafeAppUI
+                                                            .buttonSpacingMedium),
+                                                  ),
                                                   Text(
                                                     'About',
                                                     style: TextStyle(
@@ -276,7 +255,7 @@ class CafeMarker extends Marker {
                                           ),
                                           Padding(
                                             padding: EdgeInsetsGeometry.all(
-                                                CafeAppUI.buttonSpacingMedium),
+                                                CafeAppUI.buttonSpacingLarge),
                                           ),
                                           Row(
                                             mainAxisAlignment:
@@ -293,8 +272,13 @@ class CafeMarker extends Marker {
                                                   return TextButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
-                                                        showDialog(
+                                                        showModalBottomSheet<
+                                                            void>(
+                                                          showDragHandle: true,
                                                           context: context,
+                                                          useSafeArea: true,
+                                                          isScrollControlled:
+                                                              true,
                                                           builder: (BuildContext
                                                                   context) =>
                                                               rating_popup(
@@ -320,9 +304,10 @@ class CafeMarker extends Marker {
                                                 }
                                               }),
                                               Padding(
-                                                  padding: EdgeInsetsGeometry
-                                                      .all(CafeAppUI
-                                                          .buttonSpacingMedium)),
+                                                padding: EdgeInsetsGeometry.all(
+                                                    CafeAppUI
+                                                        .buttonSpacingMedium),
+                                              ),
                                               TextButton(
                                                 onPressed: () async {
                                                   CafeappUtils.launchMap(
