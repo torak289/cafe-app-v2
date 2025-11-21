@@ -26,7 +26,7 @@ class LocationService extends ChangeNotifier {
 
   Future<Position> currentPosition = Geolocator.getCurrentPosition();
 
-  openLocationSetting(){
+  void openLocationSetting(){
     Geolocator.openAppSettings();
   }
 }

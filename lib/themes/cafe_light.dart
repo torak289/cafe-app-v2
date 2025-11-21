@@ -98,12 +98,33 @@ ThemeData cafeLightTheme = ThemeData(
       borderRadius: _searchBorderRadius,
     ),
   ),
+  //Bottom Sheet
+  bottomSheetTheme: BottomSheetThemeData(
+    backgroundColor: CafeAppUI.backgroundColor,
+  ),
+  //Tool Tips
+  tooltipTheme: TooltipThemeData(
+    margin: EdgeInsets.all(32),
+    triggerMode: TooltipTriggerMode.tap,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.all(Radius.circular(16)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black,
+          blurRadius: 4,
+        )
+      ],
+    ),
+    padding: EdgeInsets.all(16),
+    textStyle: TextStyle(color: Colors.black),
+  ),
   //Chips
   chipTheme: ChipThemeData(side: BorderSide(color: Colors.black)),
   //Selectables
   checkboxTheme: CheckboxThemeData(
-    fillColor: WidgetStateProperty.resolveWith<Color>((states){
-      if(states.contains(WidgetState.selected)){
+    fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+      if (states.contains(WidgetState.selected)) {
         return Colors.pinkAccent;
       }
       return Colors.white;

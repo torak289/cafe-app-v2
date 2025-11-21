@@ -1,6 +1,5 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
-import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
@@ -30,6 +29,7 @@ class CafeMarker extends Marker {
             children: [
               GestureDetector(
                 onTap: () => showModalBottomSheet<void>(
+                  showDragHandle: true,
                   context: context,
                   useSafeArea: true,
                   isScrollControlled: true,
@@ -39,8 +39,9 @@ class CafeMarker extends Marker {
                     /*UserModel? user =
                         Provider.of<UserModel?>(context, listen: false);*/
                     return DraggableScrollableSheet(
-                      expand: false,
-                      builder: (context, scrollController) {
+                        initialChildSize: 1,
+                        expand: false,
+                        builder: (context, scrollController) {
                           return SizedBox(
                             width: double.infinity,
                             child: SingleChildScrollView(
@@ -50,8 +51,12 @@ class CafeMarker extends Marker {
                                 builder: (BuildContext context, future) {
                                   if (future.hasData) {
                                     return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 32, vertical: 32),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        32,
+                                        16,
+                                        48,
+                                        48,
+                                      ),
                                       child: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
@@ -94,57 +99,91 @@ class CafeMarker extends Marker {
                                                 CafeAppUI.buttonSpacingMedium),
                                           ),
                                           Builder(builder: (context) {
-                                            if (future.data!.totalReviews! > 0) {
+                                            if (future.data!.totalReviews! >
+                                                0) {
                                               return Column(
                                                 children: [
                                                   StarRating(
                                                     size: 32,
-                                                    color:
-                                                        CafeAppUI.iconButtonIconColor,
-                                                    borderColor:
-                                                        CafeAppUI.iconButtonIconColor,
+                                                    color: CafeAppUI
+                                                        .iconButtonIconColor,
+                                                    borderColor: CafeAppUI
+                                                        .iconButtonIconColor,
                                                     starCount: 5,
-                                                    rating:
-                                                        future.data!.rating != null
-                                                            ? future.data!.rating!
-                                                                .toDouble()
-                                                            : 0.0,
+                                                    rating: future
+                                                                .data!.rating !=
+                                                            null
+                                                        ? future.data!.rating!
+                                                            .toDouble()
+                                                        : 0.0,
                                                   ),
-                                                  Text(
-                                                      "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews"), //TODO: Implement whole number trim of .0
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews", //TODO: Implement whole number trim of .0
+                                                      ),
+                                                      Padding(
+                                                        padding: EdgeInsetsGeometry
+                                                            .all(CafeAppUI
+                                                                .buttonSpacingSmall),
+                                                      ),
+                                                      Tooltip(
+                                                        message:
+                                                            'This is the average across all reviews. The average is calculated based on 3 factors, Coffee, Atmosphere & Service',
+                                                        child: Icon(
+                                                          Icons
+                                                              .info_outline_rounded,
+                                                          color: Colors.black,
+                                                          size: 18,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ), 
                                                 ],
                                               );
                                             } else {
                                               return Text(
                                                 'No Rating',
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               );
                                             }
                                           }),
                                           Builder(builder: (context) {
-                                            if (future.data!.description != null ||
-                                                future.data!.description!.isEmpty) {
+                                            if (future.data!.description !=
+                                                    null ||
+                                                future.data!.description!
+                                                    .isEmpty) {
                                               return Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Padding(
-                                                      padding: EdgeInsetsGeometry.all(
-                                                          CafeAppUI
+                                                      padding: EdgeInsetsGeometry
+                                                          .all(CafeAppUI
                                                               .buttonSpacingMedium)),
                                                   Text(
                                                     'About',
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
                                                   Padding(
                                                       padding:
-                                                          EdgeInsetsGeometry.all(1)),
+                                                          EdgeInsetsGeometry
+                                                              .all(1)),
                                                   Text(
                                                     future.data!.description!,
-                                                    textAlign: TextAlign.justify,
+                                                    textAlign:
+                                                        TextAlign.justify,
                                                   ),
                                                 ],
                                               );
@@ -159,29 +198,34 @@ class CafeMarker extends Marker {
                                           Chip(
                                             label: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text('Laptop Friendly'),
                                                 Builder(
-                                                  builder: (BuildContext context) {
-                                                    if (future
-                                                            .data!.isLaptopFriendly !=
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    if (future.data!
+                                                            .isLaptopFriendly !=
                                                         null) {
-                                                      return future
-                                                              .data!.isLaptopFriendly!
+                                                      return future.data!
+                                                              .isLaptopFriendly!
                                                           ? Icon(
-                                                              Icons.check_rounded,
+                                                              Icons
+                                                                  .check_rounded,
                                                               color: CafeAppUI
                                                                   .iconButtonIconColor,
                                                             )
                                                           : Icon(
-                                                              Icons.close_rounded,
+                                                              Icons
+                                                                  .close_rounded,
                                                               color: CafeAppUI
                                                                   .iconButtonIconColor,
                                                             );
                                                     } else {
                                                       return Icon(
-                                                        Icons.question_mark_rounded,
+                                                        Icons
+                                                            .question_mark_rounded,
                                                         color: CafeAppUI
                                                             .iconButtonIconColor,
                                                       );
@@ -194,27 +238,33 @@ class CafeMarker extends Marker {
                                           Chip(
                                             label: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
                                                 Text('WiFi'),
                                                 Builder(
-                                                  builder: (BuildContext context) {
+                                                  builder:
+                                                      (BuildContext context) {
                                                     if (future.data!.hasWifi !=
                                                         null) {
-                                                      return future.data!.hasWifi!
+                                                      return future
+                                                              .data!.hasWifi!
                                                           ? Icon(
-                                                              Icons.check_rounded,
+                                                              Icons
+                                                                  .check_rounded,
                                                               color: CafeAppUI
                                                                   .iconButtonIconColor,
                                                             )
                                                           : Icon(
-                                                              Icons.close_rounded,
+                                                              Icons
+                                                                  .close_rounded,
                                                               color: CafeAppUI
                                                                   .iconButtonIconColor,
                                                             );
                                                     } else {
                                                       return Icon(
-                                                        Icons.question_mark_rounded,
+                                                        Icons
+                                                            .question_mark_rounded,
                                                         color: CafeAppUI
                                                             .iconButtonIconColor,
                                                       );
@@ -232,10 +282,11 @@ class CafeMarker extends Marker {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Builder(
-                                                  builder: (BuildContext context) {
+                                              Builder(builder:
+                                                  (BuildContext context) {
                                                 AuthService authService =
-                                                    Provider.of<AuthService>(context,
+                                                    Provider.of<AuthService>(
+                                                        context,
                                                         listen: false);
                                                 if (authService.appState ==
                                                     AppState.Authenticated) {
@@ -260,7 +311,8 @@ class CafeMarker extends Marker {
                                                               padding:
                                                                   EdgeInsetsGeometry
                                                                       .all(2)),
-                                                          Icon(Icons.star_rounded)
+                                                          Icon(Icons
+                                                              .star_rounded)
                                                         ],
                                                       ));
                                                 } else {
@@ -268,61 +320,45 @@ class CafeMarker extends Marker {
                                                 }
                                               }),
                                               Padding(
-                                                  padding: EdgeInsetsGeometry.all(
-                                                      CafeAppUI.buttonSpacingMedium)),
+                                                  padding: EdgeInsetsGeometry
+                                                      .all(CafeAppUI
+                                                          .buttonSpacingMedium)),
                                               TextButton(
                                                 onPressed: () async {
                                                   CafeappUtils.launchMap(
                                                       cafe.location);
                                                 },
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
                                                     Text('Goto'),
                                                     Padding(
                                                         padding:
-                                                            EdgeInsetsGeometry.all(
-                                                                3)),
-                                                    Icon(Icons.assistant_navigation),
+                                                            EdgeInsetsGeometry
+                                                                .all(3)),
+                                                    Icon(Icons
+                                                        .assistant_navigation),
                                                   ],
                                                 ),
                                               ),
                                             ],
                                           ),
-                                          /*Chip(
-                                              label: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Text('Verified'),
-                                                  Icon(
-                                                    Icons.verified_rounded,
-                                                    color: Colors.pinkAccent,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),*/
                                         ],
                                       ),
                                     );
                                   } else {
-                                    return Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(
-                                          color: CafeAppUI.iconButtonIconColor,
-                                        ),
-                                      ],
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        color: CafeAppUI.iconButtonIconColor,
+                                      ),
                                     );
                                   }
                                 },
                               ),
                             ),
                           );
-                        }
-                    );
+                        });
                   },
                 ),
                 onDoubleTap: () {
