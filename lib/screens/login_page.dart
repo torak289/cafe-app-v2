@@ -62,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextFormField(
                           controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your email!';
@@ -78,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                                 EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
                         TextFormField(
                           controller: passwordController,
+                          autocorrect: false,
                           validator: (value) {
                             //TODO: Implement local password validation???
                             if (value == null || value.isEmpty) {
