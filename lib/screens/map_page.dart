@@ -64,11 +64,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final LocationService location =
-        Provider.of<LocationService>(context, listen: false);
-    final AuthService authService = Provider.of(context, listen: false);
+        Provider.of<LocationService>(context, listen: true);
+    final AuthService authService = Provider.of(context, listen: true);
     database = Provider.of<DatabaseService>(context, listen: false);
     final ConnectivityService connectivity =
         Provider.of(context, listen: false);
+    
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -79,12 +80,9 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               StreamBuilder<List<ConnectivityResult>>(
                   stream: connectivity.connectivityStream,
                   builder: (context, snapshot) {
-                    final isConnected =
-                        !(snapshot.data?.contains(ConnectivityResult.none) ??
-                            true);
-                    if (!isConnected) {
-                      return SizedBox.shrink();
-                    } else {
+                    final isDisconnected =
+                        snapshot.data?.contains(ConnectivityResult.none) ?? true;
+                    if (isDisconnected) {
                       return Container(
                         height: 64,
                         color: Colors.pinkAccent,
