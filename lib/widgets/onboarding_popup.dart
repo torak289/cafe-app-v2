@@ -1,25 +1,34 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
-import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/share_pref_service.dart';
-import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
-import 'package:cafeapp_v2/widgets/profile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class OnboardingPopup extends StatelessWidget {
+class OnboardingPopup extends StatefulWidget {
+  @override
+  State<OnboardingPopup> createState() => _OnboardingPopupState();
+}
+
+class _OnboardingPopupState extends State<OnboardingPopup> {
+  bool _isDismissing = false;
+
+  Future<void> _dismissOnboarding(SharePrefService sharePrefService) async {
+    setState(() {
+      _isDismissing = true;
+    });
+    await sharePrefService.hasFirstLaunched();
+  }
+
   @override
   Widget build(BuildContext context) {
     final SharePrefService sharePrefService =
         Provider.of<SharePrefService>(context, listen: false);
     final pageController = PageController(viewportFraction: 1, keepPage: true);
-    if (sharePrefService.isFirstLauncher) {
+    if (sharePrefService.isFirstLauncher && !_isDismissing) {
       return Positioned.fill(
         child: GestureDetector(
           onTap: () {
-            sharePrefService.hasFirstLaunched();
+            _dismissOnboarding(sharePrefService);
           },
           child: Container(
             color: Colors.black54, // Dim background
@@ -144,7 +153,7 @@ class OnboardingPopup extends StatelessWidget {
                               CafeAppUI.buttonSpacingSmall)),
                       TextButton(
                           onPressed: () {
-                            sharePrefService.hasFirstLaunched();
+                            _dismissOnboarding(sharePrefService);
                           },
                           child: Text('Skip Onboarding')),
                     ],
