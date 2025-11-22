@@ -307,21 +307,6 @@ class _AddCafePageState extends State<AddCafePage>
                         ],
                       ),
                       Tooltip(
-                        //TODO: Move styling into theme
-                        margin: EdgeInsets.all(32),
-                        triggerMode: TooltipTriggerMode.tap,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black,
-                              blurRadius: 4,
-                            )
-                          ],
-                        ),
-                        padding: EdgeInsets.all(16),
-                        textStyle: TextStyle(color: Colors.black),
                         message:
                             'Tell us about this cafe! We require this so that everyone knows how good it is!',
                         child: Icon(
