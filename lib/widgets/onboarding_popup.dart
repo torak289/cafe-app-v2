@@ -1,6 +1,11 @@
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/services/share_pref_service.dart';
+import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
+import 'package:cafeapp_v2/widgets/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -48,15 +53,73 @@ class OnboardingPopup extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Center(
-                        child: Text('Onboarding Page 2'),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.verified_rounded,
+                                color: Colors.pinkAccent,
+                              ),
+                              Padding(
+                                padding: EdgeInsetsGeometry.all(
+                                    CafeAppUI.buttonSpacingSmall),
+                              ),
+                              Text(
+                                'Verified',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            'Tap the Café icon on the map to open its overview page. From here, you can read existing reviews or add your own. Please note that you’ll need to be logged in to leave a review.',
+                            textAlign: TextAlign.justify,
+                          ),
+                        ],
                       ),
-                      Center(
-                        child: Text('Onboarding Page 3'),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Create account by clicking the profile icon'),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(100)),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: const Color.fromARGB(117, 0, 0, 0),
+                                      blurRadius: 8)
+                                ]),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Icon(Icons.person,
+                                  color: Colors.black, size: 28),
+                            ),
+                          ),
+                        ],
                       ),
-                      Center(
-                        child: Text('Onboarding Page 4'),
-                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Long-press on the map to add a café.',
+                          ),
+                          Text(
+                            'Alternatively, use the add button in the map controls.',
+                          ),
+                          Text(
+                            'You’ll need an account to add a café.',
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -76,7 +139,9 @@ class OnboardingPopup extends StatelessWidget {
                           type: WormType.normal,
                         ),
                       ),
-                      Padding(padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
+                      Padding(
+                          padding: EdgeInsetsGeometry.all(
+                              CafeAppUI.buttonSpacingSmall)),
                       TextButton(
                           onPressed: () {
                             sharePrefService.hasFirstLaunched();

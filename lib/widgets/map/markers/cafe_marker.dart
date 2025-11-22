@@ -74,7 +74,7 @@ class CafeMarker extends Marker {
                                           ),
                                           Padding(
                                             padding: EdgeInsetsGeometry.all(
-                                                CafeAppUI.buttonSpacingLarge),
+                                                CafeAppUI.buttonSpacingMedium),
                                           ),
                                           Builder(builder: (context) {
                                             if (future.data!.totalReviews! >
