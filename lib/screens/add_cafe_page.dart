@@ -347,6 +347,11 @@ class _AddCafePageState extends State<AddCafePage>
                     maxLength: 256,
                     keyboardType: TextInputType.text,
                     autocorrect: true,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      )
+                    ),
                   ),
                   /*args.isOwner!
                       ? Row(

@@ -59,9 +59,6 @@ class _rating_popupState extends State<rating_popup> {
                       children: [
                         Text(
                           'Coffee: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
                         StarRating(
                           size: 32,
@@ -84,9 +81,6 @@ class _rating_popupState extends State<rating_popup> {
                       children: [
                         Text(
                           'Service: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
                         StarRating(
                           size: 32,
@@ -109,9 +103,6 @@ class _rating_popupState extends State<rating_popup> {
                       children: [
                         Text(
                           'Atmosphere: ',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
                         ),
                         StarRating(
                           size: 32,
