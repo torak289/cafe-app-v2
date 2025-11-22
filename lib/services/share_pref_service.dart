@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -7,7 +8,9 @@ class SharePrefService extends ChangeNotifier {
   bool get isFirstLauncher => _isFirstLaunch;
 
   SharePrefService() {
-    _restAll();
+    if (kDebugMode) {
+      _restAll();
+    }
     _loadFirstLaunch();
   }
 
