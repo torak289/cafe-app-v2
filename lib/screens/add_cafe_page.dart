@@ -60,12 +60,13 @@ class _AddCafePageState extends State<AddCafePage>
                   Center(
                     child: const Text(
                       'Add New Cafe',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   ),
                   Padding(
-                      padding:
-                          EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium)),
+                      padding: EdgeInsetsGeometry.all(
+                          CafeAppUI.buttonSpacingMedium)),
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16),
@@ -321,7 +322,7 @@ class _AddCafePageState extends State<AddCafePage>
                       padding: EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                   TextFormField(
                     validator: (value) {
-                      if(value == null || value.isEmpty){
+                      if (value == null || value.isEmpty) {
                         return "Please enter a cafe description";
                       }
                       return null;
@@ -335,18 +336,25 @@ class _AddCafePageState extends State<AddCafePage>
                     decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(16),
                       border: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1.5),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                       enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1.5),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                       focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Colors.pinkAccent, width: 1.5),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                       errorBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: CafeAppUI.errorText, width: 1.5),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1.5),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
                     ),
@@ -395,7 +403,8 @@ class _AddCafePageState extends State<AddCafePage>
                       ),
                       TextButton(
                           onPressed: () async {
-                            if (authService.appState == AppState.Authenticated) {
+                            if (authService.appState ==
+                                AppState.Authenticated) {
                               if (formKey.currentState!.validate()) {
                                 CafeModel newCafe = CafeModel(
                                   name: cafeName.text.trim(),

@@ -155,18 +155,25 @@ class _rating_popupState extends State<rating_popup> {
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(16),
                           border: OutlineInputBorder(
+                            borderSide: BorderSide(width: 1.5),
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
                           enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 1.5),
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
                           focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.pinkAccent, width: 1.5),
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
                           errorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: CafeAppUI.errorText, width: 1.5),
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
                           focusedErrorBorder: OutlineInputBorder(
+                            borderSide: BorderSide(width: 1.5),
                             borderRadius: BorderRadius.all(Radius.circular(16)),
                           ),
                         ),
