@@ -24,6 +24,7 @@ class _rating_popupState extends State<rating_popup> {
   bool? laptopFriendly;
   bool? hasWifi;
   final formKey = GlobalKey<FormState>();
+  TextEditingController contentTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     DatabaseService databaseService =
@@ -189,6 +190,7 @@ class _rating_popupState extends State<rating_popup> {
                             CafeAppUI.buttonSpacingSmall),
                       ),
                       TextFormField(
+                        controller: contentTextController,
                         minLines: 10,
                         maxLines: 10,
                         maxLength: 256,
@@ -263,6 +265,9 @@ class _rating_popupState extends State<rating_popup> {
                                 widget.coffeeRating,
                                 widget.atmosphereRating,
                                 widget.serviceRating,
+                                hasWifi,
+                                laptopFriendly,
+                                contentTextController.text.trim(),
                               );
                               debugPrint('On Pressed Review: $success');
                               if (context.mounted) {

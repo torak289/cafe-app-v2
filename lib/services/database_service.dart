@@ -68,13 +68,16 @@ class DatabaseService {
   }
 
   Future<bool> reviewCafe(String uuid, double coffeeScore, atmosphereScore,
-      serviceScore) async {
+      serviceScore, bool? wifi, bool? laptopFriendly, String? content) async {
     try {
       await _selectUsingFunc(func: 'add_cafe_review', params: {
         'p_cafe_id': uuid,
         'p_score': coffeeScore,
         'p_atmosphere_score': atmosphereScore,
         'p_service_score': serviceScore,
+        'p_wifi': wifi,
+        'p_laptop_friendly': laptopFriendly,
+        'p_content': content,
       });
       return true;
     } catch (e) {
