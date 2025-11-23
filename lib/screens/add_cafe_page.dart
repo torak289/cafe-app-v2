@@ -327,15 +327,28 @@ class _AddCafePageState extends State<AddCafePage>
                       return null;
                     },
                     controller: cafeDescription,
-                    minLines: 5,
-                    maxLines: 5,
+                    minLines: 8,
+                    maxLines: 8,
                     maxLength: 256,
                     keyboardType: TextInputType.text,
                     autocorrect: true,
                     decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(16)),
-                      )
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                      ),
                     ),
                   ),
                   /*args.isOwner!

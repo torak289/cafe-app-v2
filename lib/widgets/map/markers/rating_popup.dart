@@ -146,6 +146,24 @@ class _rating_popupState extends State<rating_popup> {
                       maxLines: 10,
                       maxLength: 256,
                       keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(16),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
                     ),
                     Padding(
                       padding:
