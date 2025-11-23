@@ -40,8 +40,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
       AnimatedMapController(vsync: this);
 
   late DatabaseService database;
-  late Future<MarkerLayer> markerLayer =
-      database.getCafesInBounds(animatedMapController, context);
+  Future<MarkerLayer>? _markerLayer;
+  bool _isMarkerLayerInitialized = false;
 
   final Future<CacheStore> _cacheStoreFuture = _getCacheStore();
 
@@ -60,6 +60,18 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     animatedMapController.dispose();
   }
 
+  Future<MarkerLayer> get markerLayer {
+    if (!_isMarkerLayerInitialized) {
+      _markerLayer = database.getCafesInBounds(animatedMapController, context);
+      _isMarkerLayerInitialized = true;
+    }
+    return _markerLayer!;
+  }
+
+  set markerLayer(Future<MarkerLayer> value) {
+    _markerLayer = value;
+  }
+
   final _inBoundsDebouncer = Debouncer(milliseconds: 200);
   @override
   Widget build(BuildContext context) {
@@ -67,9 +79,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
         Provider.of<LocationService>(context, listen: true);
     final AuthService authService = Provider.of(context, listen: true);
     database = Provider.of<DatabaseService>(context, listen: false);
-    final ConnectivityService connectivity =
-        Provider.of(context, listen: false);
-    
+    final ConnectivityService connectivity = Provider.of(context, listen: true);
+
     return Scaffold(
       body: FutureBuilder<LocationPermission>(
         future: location.checkServices(),
@@ -80,12 +91,14 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
               StreamBuilder<List<ConnectivityResult>>(
                   stream: connectivity.connectivityStream,
                   builder: (context, snapshot) {
-                    final isDisconnected =
-                        snapshot.data?.contains(ConnectivityResult.none) ?? true;
+                    final results = snapshot.data ?? [];
+                    final isDisconnected = results.isEmpty ||
+                        results.contains(ConnectivityResult.none);
                     if (isDisconnected) {
                       return Container(
-                        height: 64,
+                        height: 96,
                         color: Colors.pinkAccent,
+                        padding: EdgeInsets.fromLTRB(0, 32, 0, 0),
                         child: Center(
                           child: Text(
                             'Check your network connection...',
@@ -93,6 +106,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                           ),
                         ),
                       );
+                    } else {
+                      return SizedBox.shrink();
                     }
                   }),
               StreamBuilder<Position>(
@@ -184,15 +199,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                       maxStale: const Duration(days: 2),
                                     ),
                                   ),
-                                  MarkerLayer(
-                                    markers: [
-                                      UserMarker(
-                                        position: position.data!,
-                                        controller:
-                                            animatedMapController.mapController,
-                                      ),
-                                    ],
-                                  ),
                                   FutureBuilder(
                                     future: markerLayer,
                                     builder: (context, cafeMarkers) {
@@ -202,7 +208,16 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                         return const MarkerLayer(markers: []);
                                       }
                                     },
-                                  )
+                                  ),
+                                  MarkerLayer(
+                                    markers: [
+                                      UserMarker(
+                                        position: position.data!,
+                                        controller:
+                                            animatedMapController.mapController,
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               );
                             } else {

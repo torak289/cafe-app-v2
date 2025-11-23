@@ -12,28 +12,30 @@ class UserMarker extends Marker {
     required this.controller,
   }) : super(
           point: LatLng(position.latitude, position.longitude),
+          //width: position.accuracy * 10,
+          //height: position.accuracy * 10,
           alignment: Alignment.center,
           child: GestureDetector(
             onDoubleTap: () {
-              controller.move(LatLng(position.latitude, position.longitude), 18);
+              controller.move(
+                  LatLng(position.latitude, position.longitude), 18);
+              debugPrint(position.accuracy.toString());
             },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                /*Icon(
-                    Icons.circle,
-                    color: const Color.fromARGB(125, 0, 0, 0),
-                    size: position.accuracy,
-                  ),*/
-                Transform.rotate(
-                  angle: position.heading,
-                  child: const Icon(
-                    Icons.navigation,
-                    color: CafeAppUI.secondaryColor,
-                    size: 20,
-                  ),
-                )
-              ],
+            child: Container(
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(50, 255, 64, 128),
+                  border: BoxBorder.all(color: Colors.pinkAccent, width: 1),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(200),
+                  )),
+              child: Transform.rotate(
+                angle: position.heading,
+                child: const Icon(
+                  Icons.navigation,
+                  color: Colors.pinkAccent,
+                  size: 20,
+                ),
+              ),
             ),
           ),
         );
