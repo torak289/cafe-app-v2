@@ -33,7 +33,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = Provider.of<AuthService>(context, listen: false);
+    AuthService authService = Provider.of<AuthService>(context, listen: true);
 
     authService.addListener(
       () {
