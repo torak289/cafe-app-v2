@@ -21,12 +21,13 @@ class rating_popup extends StatefulWidget {
 }
 
 class _rating_popupState extends State<rating_popup> {
+  bool? laptopFriendly;
+  bool? hasWifi;
+  final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     DatabaseService databaseService =
         Provider.of<DatabaseService>(context, listen: false);
-
-    final formKey = GlobalKey<FormState>();
 
     return DraggableScrollableSheet(
         initialChildSize: 1,
@@ -129,6 +130,46 @@ class _rating_popupState extends State<rating_popup> {
                             CafeAppUI.buttonSpacingMedium),
                       ),
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Is this Cafe Laptop Friendly? ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Checkbox(
+                            tristate: true,
+                            value: laptopFriendly,
+                            onChanged: (value) {
+                              setState(() {
+                                laptopFriendly = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Does this Cafe have WiFi? ',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Checkbox(
+                            tristate: true,
+                            value: hasWifi,
+                            onChanged: (value) {
+                              setState(() {
+                                hasWifi = value;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(
+                            CafeAppUI.buttonSpacingMedium),
+                      ),
+                      Row(
                         children: [
                           const Text(
                             'Review ',
@@ -187,8 +228,7 @@ class _rating_popupState extends State<rating_popup> {
                                     CafeAppUI.buttonSpacingMedium),
                               ),
                               Text(
-                                "You must review the Cafe! We don't submit 0 Stars",
-                                textAlign: TextAlign.center,
+                                "Oops! Please rate all categories with at least 1 star before submitting.",
                                 style: TextStyle(
                                   color: CafeAppUI.errorText,
                                 ),
@@ -214,8 +254,6 @@ class _rating_popupState extends State<rating_popup> {
                                 widget.serviceRating < 1) {
                               setState(() {
                                 widget.showError = true;
-                                debugPrint(
-                                    "You must review the cafe! We don't submit 0 Stars");
                               });
                               return;
                             }
