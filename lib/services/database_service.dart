@@ -185,7 +185,25 @@ class DatabaseService {
       AnimatedMapController mapController, BuildContext context) async {
     List<CafeMarker> markers = List.empty(growable: true);
     try {
-      LatLngBounds bounds = mapController.mapController.camera.visibleBounds;
+      // Wait for the map controller to be ready by polling
+      int attempts = 0;
+      const maxAttempts = 50; // 5 seconds total with 100ms delays
+      LatLngBounds? bounds;
+      
+      while (bounds == null && attempts < maxAttempts) {
+        try {
+          bounds = mapController.mapController.camera.visibleBounds;
+          break;
+        } catch (e) {
+          attempts++;
+          await Future.delayed(const Duration(milliseconds: 100));
+        }
+      }
+      
+      if (bounds == null) {
+        throw Exception('MapController camera failed to initialize');
+      }
+      
       List<CafeModel> cafes = List.empty(growable: true);
       final data = await _selectUsingFunc(func: 'cafes_in_bounds', params: {
         'min_lat': bounds.southWest.latitude,
