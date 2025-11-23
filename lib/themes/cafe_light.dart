@@ -44,7 +44,7 @@ ThemeData cafeLightTheme = ThemeData(
     selectionHandleColor: CafeAppUI.secondaryText,
   ),
   inputDecorationTheme: InputDecorationTheme(
-    contentPadding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
+    contentPadding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
     //isDense: true,
     filled: true,
     fillColor: CafeAppUI.backgroundColor,
