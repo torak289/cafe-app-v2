@@ -98,6 +98,10 @@ ThemeData cafeLightTheme = ThemeData(
       borderRadius: _searchBorderRadius,
     ),
   ),
+  //Progress Indicator
+  progressIndicatorTheme: ProgressIndicatorThemeData(
+    color: Colors.black
+  ),
   //Bottom Sheet
   bottomSheetTheme: BottomSheetThemeData(
     backgroundColor: CafeAppUI.backgroundColor,
