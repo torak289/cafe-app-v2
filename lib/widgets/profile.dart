@@ -80,6 +80,7 @@ class _ProfileState extends State<Profile> {
               }
               break;
             default:
+            debugPrint("Account State: ${sharePrefService.hasAccount}");
               if (sharePrefService.hasAccount) {
                 Navigator.pushNamed(context, Routes.loginPage);
               } else {

@@ -33,6 +33,13 @@ class SharePrefService extends ChangeNotifier {
     await prefs.setBool(_hasAccountKey, _hasAccount);
   }
 
+  Future<void> setHasAccount(bool newValue) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_hasAccountKey, newValue);
+    _loadHasAccount();
+    notifyListeners();
+  }
+
   // Version Number
   Future<void> _loadVersionNumber() async {
     final prefs = await SharedPreferences.getInstance();

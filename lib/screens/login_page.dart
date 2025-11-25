@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,13 +25,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final AuthService authService = Provider.of(context, listen: true);
+    final SharePrefService sharePrefService =
+        Provider.of(context, listen: true);
+        
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Builder(builder: (context) {
         if (authService.appState == AppState.Authenticated) {
           if (context.mounted) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (context.mounted) {
+              if (context.mounted && Navigator.canPop(context)) {
                 Navigator.pop(context);
               }
             });
@@ -160,6 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                         Center(
                           child: GestureDetector(
                             onTap: () {
+                              sharePrefService.setHasAccount(false);
                               Navigator.popAndPushNamed(
                                 context,
                                 Routes.registrationPage,
