@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthService authService = Provider.of(context, listen: false);
+    final AuthService authService = Provider.of(context, listen: true);
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Builder(builder: (context) {
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: [
                         Image.asset('assets/images/Cafe_Logo.png', scale: 2),
                         const Text(
-                          "Welcome!",
+                          "Welcome Back!",
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -132,6 +133,25 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                           child: const Text("Login"),
+                        ),
+                        const Padding(
+                            padding: EdgeInsetsGeometry.all(
+                                CafeAppUI.buttonSpacingMedium)),
+                        Center(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.popAndPushNamed(
+                                context,
+                                Routes.registrationPage,
+                              );
+                            },
+                            child: Text(
+                              'Dont have an Account? Click here to create one',
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
                         ),
                         const Padding(
                             padding:

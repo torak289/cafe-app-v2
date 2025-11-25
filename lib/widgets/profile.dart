@@ -2,6 +2,7 @@ import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +34,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    AuthService authService = Provider.of<AuthService>(context, listen: true);
+    AuthService authService = Provider.of<AuthService>(
+      context,
+      listen: true,
+    );
+    SharePrefService sharePrefService = Provider.of<SharePrefService>(
+      context,
+      listen: true,
+    );
 
     authService.addListener(
       () {
@@ -72,7 +80,11 @@ class _ProfileState extends State<Profile> {
               }
               break;
             default:
-              Navigator.pushNamed(context, Routes.loginPage);
+              if (sharePrefService.hasAccount) {
+                Navigator.pushNamed(context, Routes.loginPage);
+              } else {
+                Navigator.pushNamed(context, Routes.registrationPage);
+              }
               break;
           }
         },

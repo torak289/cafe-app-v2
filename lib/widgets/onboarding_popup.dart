@@ -24,7 +24,7 @@ class _OnboardingPopupState extends State<OnboardingPopup> {
     final SharePrefService sharePrefService =
         Provider.of<SharePrefService>(context, listen: false);
     final pageController = PageController(viewportFraction: 1, keepPage: true);
-    if (sharePrefService.isFirstLauncher && !_isDismissing) {
+    if (sharePrefService.isFirstLaunch && !_isDismissing) {
       return Positioned.fill(
         child: GestureDetector(
           onTap: () {

@@ -4,11 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharePrefService extends ChangeNotifier {
   static const _firstLaunchKey = 'first_launch';
   bool _isFirstLaunch = true;
-  bool get isFirstLauncher => _isFirstLaunch;
+  bool get isFirstLaunch => _isFirstLaunch;
 
   static const _versionNumberKey = 'version_number';
   String _versionNumber = '0.0.0';
   String get versionNumber => _versionNumber;
+
+  static const _hasAccountKey = 'has_account';
+  bool _hasAccount = false;
+  bool get hasAccount => _hasAccount;
 
   SharePrefService() {
     if (kDebugMode) {
@@ -16,6 +20,17 @@ class SharePrefService extends ChangeNotifier {
     }
     _loadFirstLaunch();
     _loadVersionNumber();
+    _loadHasAccount();
+  }
+  // Has Account
+  Future<void> _loadHasAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    _hasAccount = prefs.getBool(_hasAccountKey) ?? false;
+  }
+
+  Future<void> _resetHasAccount() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_hasAccountKey, _hasAccount);
   }
 
   // Version Number
@@ -47,12 +62,13 @@ class SharePrefService extends ChangeNotifier {
 
   Future<void> _resetFirstLaunch() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_firstLaunchKey, isFirstLauncher);
+    await prefs.setBool(_firstLaunchKey, _isFirstLaunch);
     notifyListeners();
   }
 
   // Reset All
   Future<void> _restAll() async {
     _resetFirstLaunch();
+    _resetHasAccount();
   }
 }
