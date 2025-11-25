@@ -27,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
     final AuthService authService = Provider.of(context, listen: true);
     final SharePrefService sharePrefService =
         Provider.of(context, listen: true);
-        
+
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Builder(builder: (context) {
@@ -147,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                               if (context.mounted) {
                                 if (response == 'Success') {
-                                  Navigator.pop(context);
+                                  //Navigator.pop(context);
                                 } else {
                                   setState(() {
                                     errorString = response;
@@ -202,15 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                                         CafeAppUI.buttonSpacingLarge)),
                                 TextButton(
                                   onPressed: () async {
-                                    final response =
-                                        await authService.appleSSO();
-                                    if (context.mounted) {
-                                      if (response == "Success") {
-                                        Navigator.pop(context);
-                                      } else {
-                                        debugPrint(response.toString());
-                                      }
-                                    }
+                                    final response = await authService.appleSSO();
                                   },
                                   child: const Row(
                                     children: [
@@ -236,13 +228,6 @@ class _LoginPageState extends State<LoginPage> {
                         TextButton(
                           onPressed: () async {
                             final response = await authService.googleSSO();
-                            if (context.mounted) {
-                              if (response == "Success") {
-                                Navigator.pop(context);
-                              } else {
-                                debugPrint(response.toString());
-                              }
-                            }
                           },
                           child: Row(
                             children: [

@@ -177,7 +177,7 @@ class _LoginPageState extends State<RegistrationPage> {
                         ),
                         const Padding(
                             padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                                EdgeInsets.all(CafeAppUI.buttonSpacingLarge),),
                         const Row(
                           children: [
                             Expanded(child: Divider(color: Colors.black)),
