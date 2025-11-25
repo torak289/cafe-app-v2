@@ -27,6 +27,15 @@ class _LoginPageState extends State<LoginPage> {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Builder(builder: (context) {
+        if (authService.appState == AppState.Authenticated) {
+          if (context.mounted) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            });
+          }
+        }
         if (authService.appState == AppState.Authenticating) {
           return const Center(
             child: Column(

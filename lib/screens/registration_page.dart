@@ -134,7 +134,7 @@ class _LoginPageState extends State<RegistrationPage> {
                         TextButton(
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
-                              String response = await authService.emailLogin(
+                              String response = await authService.emailRegister(
                                 emailController.text.trim(),
                                 passwordController.text.trim(),
                               );
