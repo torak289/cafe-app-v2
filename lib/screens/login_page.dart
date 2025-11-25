@@ -81,8 +81,9 @@ class _LoginPageState extends State<LoginPage> {
                           textAlign: TextAlign.left,
                         ),
                         const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingMedium),
+                        ),
                         TextFormField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
@@ -159,8 +160,9 @@ class _LoginPageState extends State<LoginPage> {
                           child: const Text("Login"),
                         ),
                         const Padding(
-                            padding: EdgeInsetsGeometry.all(
-                                CafeAppUI.buttonSpacingMedium)),
+                          padding: EdgeInsetsGeometry.all(
+                              CafeAppUI.buttonSpacingMedium),
+                        ),
                         Center(
                           child: GestureDetector(
                             onTap: () {
@@ -179,8 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge),
+                        ),
                         const Row(
                           children: [
                             Expanded(child: Divider(color: Colors.black)),
@@ -198,11 +200,13 @@ class _LoginPageState extends State<LoginPage> {
                             return Column(
                               children: [
                                 const Padding(
-                                    padding: EdgeInsets.all(
-                                        CafeAppUI.buttonSpacingLarge)),
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingLarge),
+                                ),
                                 TextButton(
                                   onPressed: () async {
-                                    final response = await authService.appleSSO();
+                                    final response =
+                                        await authService.appleSSO();
                                   },
                                   child: const Row(
                                     children: [
