@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
@@ -32,10 +34,14 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
     final TextEditingController confirmPassword = TextEditingController();
     return Scaffold(
       body: SafeArea(
-        bottom: false,
+        bottom: Platform.isIOS ? false : true,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(CafeAppUI.screenHorizontal, 0,
-              CafeAppUI.screenHorizontal, CafeAppUI.screenVertical),
+          padding: const EdgeInsets.fromLTRB(
+            CafeAppUI.screenHorizontal,
+            0,
+            CafeAppUI.screenHorizontal,
+            CafeAppUI.screenVertical,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

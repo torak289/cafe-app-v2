@@ -9,7 +9,6 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService with ChangeNotifier {
-  //TODO: Fix app idle & JWT expired
   late SupabaseClient _client;
   AppState _appState = AppState.Uninitialized;
 
