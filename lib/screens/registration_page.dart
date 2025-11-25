@@ -27,12 +27,29 @@ class _LoginPageState extends State<RegistrationPage> {
     final formKey = GlobalKey<FormState>();
     return Scaffold(
       body: Builder(builder: (context) {
+        if (authService.appState == AppState.Authenticated) {
+          if (context.mounted) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            });
+          }
+        }
         if (authService.appState == AppState.Authenticating) {
-          return const Center(
-            //TODO: Improve look/feel of progress indicator location etc...
-            child: CircularProgressIndicator(
-              color: Colors.black,
-            ),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium),
+              ),
+              Text('Authenticating...'),
+            ],
           );
         } else {
           return Form(
@@ -123,7 +140,7 @@ class _LoginPageState extends State<RegistrationPage> {
                               );
                               if (context.mounted) {
                                 if (response == 'Success') {
-                                  Navigator.pop(context);
+                                  //Navigator.pop(context);
                                 } else {
                                   setState(() {
                                     errorString = response;

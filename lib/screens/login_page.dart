@@ -29,9 +29,18 @@ class _LoginPageState extends State<LoginPage> {
       body: Builder(builder: (context) {
         if (authService.appState == AppState.Authenticating) {
           return const Center(
-            //TODO: Improve look/feel of progress indicator location etc...
-            child: CircularProgressIndicator(
-              color: Colors.black,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  color: Colors.black,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium),
+                ),
+                Text('Authenticating...'),
+              ],
             ),
           );
         } else {
@@ -91,8 +100,9 @@ class _LoginPageState extends State<LoginPage> {
                           obscureText: true,
                         ),
                         const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingMedium),
+                        ),
                         Builder(builder: (context) {
                           if (errorString.isNotEmpty) {
                             return Column(
@@ -106,8 +116,9 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 const Padding(
-                                    padding: EdgeInsets.all(
-                                        CafeAppUI.buttonSpacingMedium)),
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingMedium),
+                                ),
                               ],
                             );
                           } else {
@@ -205,8 +216,9 @@ class _LoginPageState extends State<LoginPage> {
                           }
                         }),
                         const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
+                          padding:
+                              EdgeInsets.all(CafeAppUI.buttonSpacingMedium),
+                        ),
                         TextButton(
                           onPressed: () async {
                             final response = await authService.googleSSO();
@@ -228,8 +240,8 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         const Padding(
-                            padding:
-                                EdgeInsets.all(CafeAppUI.buttonSpacingLarge)),
+                          padding: EdgeInsets.all(CafeAppUI.buttonSpacingLarge),
+                        ),
                         Row(
                           children: [
                             GestureDetector(

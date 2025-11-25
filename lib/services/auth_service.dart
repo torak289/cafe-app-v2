@@ -324,13 +324,29 @@ class AuthService with ChangeNotifier {
       notifyListeners();
 
       return "Success";
+    } on SignInWithAppleAuthorizationException catch (e) {
+      // Handle user cancellation (error code 1001) and other Apple auth errors
+      if (e.code == AuthorizationErrorCode.canceled) {
+        debugPrint("Apple Sign-In was canceled by user");
+        _appState = AppState.Unauthenticated;
+        notifyListeners();
+        return "Sign in was canceled";
+      } else {
+        debugPrint("Apple Sign-In Error: ${e.message}");
+        _appState = AppState.Unauthenticated;
+        notifyListeners();
+        return e.message;
+      }
     } on AuthException catch (e) {
       debugPrint("Error: ${e.message}");
       _appState = AppState.Unauthenticated;
       notifyListeners();
       return e.message;
     } catch (e) {
-      return Future.error(e);
+      debugPrint("Unexpected error during Apple Sign-In: $e");
+      _appState = AppState.Unauthenticated;
+      notifyListeners();
+      return "An unexpected error occurred";
     }
   }
 

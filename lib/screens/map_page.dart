@@ -251,7 +251,6 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                   } else {
                     return const Center(
                       child: CircularProgressIndicator(
-                        color: Colors.black,
                       ),
                     );
                   }
