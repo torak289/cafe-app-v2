@@ -58,6 +58,15 @@ class _AddCafePageState extends State<AddCafePage>
           ),
           child: Column(
             children: [
+              Center(
+                child: const Text(
+                  'Add New Cafe',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium),
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   child: Form(
@@ -66,16 +75,6 @@ class _AddCafePageState extends State<AddCafePage>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Center(
-                          child: const Text(
-                            'Add New Cafe',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                        ),
-                        Padding(
-                            padding: EdgeInsetsGeometry.all(
-                                CafeAppUI.buttonSpacingMedium)),
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(16),
@@ -212,6 +211,8 @@ class _AddCafePageState extends State<AddCafePage>
                                 EdgeInsets.all(CafeAppUI.buttonSpacingSmall)),
                         TextFormField(
                           controller: cafeName,
+                          keyboardType: TextInputType.text,
+                          textCapitalization: TextCapitalization.words,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a Cafe Name';
@@ -243,16 +244,6 @@ class _AddCafePageState extends State<AddCafePage>
                               //TODO: Move styling into theme
                               margin: EdgeInsets.all(32),
                               triggerMode: TooltipTriggerMode.tap,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(16)),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    blurRadius: 4,
-                                  )
-                                ],
-                              ),
                               padding: EdgeInsets.all(16),
                               textStyle: TextStyle(color: Colors.black),
                               message:
@@ -357,6 +348,7 @@ class _AddCafePageState extends State<AddCafePage>
                           maxLength: 256,
                           keyboardType: TextInputType.text,
                           autocorrect: true,
+                          textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.all(16),
                             border: OutlineInputBorder(

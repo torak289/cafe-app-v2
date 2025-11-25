@@ -96,13 +96,23 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                               Text("${user?.email}"),
                             ],
                           ),
-                          /*GestureDetector(
-                            child: const Icon(
-                              Icons.edit_rounded,
-                              color: CafeAppUI.iconButtonIconColor,
-                              size: 16,
-                            ),
-                          )*/
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Account Type',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              const Padding(
+                                  padding: EdgeInsets.all(
+                                      CafeAppUI.buttonSpacingMedium)),
+                              Text("${user?.provider}"),
+                            ],
+                          ),
                         ],
                       ),
                       Builder(builder: (context) {

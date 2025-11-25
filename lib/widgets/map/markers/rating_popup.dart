@@ -195,6 +195,8 @@ class _rating_popupState extends State<rating_popup> {
                         maxLines: 10,
                         maxLength: 256,
                         keyboardType: TextInputType.text,
+                        textCapitalization: TextCapitalization.sentences,
+                        autocorrect: true,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.all(16),
                           border: OutlineInputBorder(
