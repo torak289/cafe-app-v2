@@ -24,7 +24,36 @@ class _rating_popupState extends State<rating_popup> {
   bool? laptopFriendly;
   bool? hasWifi;
   final formKey = GlobalKey<FormState>();
+  final textFieldKey = GlobalKey();
+  final textFieldFocusNode = FocusNode();
   TextEditingController contentTextController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    textFieldFocusNode.addListener(_scrollToTextField);
+  }
+
+  @override
+  void dispose() {
+    textFieldFocusNode.removeListener(_scrollToTextField);
+    textFieldFocusNode.dispose();
+    contentTextController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTextField() {
+    if (textFieldFocusNode.hasFocus) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Scrollable.ensureVisible(
+          textFieldKey.currentContext!,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.easeInOut,
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     DatabaseService databaseService =
@@ -191,7 +220,9 @@ class _rating_popupState extends State<rating_popup> {
                             CafeAppUI.buttonSpacingSmall),
                       ),
                       TextFormField(
+                        key: textFieldKey,
                         controller: contentTextController,
+                        focusNode: textFieldFocusNode,
                         minLines: 10,
                         maxLines: 10,
                         maxLength: 256,
