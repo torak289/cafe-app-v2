@@ -35,7 +35,7 @@ ThemeData cafeLightTheme = ThemeData(
       fontWeight: FontWeight.bold,
       color: Colors.grey,
     ),
-    overlayColor: WidgetStatePropertyAll(Color.fromARGB(255, 226, 226, 226)),
+    overlayColor: WidgetStatePropertyAll(Colors.white),
   ),
   //Search
   textSelectionTheme: const TextSelectionThemeData(
