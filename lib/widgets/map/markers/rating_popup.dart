@@ -35,14 +35,15 @@ class _rating_popupState extends State<rating_popup> {
         expand: false,
         builder: (context, scrollController) {
           return SingleChildScrollView(
+            controller: scrollController,
             child: SizedBox(
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(
+                padding: EdgeInsets.fromLTRB(
                   32,
                   16,
                   48,
-                  48,
+                  MediaQuery.of(context).viewInsets.bottom + 48,
                 ),
                 child: Form(
                   key: formKey,
