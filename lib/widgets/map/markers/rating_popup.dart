@@ -43,7 +43,7 @@ class _rating_popupState extends State<rating_popup> {
                   32,
                   16,
                   48,
-                  MediaQuery.of(context).viewInsets.bottom + 48,
+                  MediaQuery.of(context).viewInsets.bottom + 8,
                 ),
                 child: Form(
                   key: formKey,
