@@ -5,6 +5,7 @@ import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
+import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -356,8 +357,12 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                                     child: const Text("Yes"),
                                   ),
                                   TextButton(
-                                    onPressed: () =>
-                                        Navigator.pop(context, "Closed"),
+                                    onPressed: () {
+                                      SharePrefService sharePrefService =
+                                          Provider.of(context);
+                                      sharePrefService.setHasAccount(false);
+                                      Navigator.pop(context, "Closed");
+                                    },
                                     child: const Text("No"),
                                   ),
                                 ],
