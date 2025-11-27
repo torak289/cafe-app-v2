@@ -40,6 +40,37 @@ class _LoginPageState extends State<RegistrationPage> {
             });
           }
         }
+        if (authService.appState == AppState.Registering) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: CafeAppUI.screenVertical,
+              horizontal: CafeAppUI.screenHorizontal,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Please confirm your email address, before clicking below',
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding:
+                      EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingMedium),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    sharePrefService.setHasAccount(true);
+                    await authService.emailLogin(
+                      emailController.text.trim(),
+                      passwordController.text.trim(),
+                    );
+                  },
+                  child: Text('Login'),
+                ),
+              ],
+            ),
+          );
+        }
         if (authService.appState == AppState.Authenticating) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
