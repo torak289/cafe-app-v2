@@ -4,6 +4,7 @@ import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
+import 'package:cafeapp_v2/widgets/map/markers/individual_review.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
@@ -52,9 +53,9 @@ class CafeMarker extends Marker {
                                   if (future.hasData) {
                                     return Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                        32,
+                                        CafeAppUI.screenHorizontal * 2,
                                         16,
-                                        48,
+                                        CafeAppUI.screenHorizontal * 2,
                                         48,
                                       ),
                                       child: Column(
@@ -328,6 +329,25 @@ class CafeMarker extends Marker {
                                                 ),
                                               ),
                                             ],
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsetsGeometry.all(
+                                                CafeAppUI.buttonSpacingMedium),
+                                          ),
+                                          SizedBox(
+                                            height: 240,
+                                            child: ListView(
+                                              scrollDirection: Axis.horizontal,
+                                              children: [
+                                                IndividualReview(),
+                                                Padding(
+                                                  padding:
+                                                      EdgeInsetsGeometry.all(
+                                                          16),
+                                                ),
+                                                IndividualReview(),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
