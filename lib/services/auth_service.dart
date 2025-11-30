@@ -165,7 +165,10 @@ class AuthService with ChangeNotifier {
 
   Future<String> emailRegister(String email, String password) async {
     try {
-      await _client.auth.signUp(email: email, password: password);
+      await _client.auth.signUp(
+        email: email,
+        password: password,
+      );
       _appState = AppState.Registering;
       notifyListeners();
       return "Success";
