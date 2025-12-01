@@ -270,7 +270,7 @@ class _OnboardingPopupState extends State<OnboardingPopup> {
                                     SizedBox(
                                       width: 170,
                                       child: Text(
-                                          'Press on on the profile icon to start Register an Account'),
+                                          'Press the profile icon to Register an Account'),
                                     ),
                                     Padding(
                                       padding: EdgeInsetsGeometry.all(
@@ -298,7 +298,7 @@ class _OnboardingPopupState extends State<OnboardingPopup> {
                                 ),
                                 Padding(
                                   padding: EdgeInsetsGeometry.all(
-                                    CafeAppUI.buttonSpacingSmall,
+                                    CafeAppUI.buttonSpacingMedium,
                                   ),
                                 ),
                                 Text('Login with email & password'),
@@ -350,7 +350,9 @@ class _OnboardingPopupState extends State<OnboardingPopup> {
                                     child: Text('********'),
                                   ),
                                 ),
-                                Padding(padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
+                                Padding(
+                                    padding: EdgeInsetsGeometry.all(
+                                        CafeAppUI.buttonSpacingSmall)),
                                 const Row(
                                   children: [
                                     Expanded(
@@ -366,9 +368,13 @@ class _OnboardingPopupState extends State<OnboardingPopup> {
                                         child: Divider(color: Colors.black)),
                                   ],
                                 ),
-                                Padding(padding: EdgeInsetsGeometry.all(CafeAppUI.buttonSpacingSmall)),
+                                Padding(
+                                    padding: EdgeInsetsGeometry.all(
+                                        CafeAppUI.buttonSpacingSmall)),
                                 TextButton(
-                                  onPressed: null,
+                                  onPressed: () {
+                                    _dismissOnboarding(sharePrefService);
+                                  },
                                   child: const Row(
                                     children: [
                                       Icon(
