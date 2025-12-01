@@ -19,7 +19,7 @@ class Routes {
   static const String userSettingsPage = '/userSettingsPage';
 
   static final routes = <String, WidgetBuilder>{
-    mapPage: (BuildContext context) => const MapPage(),
+    mapPage: (BuildContext context) => MapPage(),
     loginPage: (BuildContext context) => const LoginPage(),
     registrationPage: (BuildContext context) => const RegistrationPage(),
     addCafePage: (BuildContext context) => AddCafePage(),

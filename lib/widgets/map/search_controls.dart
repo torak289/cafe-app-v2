@@ -13,10 +13,14 @@ import 'package:provider/provider.dart';
 class SearchControls extends StatefulWidget {
   final Future<MarkerLayer> markerLayer;
   final AnimatedMapController mapController;
+  final FocusNode findCafeButtonFocus;
+  final FocusNode searchBarFocus;
   SearchControls({
     super.key,
     required this.markerLayer,
     required this.mapController,
+    required this.findCafeButtonFocus,
+    required this.searchBarFocus,
   });
 
   @override
@@ -61,6 +65,7 @@ class _SearchControlsState extends State<SearchControls> {
     searchController.dispose();
     super.dispose();
   }
+
   void _search() async {
     final text = searchController.text;
     try {
@@ -108,14 +113,18 @@ class _SearchControlsState extends State<SearchControls> {
           Stack(
             alignment: Alignment.bottomCenter,
             children: [
-              TextButton(
-                onPressed: () async {
-                  List<CafeModel> closestCafes = await database.getClosestCafe(
-                      widget.mapController.mapController.camera.center);
-                  widget.mapController
-                      .animateTo(dest: closestCafes[0].location, zoom: 18);
-                },
-                child: const Text("Find Cafe"),
+              Focus(
+                focusNode: widget.findCafeButtonFocus,
+                child: TextButton(
+                  onPressed: () async {
+                    List<CafeModel> closestCafes =
+                        await database.getClosestCafe(
+                            widget.mapController.mapController.camera.center);
+                    widget.mapController
+                        .animateTo(dest: closestCafes[0].location, zoom: 18);
+                  },
+                  child: const Text("Find Cafe"),
+                ),
               ),
               Builder(builder: (context) {
                 if (!showSearch) return Container();
@@ -126,8 +135,7 @@ class _SearchControlsState extends State<SearchControls> {
                     decoration: BoxDecoration(
                       color: CafeAppUI.backgroundColor,
                       border: Border.all(color: Colors.black, width: 1.5),
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(16)),
+                      borderRadius: const BorderRadius.all(Radius.circular(16)),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -146,7 +154,8 @@ class _SearchControlsState extends State<SearchControls> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: List.generate(cafeResults.length, (i) {
@@ -168,8 +177,8 @@ class _SearchControlsState extends State<SearchControls> {
                                 widget.mapController.animateTo(
                                   duration: const Duration(milliseconds: 200),
                                   dest: cafe.location,
-                                  zoom: widget.mapController
-                                      .mapController.camera.zoom,
+                                  zoom: widget
+                                      .mapController.mapController.camera.zoom,
                                 );
 
                                 // Remove the listener while we programmatically
@@ -182,7 +191,8 @@ class _SearchControlsState extends State<SearchControls> {
                                   showSearch = false;
                                 });
 
-                                Future.delayed(const Duration(milliseconds: 250), () {
+                                Future.delayed(
+                                    const Duration(milliseconds: 250), () {
                                   if (mounted) _addSearchListener();
                                 });
                               },
@@ -206,7 +216,8 @@ class _SearchControlsState extends State<SearchControls> {
                                         IconButton(
                                           onPressed: () {
                                             // launch external maps
-                                            CafeappUtils.launchMap(cafe.location);
+                                            CafeappUtils.launchMap(
+                                                cafe.location);
                                           },
                                           icon: const Icon(
                                             Icons.explore,
@@ -235,23 +246,26 @@ class _SearchControlsState extends State<SearchControls> {
             ],
           ),
           const Padding(padding: EdgeInsets.all(CafeAppUI.buttonSpacingMedium)),
-          TextField(
-            decoration: const InputDecoration(labelText: 'Search a cafe!'),
-            //TODO: meh behavior improve...
-            controller: searchController,
-            onTap: () {
-              setState(() {
-                showSearch = true;
-              });
-            },
-            onSubmitted: (_) {
-              // Hide results and dismiss keyboard when user submits
-              FocusScope.of(context).unfocus();
-              setState(() {
-                showSearch = false;
-              });
-            },
-            // dismissal of results is only handled on keyboard submit (onSubmitted)
+          Focus(
+            focusNode: widget.searchBarFocus,
+            child: TextField(
+              decoration: const InputDecoration(labelText: 'Search a cafe!'),
+              //TODO: meh behavior improve...
+              controller: searchController,
+              onTap: () {
+                setState(() {
+                  showSearch = true;
+                });
+              },
+              onSubmitted: (_) {
+                // Hide results and dismiss keyboard when user submits
+                FocusScope.of(context).unfocus();
+                setState(() {
+                  showSearch = false;
+                });
+              },
+              // dismissal of results is only handled on keyboard submit (onSubmitted)
+            ),
           )
         ],
       ),

@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({
+  Profile({
     super.key,
+    required this.focusNode,
   });
-
+  FocusNode focusNode;
   @override
   State<Profile> createState() => _ProfileState();
 }
@@ -45,50 +46,55 @@ class _ProfileState extends State<Profile> {
 
     authService.addListener(
       () {
-        setState(() {
+        if (mounted) {
+          setState(() {
           if (authService.appState == AppState.Authenticated) {
             _authSuccessState();
           } else {
             _authFailState();
           }
-        });
+          });
+        }
       },
     );
 
     return Positioned(
       right: CafeAppUI.profileRightPadding,
       top: CafeAppUI.probileTopPadding,
-      child: GestureDetector(
-        child: Container(
-          width: 48,
-          height: 48,
-          decoration: const BoxDecoration(
-            color: CafeAppUI.backgroundColor,
-            borderRadius: BorderRadius.all(Radius.circular(100)),
+      child: Focus(
+        focusNode: widget.focusNode,
+        child: GestureDetector(
+          child: Container(
+            width: 48,
+            height: 48,
+            decoration: const BoxDecoration(
+              color: CafeAppUI.backgroundColor,
+              borderRadius: BorderRadius.all(Radius.circular(100)),
+            ),
+            child: Icon(
+              Icons.person,
+              color: currentColor,
+            ),
           ),
-          child: Icon(
-            Icons.person,
-            color: currentColor,
-          ),
+          onTap: () async {
+            switch (authService.appState) {
+              case AppState.Authenticated:
+                await authService.manualRefresh();
+                if (context.mounted) {
+                  Navigator.pushNamed(context, Routes.userSettingsPage);
+                }
+                break;
+              default:
+                debugPrint("Account State: ${sharePrefService.hasAccount}");
+                if (sharePrefService.hasAccount) {
+                  Navigator.pushNamed(context, Routes.loginPage);
+                } else {
+                  Navigator.pushNamed(context, Routes.registrationPage);
+                }
+                break;
+            }
+          },
         ),
-        onTap: () async {
-          switch (authService.appState) {
-            case AppState.Authenticated:
-              await authService.manualRefresh();
-              if (context.mounted) {
-                Navigator.pushNamed(context, Routes.userSettingsPage);
-              }
-              break;
-            default:
-            debugPrint("Account State: ${sharePrefService.hasAccount}");
-              if (sharePrefService.hasAccount) {
-                Navigator.pushNamed(context, Routes.loginPage);
-              } else {
-                Navigator.pushNamed(context, Routes.registrationPage);
-              }
-              break;
-          }
-        },
       ),
     );
   }

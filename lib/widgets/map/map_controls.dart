@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:onboarding_overlay/onboarding_overlay.dart';
 import 'package:provider/provider.dart';
 
 class MapControls extends StatelessWidget {
@@ -27,7 +28,6 @@ class MapControls extends StatelessWidget {
     AuthService user = Provider.of(context, listen: false);
     final LocationService location =
         Provider.of<LocationService>(context, listen: false);
-
     return Positioned(
       right: CafeAppUI.mapControlsRightPadding,
       bottom: CafeAppUI.mapControlsBottomPadding,
