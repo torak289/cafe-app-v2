@@ -5,11 +5,9 @@ import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/data_models/roaster_model.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_marker.dart';
 import 'package:cafeapp_v2/widgets/map/markers/roaster_marker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
