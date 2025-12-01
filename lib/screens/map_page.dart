@@ -11,7 +11,6 @@ import 'package:cafeapp_v2/services/location_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:cafeapp_v2/widgets/map/map_controls.dart';
-import 'package:cafeapp_v2/widgets/onboarding_popup.dart';
 import 'package:cafeapp_v2/widgets/profile.dart';
 import 'package:cafeapp_v2/widgets/map/search_controls.dart';
 import 'package:cafeapp_v2/widgets/map/markers/user_marker.dart';
@@ -245,13 +244,11 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             ],
                           ),
                         ),
-                        OnboardingPopup(),
                       ],
                     );
                   } else {
                     return const Center(
-                      child: CircularProgressIndicator(
-                      ),
+                      child: CircularProgressIndicator(),
                     );
                   }
                 },
