@@ -336,7 +336,6 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                                 actions: [
                                   TextButton(
                                     onPressed: () async {
-                                      //TODO: Implement authService account deletion...
                                       String res =
                                           await authService.deleteUser();
                                       if (context.mounted) {
