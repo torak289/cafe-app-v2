@@ -99,9 +99,7 @@ ThemeData cafeLightTheme = ThemeData(
     ),
   ),
   //Progress Indicator
-  progressIndicatorTheme: ProgressIndicatorThemeData(
-    color: Colors.black
-  ),
+  progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.black),
   //Bottom Sheet
   bottomSheetTheme: BottomSheetThemeData(
     backgroundColor: CafeAppUI.backgroundColor,
@@ -124,7 +122,16 @@ ThemeData cafeLightTheme = ThemeData(
     textStyle: TextStyle(color: Colors.black),
   ),
   //Chips
-  chipTheme: ChipThemeData(side: BorderSide(color: Colors.black)),
+  chipTheme: ChipThemeData(
+    labelStyle: TextStyle(
+      fontSize: 14,
+      color: CafeAppUI.secondaryText,
+    ),
+    side: BorderSide(
+      color: Colors.black,
+      width: 1.5,
+    ),
+  ),
   //Selectables
   checkboxTheme: CheckboxThemeData(
     fillColor: WidgetStateProperty.resolveWith<Color>((states) {
