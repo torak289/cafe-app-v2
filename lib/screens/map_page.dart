@@ -142,17 +142,17 @@ class _MapPageState extends State<MapPage>
                         return Container(
                           height: 96,
                           color: Colors.pinkAccent,
-                          padding: EdgeInsets.fromLTRB(0, 32, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
                           child: Center(
                             child: Text(
                               'Check your network connection...',
-                              style:
-                                  TextStyle(color: CafeAppUI.buttonTextColor),
+                              style: const TextStyle(
+                                  color: CafeAppUI.buttonTextColor),
                             ),
                           ),
                         );
                       } else {
-                        return SizedBox.shrink();
+                        return const SizedBox.shrink();
                       }
                     }),
                 // Show location permission banner if disabled
@@ -270,6 +270,9 @@ class _MapPageState extends State<MapPage>
     LatLng centerLocation,
     Position? userPosition,
   ) {
+    final LocationService location =
+        Provider.of<LocationService>(context, listen: false);
+    
     return Stack(
       children: [
         FutureBuilder(
@@ -282,23 +285,15 @@ class _MapPageState extends State<MapPage>
                 options: MapOptions(
                   onMapEvent: (event) {
                     // Don't call setState here - it causes map to flicker
-                    String evtName = _eventName(event, markerLayer);
+                    // Update markers when map movement ends
                     final id = AnimationId.fromMapEvent(event);
-                    if (id != null) {
-                      if (id.moveId == AnimatedMoveId.finished) {
-                        _inBoundsDebouncer.run(() {
-                          // Update markerLayer and notify listeners without rebuilding the map
-                          markerLayer = database.getCafesInBounds(
-                              animatedMapController, context);
-                          _markerUpdateNotifier.value++;
-                        });
-                      }
-                    }
-                    if (evtName == 'MapEventMoveEnd' ||
-                        evtName == 'MapEventFlingAnimationEnd' ||
-                        evtName == 'MapEventNonRotatedSizeChange') {
+                    final shouldUpdate = (id?.moveId == AnimatedMoveId.finished) ||
+                        event is MapEventMoveEnd ||
+                        event is MapEventFlingAnimationEnd ||
+                        event is MapEventNonRotatedSizeChange;
+                    
+                    if (shouldUpdate) {
                       _inBoundsDebouncer.run(() {
-                        // Update markerLayer and notify listeners without rebuilding the map
                         markerLayer = database.getCafesInBounds(
                             animatedMapController, context);
                         _markerUpdateNotifier.value++;
@@ -359,16 +354,25 @@ class _MapPageState extends State<MapPage>
                       );
                     },
                   ),
-                  // Only show user marker if position is available
-                  if (userPosition != null)
-                    MarkerLayer(
-                      markers: [
-                        UserMarker(
-                          position: userPosition,
-                          controller: animatedMapController.mapController,
-                        ),
-                      ],
-                    ),
+                  // User marker layer that updates with position stream
+                  StreamBuilder<Position>(
+                    stream: location.positionStream,
+                    initialData: userPosition,
+                    builder: (context, positionSnapshot) {
+                      if (positionSnapshot.hasData) {
+                        return MarkerLayer(
+                          markers: [
+                            UserMarker(
+                              position: positionSnapshot.data!,
+                              controller: animatedMapController.mapController,
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const MarkerLayer(markers: []);
+                      }
+                    },
+                  ),
                 ],
               );
             } else {
