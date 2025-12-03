@@ -101,7 +101,7 @@ class _MapPageState extends State<MapPage>
   final _inBoundsDebouncer = Debouncer(milliseconds: 200);
 
   // Default location (e.g., San Francisco) used when location services are disabled
-  static const LatLng _defaultLocation = LatLng(37.7749, -122.4194);
+  static const LatLng _defaultLocation = LatLng(51.5072, 0.1276);
 
   @override
   Widget build(BuildContext context) {
