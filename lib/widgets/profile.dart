@@ -16,22 +16,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Color currentColor = Colors.black;
-
-  @override
-  void initState() {
-    currentColor = Colors.black;
-    super.initState();
-  }
-
-  void _authSuccessState() {
-    currentColor = Colors.pinkAccent;
-  }
-
-  void _authFailState() {
-    currentColor = Colors.black;
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthService authService = Provider.of<AuthService>(
@@ -43,17 +27,10 @@ class _ProfileState extends State<Profile> {
       listen: true,
     );
 
-    authService.addListener(
-      () {
-        setState(() {
-          if (authService.appState == AppState.Authenticated) {
-            _authSuccessState();
-          } else {
-            _authFailState();
-          }
-        });
-      },
-    );
+    // Determine color based on current auth state
+    final Color currentColor = authService.appState == AppState.Authenticated
+        ? Colors.pinkAccent
+        : Colors.black;
 
     return Positioned(
       right: CafeAppUI.profileRightPadding,
@@ -80,7 +57,7 @@ class _ProfileState extends State<Profile> {
               }
               break;
             default:
-            debugPrint("Account State: ${sharePrefService.hasAccount}");
+              debugPrint("Account State: ${sharePrefService.hasAccount}");
               if (sharePrefService.hasAccount) {
                 Navigator.pushNamed(context, Routes.loginPage);
               } else {
