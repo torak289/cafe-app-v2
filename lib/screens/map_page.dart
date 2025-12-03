@@ -155,45 +155,6 @@ class _MapPageState extends State<MapPage>
                         return SizedBox.shrink();
                       }
                     }),
-                // Show location permission banner if disabled
-                if (!hasLocationPermission)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: SafeArea(
-                      child: Container(
-                        margin: const EdgeInsets.all(16),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.location_off, color: Colors.white),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Location disabled. Enable for personalized features.',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => location.openLocationSetting(),
-                              child: const Text(
-                                'Enable',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                 // Build the map with or without location
                 hasLocationPermission
                     ? StreamBuilder<Position>(
