@@ -35,13 +35,20 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
+class _MapPageState extends State<MapPage>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimatedMapController animatedMapController =
       AnimatedMapController(vsync: this);
 
   late DatabaseService database;
   Future<MarkerLayer>? _markerLayer;
   bool _isMarkerLayerInitialized = false;
+
+  // Key to rebuild only the marker FutureBuilder, not the entire map
+  final ValueNotifier<int> _markerUpdateNotifier = ValueNotifier<int>(0);
+
+  // Track permission changes
+  final ValueNotifier<int> _permissionCheckNotifier = ValueNotifier<int>(0);
 
   final Future<CacheStore> _cacheStoreFuture = _getCacheStore();
 
@@ -55,9 +62,28 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   void dispose() {
-    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    _markerUpdateNotifier.dispose();
+    _permissionCheckNotifier.dispose();
     animatedMapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // When app resumes, re-check permissions
+    if (state == AppLifecycleState.resumed) {
+      debugPrint('App resumed - rechecking location permissions');
+      _permissionCheckNotifier.value++;
+    }
   }
 
   Future<MarkerLayer> get markerLayer {
@@ -73,6 +99,10 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   }
 
   final _inBoundsDebouncer = Debouncer(milliseconds: 200);
+
+  // Default location (e.g., San Francisco) used when location services are disabled
+  static const LatLng _defaultLocation = LatLng(37.7749, -122.4194);
+
   @override
   Widget build(BuildContext context) {
     final LocationService location =
@@ -82,210 +112,293 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
     final ConnectivityService connectivity = Provider.of(context, listen: true);
 
     return Scaffold(
-      body: FutureBuilder<LocationPermission>(
-        future: location.checkServices(),
-        builder: (context, locationData) {
-          if (locationData.data == LocationPermission.always ||
-              locationData.data == LocationPermission.whileInUse) {
-            return Stack(children: [
-              StreamBuilder<List<ConnectivityResult>>(
-                  stream: connectivity.connectivityStream,
-                  builder: (context, snapshot) {
-                    final results = snapshot.data ?? [];
-                    final isDisconnected = results.isEmpty ||
-                        results.contains(ConnectivityResult.none);
-                    if (isDisconnected) {
-                      return Container(
-                        height: 96,
-                        color: Colors.pinkAccent,
-                        padding: EdgeInsets.fromLTRB(0, 32, 0, 0),
-                        child: Center(
-                          child: Text(
-                            'Check your network connection...',
-                            style: TextStyle(color: CafeAppUI.buttonTextColor),
+      body: ValueListenableBuilder<int>(
+        valueListenable: _permissionCheckNotifier,
+        builder: (context, value, child) {
+          return FutureBuilder<LocationPermission>(
+            future: location.checkServices(),
+            builder: (context, locationData) {
+              // Check if location services are enabled
+              // Handle both successful permission grants and errors/denials
+              final bool hasLocationPermission =
+                  locationData.connectionState == ConnectionState.done &&
+                      !locationData.hasError &&
+                      (locationData.data == LocationPermission.always ||
+                          locationData.data == LocationPermission.whileInUse);
+
+              // Show loading only on initial load
+              if (locationData.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              return Stack(children: [
+                StreamBuilder<List<ConnectivityResult>>(
+                    stream: connectivity.connectivityStream,
+                    builder: (context, snapshot) {
+                      final results = snapshot.data ?? [];
+                      final isDisconnected = results.isEmpty ||
+                          results.contains(ConnectivityResult.none);
+                      if (isDisconnected) {
+                        return Container(
+                          height: 96,
+                          color: Colors.pinkAccent,
+                          padding: EdgeInsets.fromLTRB(0, 32, 0, 0),
+                          child: Center(
+                            child: Text(
+                              'Check your network connection...',
+                              style:
+                                  TextStyle(color: CafeAppUI.buttonTextColor),
+                            ),
                           ),
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    }),
+                // Show location permission banner if disabled
+                if (!hasLocationPermission)
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SafeArea(
+                      child: Container(
+                        margin: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.location_off, color: Colors.white),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Location disabled. Enable for personalized features.',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => location.openLocationSetting(),
+                              child: const Text(
+                                'Enable',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                // Build the map with or without location
+                hasLocationPermission
+                    ? StreamBuilder<Position>(
+                        stream: location.positionStream,
+                        builder: (context, AsyncSnapshot<Position> position) {
+                          if (position.hasData) {
+                            return _buildMapContent(
+                              context,
+                              authService,
+                              LatLng(position.data!.latitude,
+                                  position.data!.longitude),
+                              position.data,
+                            );
+                          } else if (position.hasError) {
+                            // If there's an error getting position, fallback to default location
+                            debugPrint(
+                                'Position stream error: ${position.error}');
+                            return _buildMapContent(
+                              context,
+                              authService,
+                              _defaultLocation,
+                              null,
+                            );
+                          } else {
+                            // Use FutureBuilder as fallback to get initial position
+                            return FutureBuilder<Position>(
+                              future: location.currentPosition,
+                              builder: (context, futurePosition) {
+                                if (futurePosition.hasData) {
+                                  return _buildMapContent(
+                                    context,
+                                    authService,
+                                    LatLng(futurePosition.data!.latitude,
+                                        futurePosition.data!.longitude),
+                                    futurePosition.data,
+                                  );
+                                } else if (futurePosition.hasError) {
+                                  // If we can't get position, use default location
+                                  debugPrint(
+                                      'Current position error: ${futurePosition.error}');
+                                  return _buildMapContent(
+                                    context,
+                                    authService,
+                                    _defaultLocation,
+                                    null,
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              },
+                            );
+                          }
+                        },
+                      )
+                    : _buildMapContent(
+                        context,
+                        authService,
+                        _defaultLocation,
+                        null, // No position available
+                      ),
+              ]);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildMapContent(
+    BuildContext context,
+    AuthService authService,
+    LatLng centerLocation,
+    Position? userPosition,
+  ) {
+    return Stack(
+      children: [
+        FutureBuilder(
+          future: _cacheStoreFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              final cacheStore = snapshot.data!;
+              return FlutterMap(
+                mapController: animatedMapController.mapController,
+                options: MapOptions(
+                  onMapEvent: (event) {
+                    // Don't call setState here - it causes map to flicker
+                    String evtName = _eventName(event, markerLayer);
+                    final id = AnimationId.fromMapEvent(event);
+                    if (id != null) {
+                      if (id.moveId == AnimatedMoveId.finished) {
+                        _inBoundsDebouncer.run(() {
+                          // Update markerLayer and notify listeners without rebuilding the map
+                          markerLayer = database.getCafesInBounds(
+                              animatedMapController, context);
+                          _markerUpdateNotifier.value++;
+                        });
+                      }
+                    }
+                    if (evtName == 'MapEventMoveEnd' ||
+                        evtName == 'MapEventFlingAnimationEnd' ||
+                        evtName == 'MapEventNonRotatedSizeChange') {
+                      _inBoundsDebouncer.run(() {
+                        // Update markerLayer and notify listeners without rebuilding the map
+                        markerLayer = database.getCafesInBounds(
+                            animatedMapController, context);
+                        _markerUpdateNotifier.value++;
+                      });
+                    }
+                  },
+                  onLongPress: (tapPos, latlng) {
+                    if (authService.appState == AppState.Authenticated) {
+                      Navigator.pushNamed(
+                        context,
+                        Routes.addCafePage,
+                        arguments: AddCafeArgs(
+                          cafePosition: latlng,
+                          isOwner: false,
                         ),
                       );
                     } else {
-                      return SizedBox.shrink();
+                      debugPrint("Not Authenticated");
                     }
-                  }),
-              StreamBuilder<Position>(
-                stream: location.positionStream,
-                builder: (context, AsyncSnapshot<Position> position) {
-                  if (position.hasData) {
-                    return Stack(
-                      children: [
-                        FutureBuilder(
-                          future: _cacheStoreFuture,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              final cacheStore = snapshot.data!;
-                              return FlutterMap(
-                                mapController:
-                                    animatedMapController.mapController,
-                                options: MapOptions(
-                                  onMapEvent: (event) => setState(
-                                    () {
-                                      //TODO: Improve Debounce... >>> Movement based Debounce >>> Location based Debounce
-                                      //TODO: Implement Caching...
-                                      String evtName =
-                                          _eventName(event, markerLayer);
-                                      final id =
-                                          AnimationId.fromMapEvent(event);
-                                      if (id != null) {
-                                        if (id.moveId ==
-                                            AnimatedMoveId.finished) {
-                                          _inBoundsDebouncer.run(() {
-                                            markerLayer =
-                                                database.getCafesInBounds(
-                                                    animatedMapController,
-                                                    context);
-                                          });
-                                        }
-                                      }
-                                      if (evtName == 'MapEventMoveEnd' ||
-                                          evtName ==
-                                              'MapEventFlingAnimationEnd' ||
-                                          evtName ==
-                                              'MapEventNonRotatedSizeChange') {
-                                        _inBoundsDebouncer.run(() {
-                                          markerLayer =
-                                              database.getCafesInBounds(
-                                                  animatedMapController,
-                                                  context);
-                                        });
-                                      }
-                                    },
-                                  ),
-                                  onLongPress: (tapPos, latlng) {
-                                    //This fails silently when location issues appear...
-                                    if (authService.appState ==
-                                        AppState.Authenticated) {
-                                      Navigator.pushNamed(
-                                        context,
-                                        Routes.addCafePage,
-                                        arguments: AddCafeArgs(
-                                          cafePosition: latlng,
-                                          isOwner: false,
-                                        ),
-                                      );
-                                    } else {
-                                      debugPrint("Not Authenticated");
-                                    }
-                                  },
-                                  initialCenter: LatLng(position.data!.latitude,
-                                      position.data!.longitude),
-                                  initialZoom: 16,
-                                  maxZoom: 21,
-                                  interactionOptions: const InteractionOptions(
-                                    flags: InteractiveFlag.all,
-                                  ),
-                                  cameraConstraint: CameraConstraint.contain(
-                                    bounds: LatLngBounds(
-                                      const LatLng(-90, -180),
-                                      const LatLng(90, 180),
-                                    ),
-                                  ),
-                                ),
-                                children: [
-                                  TileLayer(
-                                    urlTemplate:
-                                        'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
-                                    userAgentPackageName: 'io.cafe-app',
-                                    maxZoom: 25,
-                                    tileProvider: CachedTileProvider(
-                                      store: cacheStore,
-                                      maxStale: const Duration(days: 2),
-                                    ),
-                                  ),
-                                  FutureBuilder(
-                                    future: markerLayer,
-                                    builder: (context, cafeMarkers) {
-                                      if (cafeMarkers.hasData) {
-                                        return cafeMarkers.data!;
-                                      } else {
-                                        return const MarkerLayer(markers: []);
-                                      }
-                                    },
-                                  ),
-                                  MarkerLayer(
-                                    markers: [
-                                      UserMarker(
-                                        position: position.data!,
-                                        controller:
-                                            animatedMapController.mapController,
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-                          },
-                        ),
-                        SafeArea(
-                          child: Stack(
-                            children: [
-                              //Map Controls
-                              MapControls(
-                                animatedMapController: animatedMapController,
-                                position: position.data!,
-                                isAddCafePage: false,
-                              ),
-                              //Profile
-                              const Profile(),
-                              SearchControls(
-                                markerLayer: markerLayer,
-                                mapController: animatedMapController,
-                              ),
-                            ],
-                          ),
-                        ),
-                        OnboardingPopup(),
-                      ],
-                    );
-                  } else {
-                    return const Center(
-                      child: CircularProgressIndicator(
-                      ),
-                    );
-                  }
-                },
-              ),
-            ]);
-          } else {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: CafeAppUI.screenHorizontal,
-                vertical: CafeAppUI.screenVertical,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    locationData.error.toString(),
-                    style: const TextStyle(
-                      color: Colors.red,
+                  },
+                  initialCenter: centerLocation,
+                  initialZoom: userPosition != null ? 16 : 12,
+                  maxZoom: 21,
+                  interactionOptions: const InteractionOptions(
+                    flags: InteractiveFlag.all,
+                  ),
+                  cameraConstraint: CameraConstraint.contain(
+                    bounds: LatLngBounds(
+                      const LatLng(-90, -180),
+                      const LatLng(90, 180),
                     ),
                   ),
-                  const Padding(padding: EdgeInsets.all(8)),
-                  TextButton(
-                    onPressed: () {
-                      location.openLocationSetting();
-                    },
-                    child: const Text('Location Settings'),
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
+                    userAgentPackageName: 'io.cafe-app',
+                    maxZoom: 25,
+                    tileProvider: CachedTileProvider(
+                      store: cacheStore,
+                      maxStale: const Duration(days: 2),
+                    ),
                   ),
+                  // Wrap markers in ValueListenableBuilder to rebuild only markers, not entire map
+                  ValueListenableBuilder<int>(
+                    valueListenable: _markerUpdateNotifier,
+                    builder: (context, value, child) {
+                      return FutureBuilder(
+                        future: markerLayer,
+                        builder: (context, cafeMarkers) {
+                          if (cafeMarkers.hasData) {
+                            return cafeMarkers.data!;
+                          } else {
+                            return const MarkerLayer(markers: []);
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  // Only show user marker if position is available
+                  if (userPosition != null)
+                    MarkerLayer(
+                      markers: [
+                        UserMarker(
+                          position: userPosition,
+                          controller: animatedMapController.mapController,
+                        ),
+                      ],
+                    ),
                 ],
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+        SafeArea(
+          child: Stack(
+            children: [
+              //Map Controls - only show location button if position is available
+              if (userPosition != null)
+                MapControls(
+                  animatedMapController: animatedMapController,
+                  position: userPosition,
+                  isAddCafePage: false,
+                ),
+              //Profile
+              const Profile(),
+              SearchControls(
+                markerLayer: markerLayer,
+                mapController: animatedMapController,
               ),
-            );
-          }
-        },
-      ),
+            ],
+          ),
+        ),
+        OnboardingPopup(),
+      ],
     );
   }
 
