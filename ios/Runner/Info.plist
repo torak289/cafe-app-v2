@@ -71,9 +71,9 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Can I have location always?</string>
 	<key>NSLocationUsageDescription</key>
-	<string> Older devices need location.</string>
+	<string>Older devices need location.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need location when in use</string>
+	<string>We use your location to identify cafés near you and display where you are in relation to each one.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Library</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
