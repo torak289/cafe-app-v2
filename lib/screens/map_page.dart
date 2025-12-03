@@ -270,9 +270,6 @@ class _MapPageState extends State<MapPage>
     LatLng centerLocation,
     Position? userPosition,
   ) {
-    final LocationService location =
-        Provider.of<LocationService>(context, listen: false);
-    
     return Stack(
       children: [
         FutureBuilder(
@@ -354,25 +351,15 @@ class _MapPageState extends State<MapPage>
                       );
                     },
                   ),
-                  // User marker layer that updates with position stream
-                  StreamBuilder<Position>(
-                    stream: location.positionStream,
-                    initialData: userPosition,
-                    builder: (context, positionSnapshot) {
-                      if (positionSnapshot.hasData) {
-                        return MarkerLayer(
-                          markers: [
-                            UserMarker(
-                              position: positionSnapshot.data!,
-                              controller: animatedMapController.mapController,
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const MarkerLayer(markers: []);
-                      }
-                    },
-                  ),
+                  if (userPosition != null)
+                    MarkerLayer(
+                      markers: [
+                        UserMarker(
+                          position: userPosition,
+                          controller: animatedMapController.mapController,
+                        ),
+                      ],
+                    ),
                 ],
               );
             } else {
