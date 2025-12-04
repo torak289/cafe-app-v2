@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -22,11 +24,47 @@ class LocationService extends ChangeNotifier {
     }
     return permission;
   }
-  Stream<Position> positionStream = Geolocator.getPositionStream();
 
-  Future<Position> currentPosition = Geolocator.getCurrentPosition();
+  Stream<Position> get positionStream {
+    return Geolocator.getPositionStream(locationSettings: _locationSettings);
+  }
+
+  Future<Position> get currentPosition {
+    return Geolocator.getCurrentPosition();
+  }
 
   void openLocationSetting(){
     Geolocator.openAppSettings();
+  }
+
+  LocationSettings get _locationSettings {
+    if (Platform.isAndroid) {
+      return AndroidSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 5,
+        forceLocationManager: false,
+        intervalDuration: const Duration(seconds: 2),
+        foregroundNotificationConfig: const ForegroundNotificationConfig(
+          notificationText:
+              'Robusta is using your location to show nearby cafés.',
+          notificationTitle: 'Robusta is active',
+          enableWakeLock: false,
+        ),
+      );
+    }
+
+    if (Platform.isIOS) {
+      return AppleSettings(
+        accuracy: LocationAccuracy.best,
+        activityType: ActivityType.other,
+        distanceFilter: 5,
+        pauseLocationUpdatesAutomatically: false,
+      );
+    }
+
+    return const LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 5,
+    );
   }
 }
