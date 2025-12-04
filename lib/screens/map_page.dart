@@ -133,67 +133,29 @@ class _MapPageState extends State<MapPage>
 
               return Stack(children: [
                 StreamBuilder<List<ConnectivityResult>>(
-                    stream: connectivity.connectivityStream,
-                    builder: (context, snapshot) {
-                      final results = snapshot.data ?? [];
-                      final isDisconnected = results.isEmpty ||
-                          results.contains(ConnectivityResult.none);
-                      if (isDisconnected) {
-                        return Container(
-                          height: 96,
-                          color: Colors.pinkAccent,
-                          padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
-                          child: Center(
-                            child: Text(
-                              'Check your network connection...',
-                              style: const TextStyle(
-                                  color: CafeAppUI.buttonTextColor),
-                            ),
+                  stream: connectivity.connectivityStream,
+                  builder: (context, snapshot) {
+                    final results = snapshot.data ?? [];
+                    final isDisconnected = results.isEmpty ||
+                        results.contains(ConnectivityResult.none);
+                    if (isDisconnected) {
+                      return Container(
+                        height: 96,
+                        color: Colors.pinkAccent,
+                        padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
+                        child: Center(
+                          child: Text(
+                            'Check your network connection...',
+                            style: const TextStyle(
+                                color: CafeAppUI.buttonTextColor),
                           ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    }),
-                // Show location permission banner if disabled
-                if (!hasLocationPermission)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: SafeArea(
-                      child: Container(
-                        margin: const EdgeInsets.all(16),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.location_off, color: Colors.white),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                'Location disabled. Enable for personalized features.',
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () => location.openLocationSetting(),
-                              child: const Text(
-                                'Enable',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
                 // Build the map with or without location
                 hasLocationPermission
                     ? StreamBuilder<Position>(
@@ -284,15 +246,16 @@ class _MapPageState extends State<MapPage>
                     // Don't call setState here - it causes map to flicker
                     // Update markers when map movement ends
                     final id = AnimationId.fromMapEvent(event);
-                    final shouldUpdate = (id?.moveId == AnimatedMoveId.finished) ||
-                        event is MapEventMoveEnd ||
-                        event is MapEventFlingAnimationEnd ||
-                        event is MapEventNonRotatedSizeChange;
-                    
+                    final shouldUpdate =
+                        (id?.moveId == AnimatedMoveId.finished) ||
+                            event is MapEventMoveEnd ||
+                            event is MapEventFlingAnimationEnd ||
+                            event is MapEventNonRotatedSizeChange;
+
                     if (shouldUpdate) {
                       _inBoundsDebouncer.run(() {
-                        markerLayer = database.getCafesInBounds(
-                            animatedMapController);
+                        markerLayer =
+                            database.getCafesInBounds(animatedMapController);
                         _markerUpdateNotifier.value++;
                       });
                     }

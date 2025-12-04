@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 class LocationService extends ChangeNotifier {
+  final LocationFilter _locationFilter = LocationFilter();
+
   Future<LocationPermission> checkServices() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -26,7 +28,8 @@ class LocationService extends ChangeNotifier {
   }
 
   Stream<Position> get positionStream {
-    return Geolocator.getPositionStream(locationSettings: _locationSettings);
+    return Geolocator.getPositionStream(locationSettings: _locationSettings)
+        .map((position) => _locationFilter.filterLocation(position));
   }
 
   Future<Position> get currentPosition {
@@ -70,40 +73,54 @@ class LocationService extends ChangeNotifier {
 }
 
 class LocationFilter {
-  double _lastEstimate = 0.0;
-  double _kalmanGain = 0.0;
-  final double _errorMeasure = 0.1;
-  final double _errorProcess = 0.01;
-
-  List<double> filterCoordinates(List<double> rawValues) {
-    List<double> filteredValues = [];
-
-    for (double currentMeasurement in rawValues) {
-      // Prediction step
-      double prediction = _lastEstimate;
-      _errorEstimate = _errorEstimate + _errorProcess;
-
-      // Update step
-      _kalmanGain = _errorEstimate / (_errorEstimate + _errorMeasure);
-      double currentEstimate =
-          prediction + _kalmanGain * (currentMeasurement - prediction);
-      _errorEstimate = (1.0 - _kalmanGain) * _errorEstimate;
-
-      // Save for next iteration
-      _lastEstimate = currentEstimate;
-      filteredValues.add(currentEstimate);
-    }
-
-    return filteredValues;
-  }
+  // Separate Kalman filters for latitude and longitude
+  double _lastEstimateLat = 0.0;
+  double _lastEstimateLng = 0.0;
+  double _errorEstimateLat = 1.0;
+  double _errorEstimateLng = 1.0;
+  
+  // Process noise (Q) - how much we expect the location to change
+  final double _errorProcess = 0.01; // Reduced for smoother movement
+  
+  bool _isInitialized = false;
 
   Position filterLocation(Position location) {
-    final filteredLat = filterCoordinates([location.latitude])[0];
-    final filteredLng = filterCoordinates([location.longitude])[0];
+    // Initialize the filter with the first location
+    if (!_isInitialized) {
+      _lastEstimateLat = location.latitude;
+      _lastEstimateLng = location.longitude;
+      _errorEstimateLat = 5.0;
+      _errorEstimateLng = 5.0;
+      _isInitialized = true;
+      return location;
+    }
+
+    // Use GPS accuracy as measurement noise, with a minimum threshold
+    final double measurementNoise = location.accuracy.clamp(3.0, 50.0);
+
+    // Filter latitude
+    final latResult = _filterCoordinate(
+      location.latitude,
+      _lastEstimateLat,
+      _errorEstimateLat,
+      measurementNoise,
+    );
+    _lastEstimateLat = latResult['estimate']!;
+    _errorEstimateLat = latResult['error']!;
+
+    // Filter longitude  
+    final lngResult = _filterCoordinate(
+      location.longitude,
+      _lastEstimateLng,
+      _errorEstimateLng,
+      measurementNoise,
+    );
+    _lastEstimateLng = lngResult['estimate']!;
+    _errorEstimateLng = lngResult['error']!;
 
     return Position(
-      longitude: filteredLat,
-      latitude: filteredLng,
+      latitude: _lastEstimateLat,
+      longitude: _lastEstimateLng,
       timestamp: location.timestamp,
       accuracy: location.accuracy,
       altitude: location.altitude,
@@ -113,5 +130,39 @@ class LocationFilter {
       speed: location.speed,
       speedAccuracy: location.speedAccuracy,
     );
+  }
+
+  Map<String, double> _filterCoordinate(
+    double measurement,
+    double lastEstimate,
+    double errorEstimate,
+    double measurementNoise,
+  ) {
+    // Prediction step
+    double predictedEstimate = lastEstimate;
+    double predictedError = errorEstimate + _errorProcess;
+
+    // Update step (Kalman gain)
+    double kalmanGain = predictedError / (predictedError + measurementNoise);
+
+    // Calculate new estimate
+    double newEstimate = predictedEstimate + kalmanGain * (measurement - predictedEstimate);
+
+    // Update error estimate for next iteration
+    double newError = (1.0 - kalmanGain) * predictedError;
+
+    return {
+      'estimate': newEstimate,
+      'error': newError,
+    };
+  }
+
+  /// Reset the filter state (useful when starting a new tracking session)
+  void reset() {
+    _isInitialized = false;
+    _lastEstimateLat = 0.0;
+    _lastEstimateLng = 0.0;
+    _errorEstimateLat = 1.0;
+    _errorEstimateLng = 1.0;
   }
 }
