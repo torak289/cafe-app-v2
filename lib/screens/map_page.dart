@@ -88,7 +88,7 @@ class _MapPageState extends State<MapPage>
 
   Future<MarkerLayer> get markerLayer {
     if (!_isMarkerLayerInitialized) {
-      _markerLayer = database.getCafesInBounds(animatedMapController, context);
+      _markerLayer = database.getCafesInBounds(animatedMapController);
       _isMarkerLayerInitialized = true;
     }
     return _markerLayer!;
@@ -292,7 +292,7 @@ class _MapPageState extends State<MapPage>
                     if (shouldUpdate) {
                       _inBoundsDebouncer.run(() {
                         markerLayer = database.getCafesInBounds(
-                            animatedMapController, context);
+                            animatedMapController);
                         _markerUpdateNotifier.value++;
                       });
                     }
