@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/cafe_tab.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/loyalty_tab.dart';
 import 'package:cafeapp_v2/widgets/profile%20page%20tabs/tab_content_view.dart';

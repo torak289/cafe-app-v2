@@ -109,14 +109,9 @@ class AuthService with ChangeNotifier {
 
     switch (event) {
       case AuthChangeEvent.initialSession:
-        try {
-          await _client.auth.refreshSession();
-          if (_client.auth.currentSession != null) {
-            _appState = AppState.Authenticated;
-          } else {
-            _appState = AppState.Unauthenticated;
-          }
-        } catch (e) {
+        if (session != null) {
+          _appState = AppState.Authenticated;
+        } else {
           _appState = AppState.Unauthenticated;
         }
         break;

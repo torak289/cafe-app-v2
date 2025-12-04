@@ -1,5 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

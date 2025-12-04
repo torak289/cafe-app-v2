@@ -65,17 +65,17 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Access camera</string>
+	<string>We use your camera to scan QR codes for loyalty rewards and customer check-ins.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string> Always and when in use!</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Can I have location always?</string>
+	<string>We use your location to provide café recommendations and map features, even when the app is in the background.</string>
 	<key>NSLocationUsageDescription</key>
-	<string> Older devices need location.</string>
+	<string>We use your location to show nearby cafés and your position on the map.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need location when in use</string>
+	<string>We use your location to show nearby cafés and your position on the map.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Library</string>
+	<string>We use your photo library to let you upload profile pictures or café images.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

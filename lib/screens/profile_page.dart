@@ -1,4 +1,4 @@
-import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/widgets/loyalty_card.dart';

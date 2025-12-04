@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:cafeapp_v2/constants/Cafe_App_UI.dart';
+import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
 import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
@@ -85,104 +85,103 @@ class _AddCafePageState extends State<AddCafePage>
                             //Map Element
                             future: location.checkServices(),
                             builder: (context, locationData) {
-                              if (locationData.data ==
-                                      LocationPermission.always ||
-                                  locationData.data ==
+                              if (locationData.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                  ),
+                                );
+                              }
+
+                              if (locationData.hasError) {
+                                return _PermissionErrorState(
+                                  message: locationData.error?.toString() ??
+                                      'Location services unavailable. Please enable them to place the café.',
+                                  onOpenSettings: () {
+                                    location.openLocationSetting();
+                                    if (mounted) {
+                                      setState(() {});
+                                    }
+                                  },
+                                );
+                              }
+
+                              final permission = locationData.data;
+                              if (permission == LocationPermission.always ||
+                                  permission ==
                                       LocationPermission.whileInUse) {
                                 return StreamBuilder<Position>(
                                   stream: location.positionStream,
                                   builder: (context,
                                       AsyncSnapshot<Position> position) {
                                     if (position.hasData) {
-                                      return Stack(
-                                        alignment:
-                                            AlignmentDirectional.topCenter,
-                                        children: [
-                                          //Map
-                                          FlutterMap(
-                                            mapController: animatedMapController
-                                                .mapController,
-                                            options: MapOptions(
-                                              initialCenter:
-                                                  (args.cafePosition == null)
-                                                      ? LatLng(
-                                                          position
-                                                              .data!.latitude,
-                                                          position
-                                                              .data!.longitude)
-                                                      : LatLng(
-                                                          args.cafePosition!
-                                                              .latitude,
-                                                          args.cafePosition!
-                                                              .longitude),
-                                              initialZoom: 19,
-                                              cameraConstraint:
-                                                  CameraConstraint.contain(
-                                                bounds: LatLngBounds(
-                                                  const LatLng(-90, -180),
-                                                  const LatLng(90, 180),
-                                                ),
-                                              ),
-                                            ),
-                                            children: [
-                                              TileLayer(
-                                                urlTemplate:
-                                                    'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
-                                                userAgentPackageName:
-                                                    'io.cafe-app',
-                                                maxZoom: 25,
-                                              ),
-                                              MarkerLayer(
-                                                markers: [
-                                                  UserMarker(
-                                                    position: position.data!,
-                                                    controller:
-                                                        animatedMapController
-                                                            .mapController,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          //Center locator
-                                          const Center(
-                                            child: Icon(
-                                              Icons.location_searching_rounded,
-                                              color:
-                                                  CafeAppUI.iconButtonIconColor,
-                                            ),
-                                          ),
-                                          //Map Controls
-                                          MapControls(
-                                            animatedMapController:
-                                                animatedMapController,
-                                            position: position.data!,
-                                            isAddCafePage: true,
-                                          ),
-                                        ],
+                                      final center = args.cafePosition ??
+                                          LatLng(position.data!.latitude,
+                                              position.data!.longitude);
+                                      return _buildMapStack(
+                                        position.data!,
+                                        center,
+                                      );
+                                    } else if (position.hasError) {
+                                      return _PermissionErrorState(
+                                        message:
+                                            'Unable to access your current location. Please check your settings and try again.',
+                                        onOpenSettings: () {
+                                          location.openLocationSetting();
+                                          if (mounted) {
+                                            setState(() {});
+                                          }
+                                        },
                                       );
                                     } else {
-                                      return const Center(
-                                        child: CircularProgressIndicator(
-                                          color: Colors.black,
-                                        ),
+                                      return FutureBuilder<Position>(
+                                        future: location.currentPosition,
+                                        builder: (context, futurePosition) {
+                                          if (futurePosition.hasData) {
+                                            final center = args.cafePosition ??
+                                                LatLng(
+                                                    futurePosition
+                                                        .data!.latitude,
+                                                    futurePosition
+                                                        .data!.longitude);
+                                            return _buildMapStack(
+                                              futurePosition.data!,
+                                              center,
+                                            );
+                                          } else if (futurePosition.hasError) {
+                                            return _PermissionErrorState(
+                                              message:
+                                                  'Unable to determine your location. Please enable services and try again.',
+                                              onOpenSettings: () {
+                                                location.openLocationSetting();
+                                                if (mounted) {
+                                                  setState(() {});
+                                                }
+                                              },
+                                            );
+                                          } else {
+                                            return const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.black,
+                                              ),
+                                            );
+                                          }
+                                        },
                                       );
                                     }
                                   },
                                 );
                               } else {
-                                return Center(
-                                  child: Column(
-                                    children: [
-                                      Text(locationData.error.toString()),
-                                      TextButton(
-                                        onPressed: () {
-                                          location.openLocationSetting();
-                                        },
-                                        child: const Text('Location Settings'),
-                                      ),
-                                    ],
-                                  ),
+                                return _PermissionErrorState(
+                                  message:
+                                      'Location permission is required to place the café accurately.',
+                                  onOpenSettings: () {
+                                    location.openLocationSetting();
+                                    if (mounted) {
+                                      setState(() {});
+                                    }
+                                  },
                                 );
                               }
                             },
@@ -460,6 +459,86 @@ class _AddCafePageState extends State<AddCafePage>
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildMapStack(Position position, LatLng center) {
+    return Stack(
+      alignment: AlignmentDirectional.topCenter,
+      children: [
+        FlutterMap(
+          mapController: animatedMapController.mapController,
+          options: MapOptions(
+            initialCenter: center,
+            initialZoom: 19,
+            cameraConstraint: CameraConstraint.contain(
+              bounds: LatLngBounds(
+                const LatLng(-90, -180),
+                const LatLng(90, 180),
+              ),
+            ),
+          ),
+          children: [
+            TileLayer(
+              urlTemplate:
+                  'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
+              userAgentPackageName: 'io.cafe-app',
+              maxZoom: 25,
+            ),
+            MarkerLayer(
+              markers: [
+                UserMarker(
+                  position: position,
+                  controller: animatedMapController.mapController,
+                ),
+              ],
+            ),
+          ],
+        ),
+        const Center(
+          child: Icon(
+            Icons.location_searching_rounded,
+            color: CafeAppUI.iconButtonIconColor,
+          ),
+        ),
+        MapControls(
+          animatedMapController: animatedMapController,
+          position: position,
+          isAddCafePage: true,
+        ),
+      ],
+    );
+  }
+}
+
+class _PermissionErrorState extends StatelessWidget {
+  const _PermissionErrorState({
+    required this.message,
+    required this.onOpenSettings,
+  });
+
+  final String message;
+  final VoidCallback onOpenSettings;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          TextButton(
+            onPressed: onOpenSettings,
+            child: const Text('Open Location Settings'),
+          ),
+        ],
       ),
     );
   }
