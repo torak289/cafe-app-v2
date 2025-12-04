@@ -22,78 +22,78 @@ class CafeMarker extends Marker {
           point: cafe.location,
           rotate: true,
           alignment: const Alignment(0.88, -1), //TODO: This works-ish...
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => showModalBottomSheet<void>(
-                  showDragHandle: true,
-                  context: context,
-                  useSafeArea: true,
-                  isScrollControlled: true,
-                  builder: (BuildContext context) {
-                    DatabaseService databaseService =
-                        Provider.of<DatabaseService>(context, listen: false);
-                    /*UserModel? user =
-                        Provider.of<UserModel?>(context, listen: false);*/
-                    return CafeOverview(
-                      databaseService: databaseService,
-                      cafe: cafe,
+          child: Builder(
+            builder: (context) => Row(
+              children: [
+                GestureDetector(
+                  onTap: () => showModalBottomSheet<void>(
+                    showDragHandle: true,
+                    context: context,
+                    useSafeArea: true,
+                    isScrollControlled: true,
+                    builder: (BuildContext modalContext) {
+                      DatabaseService databaseService =
+                          Provider.of<DatabaseService>(modalContext,
+                              listen: false);
+                      return CafeOverview(
+                        databaseService: databaseService,
+                        cafe: cafe,
+                      );
+                    },
+                  ),
+                  onDoubleTap: () {
+                    mapController.animateTo(
+                      dest: cafe.location,
+                      zoom: 16,
                     );
                   },
-                ),
-                onDoubleTap: () {
-                  mapController.animateTo(
-                    dest: cafe.location,
-                    zoom: 16,
-                  );
-                },
-                onLongPress: () async {
-                  CafeappUtils.launchMap(cafe.location);
-                },
-                child: const Icon(
-                  Icons.location_on_sharp,
-                  color: CafeAppUI.cafeMarkerColor,
-                  size: 22,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    cafe.name.toString(),
-                    style: const TextStyle(
-                      fontFamily: "Monospace",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 8,
-                      color: CafeAppUI.secondaryColor,
-                    ),
+                  onLongPress: () async {
+                    CafeappUtils.launchMap(cafe.location);
+                  },
+                  child: const Icon(
+                    Icons.location_on_sharp,
+                    color: CafeAppUI.cafeMarkerColor,
+                    size: 22,
                   ),
-                  Row(
-                    children: [
-                      const Text(
-                        'Cafe',
-                        style: TextStyle(
-                          fontFamily: "Monospace",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 8,
-                          color: CafeAppUI.secondaryColor,
-                        ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      cafe.name.toString(),
+                      style: const TextStyle(
+                        fontFamily: "Monospace",
+                        fontWeight: FontWeight.bold,
+                        fontSize: 8,
+                        color: CafeAppUI.secondaryColor,
                       ),
-                      const Padding(padding: EdgeInsets.all(2)),
-                      cafe.verified!
-                          ? const Icon(
-                              Icons.verified,
-                              color: Colors.pinkAccent,
-                              size: 8,
-                            )
-                          : const SizedBox.shrink(),
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Cafe',
+                          style: TextStyle(
+                            fontFamily: "Monospace",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 8,
+                            color: CafeAppUI.secondaryColor,
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.all(2)),
+                        cafe.verified!
+                            ? const Icon(
+                                Icons.verified,
+                                color: Colors.pinkAccent,
+                                size: 8,
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
         );
 }
