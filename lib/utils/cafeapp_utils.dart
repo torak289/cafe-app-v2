@@ -36,12 +36,12 @@ class CafeappUtils {
   }
 
   static List<CafeMarker> cafesToMarkers(List<CafeModel> cafes,
-      AnimatedMapController mapController, BuildContext context) {
+      AnimatedMapController mapController) {
     try {
       List<CafeMarker> cafeMarkers = List.empty(growable: true);
       for (int i = 0; i < cafes.length; i++) {
         cafeMarkers.add(CafeMarker(
-            cafe: cafes[i], mapController: mapController, context: context));
+            cafe: cafes[i], mapController: mapController));
       }
       return cafeMarkers;
     } catch (e) {

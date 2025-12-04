@@ -185,7 +185,7 @@ class DatabaseService {
   }
 
   Future<MarkerLayer> getCafesInBounds(
-      AnimatedMapController mapController, BuildContext context) async {
+      AnimatedMapController mapController) async {
     List<CafeMarker> markers = List.empty(growable: true);
     try {
       // Wait for the map controller to be ready by polling
@@ -220,7 +220,7 @@ class DatabaseService {
         _addCafeToMarkerList(c);
       }
       markers =
-          CafeappUtils.cafesToMarkers(cafeMarkers, mapController, context);
+          CafeappUtils.cafesToMarkers(cafeMarkers, mapController);
 
       return MarkerLayer(markers: markers);
     } catch (e) {

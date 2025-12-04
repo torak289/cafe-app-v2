@@ -12,11 +12,11 @@ import 'package:provider/provider.dart';
 class CafeMarker extends Marker {
   final CafeModel cafe;
   final AnimatedMapController mapController;
-  final BuildContext context;
 
-  CafeMarker(
-      {required this.cafe, required this.mapController, required this.context})
-      : super(
+  CafeMarker({
+    required this.cafe,
+    required this.mapController,
+  }) : super(
           width: 200,
           height: 22,
           point: cafe.location,
@@ -94,5 +94,6 @@ class CafeMarker extends Marker {
               ),
             ],
           ),
+        ),
         );
 }
