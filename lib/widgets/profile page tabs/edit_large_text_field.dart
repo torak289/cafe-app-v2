@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 class EditLargeTextField extends StatefulWidget {
   final CafeModel cafe;
   final Function callback;
-  late bool isEditing = false;
   EditLargeTextField({
     super.key,
     required this.cafe,
@@ -20,10 +19,11 @@ class EditLargeTextField extends StatefulWidget {
 
 class _EditableCafeNameFieldState extends State<EditLargeTextField> {
   TextEditingController editingController = TextEditingController();
+  bool isEditing = false;
   @override
   Widget build(BuildContext context) {
     DatabaseService database = Provider.of(context, listen: false);
-    if (widget.isEditing) {
+    if (isEditing) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +47,7 @@ class _EditableCafeNameFieldState extends State<EditLargeTextField> {
               if (res == "Success") {
                 setState(
                   () {
-                    widget.isEditing = false;
+                    isEditing = false;
                     editingController.clear();
                     //widget.callback.call();
                     //TODO: Implement parent set state rebuild...
@@ -76,7 +76,7 @@ class _EditableCafeNameFieldState extends State<EditLargeTextField> {
           GestureDetector(
             onTap: () async {
               setState(() {
-                widget.isEditing = true;
+                isEditing = true;
                 editingController.text = widget.cafe.description!;
               });
             },

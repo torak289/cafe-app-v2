@@ -7,8 +7,7 @@ import 'package:provider/provider.dart';
 class EditableCafeNameField extends StatefulWidget {
   final CafeModel cafe;
   final Function callback;
-  late bool isEditing = false;
-  EditableCafeNameField({
+  const EditableCafeNameField({
     super.key,
     required this.cafe,
     required this.callback,
@@ -20,10 +19,11 @@ class EditableCafeNameField extends StatefulWidget {
 
 class _EditableCafeNameFieldState extends State<EditableCafeNameField> {
   TextEditingController editingController = TextEditingController();
+  bool isEditing = false;
   @override
   Widget build(BuildContext context) {
     DatabaseService database = Provider.of(context, listen: false);
-    if (widget.isEditing) {
+    if (isEditing) {
       return Row(
         children: [
           SizedBox(
@@ -41,7 +41,7 @@ class _EditableCafeNameFieldState extends State<EditableCafeNameField> {
               if (res == "Success") {
                 setState(
                   () {
-                    widget.isEditing = false;
+                    isEditing = false;
                     editingController.clear();
                     //widget.callback.call();
                     //TODO: Implement parent set state rebuild...
@@ -78,7 +78,7 @@ class _EditableCafeNameFieldState extends State<EditableCafeNameField> {
           GestureDetector(
             onTap: () async {
               setState(() {
-                widget.isEditing = true;
+                isEditing = true;
                 editingController.text = widget.cafe.name!;
               });
             },

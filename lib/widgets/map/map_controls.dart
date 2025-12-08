@@ -11,7 +11,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class MapControls extends StatelessWidget {
-  MapControls({
+  const MapControls({
     super.key,
     required this.animatedMapController,
     required this.position,
@@ -20,7 +20,7 @@ class MapControls extends StatelessWidget {
 
   final AnimatedMapController animatedMapController;
   final Position position;
-  bool isAddCafePage = false;
+  final bool isAddCafePage;
 
   @override
   Widget build(BuildContext context) {
