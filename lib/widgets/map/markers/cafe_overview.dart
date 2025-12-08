@@ -32,237 +32,260 @@ class CafeOverview extends StatelessWidget {
             child: FutureBuilder(
               future: databaseService.getCafeData(cafe.uid!),
               builder: (BuildContext context, future) {
-                if (future.hasData) {
-                  return Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      32,
-                      16,
-                      48,
-                      48,
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Center(
-                          child: Text(
-                            cafe.name != null ? cafe.name! : "NO NAME",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsGeometry.all(
-                              CafeAppUI.buttonSpacingMedium),
-                        ),
-                        Builder(builder: (context) {
-                          if (future.data!.totalReviews! > 0) {
-                            return Column(
-                              children: [
-                                StarRating(
-                                  size: 32,
-                                  color: CafeAppUI.iconButtonIconColor,
-                                  borderColor: CafeAppUI.iconButtonIconColor,
-                                  starCount: 5,
-                                  rating: future.data!.rating != null
-                                      ? future.data!.rating!.toDouble()
-                                      : 0.0,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "${future.data!.rating?.toStringAsFixed(1)}/5 from ${future.data!.totalReviews} reviews", //TODO: Implement whole number trim of .0
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsetsGeometry.all(
-                                          CafeAppUI.buttonSpacingSmall),
-                                    ),
-                                    Tooltip(
-                                      message:
-                                          'This is the average across all reviews. The average is calculated based on 3 factors, Coffee, Atmosphere & Service.',
-                                      child: Icon(
-                                        Icons.info_outline_rounded,
-                                        color: Colors.black,
-                                        size: 18,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Text(
-                              'No Rating',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            );
-                          }
-                        }),
-                        Builder(builder: (context) {
-                          if (future.data!.description != null ||
-                              future.data!.description!.isEmpty) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsetsGeometry.all(
-                                      CafeAppUI.buttonSpacingMedium),
-                                ),
-                                Text(
-                                  'About',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Padding(padding: EdgeInsetsGeometry.all(1)),
-                                Text(
-                                  future.data!.description!,
-                                  textAlign: TextAlign.justify,
-                                ),
-                              ],
-                            );
-                          } else {
-                            return SizedBox.shrink();
-                          }
-                        }),
-                        Padding(
-                          padding: EdgeInsetsGeometry.all(
-                            CafeAppUI.buttonSpacingMedium,
-                          ),
-                        ),
-                        Chip(
-                          label: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Laptop Friendly'),
-                              Builder(
-                                builder: (BuildContext context) {
-                                  if (future.data!.isLaptopFriendly != null) {
-                                    return future.data!.isLaptopFriendly!
-                                        ? Icon(
-                                            Icons.check_rounded,
-                                            color:
-                                                CafeAppUI.iconButtonIconColor,
-                                          )
-                                        : Icon(
-                                            Icons.close_rounded,
-                                            color:
-                                                CafeAppUI.iconButtonIconColor,
-                                          );
-                                  } else {
-                                    return Icon(
-                                      Icons.question_mark_rounded,
-                                      color: CafeAppUI.iconButtonIconColor,
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        Chip(
-                          label: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('WiFi'),
-                              Builder(
-                                builder: (BuildContext context) {
-                                  if (future.data!.hasWifi != null) {
-                                    return future.data!.hasWifi!
-                                        ? Icon(
-                                            Icons.check_rounded,
-                                            color:
-                                                CafeAppUI.iconButtonIconColor,
-                                          )
-                                        : Icon(
-                                            Icons.close_rounded,
-                                            color:
-                                                CafeAppUI.iconButtonIconColor,
-                                          );
-                                  } else {
-                                    return Icon(
-                                      Icons.question_mark_rounded,
-                                      color: CafeAppUI.iconButtonIconColor,
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsetsGeometry.all(
-                              CafeAppUI.buttonSpacingLarge),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Builder(builder: (BuildContext context) {
-                              AuthService authService =
-                                  Provider.of<AuthService>(context,
-                                      listen: false);
-                              if (authService.appState ==
-                                  AppState.Authenticated) {
-                                return TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      showModalBottomSheet<void>(
-                                        showDragHandle: true,
-                                        context: context,
-                                        useSafeArea: true,
-                                        isScrollControlled: true,
-                                        builder: (BuildContext context) =>
-                                            rating_popup(
-                                          cafe: cafe,
-                                        ),
-                                      );
-                                    },
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text('Review'),
-                                        Padding(
-                                            padding: EdgeInsetsGeometry.all(2)),
-                                        Icon(Icons.star_rounded)
-                                      ],
-                                    ));
-                              } else {
-                                return SizedBox.shrink();
-                              }
-                            }),
-                            Padding(
-                              padding: EdgeInsetsGeometry.all(
-                                  CafeAppUI.buttonSpacingMedium),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                CafeappUtils.launchMap(cafe.location);
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text('Goto'),
-                                  Padding(padding: EdgeInsetsGeometry.all(3)),
-                                  Icon(Icons.assistant_navigation),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
+                // Use fetched data if available, otherwise fall back to marker data
+                final displayCafe = future.hasData ? future.data! : cafe;
+                final isOffline = future.hasError ||
+                    (!future.hasData &&
+                        future.connectionState == ConnectionState.done);
+
+                if (future.connectionState == ConnectionState.waiting &&
+                    cafe.rating == null) {
+                  // Only show spinner if we have no data at all
                   return Center(
                     child: CircularProgressIndicator(
                       color: CafeAppUI.iconButtonIconColor,
                     ),
                   );
                 }
+
+                // Display cafe data (from detailed fetch or fallback to marker data)
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    32,
+                    16,
+                    48,
+                    48,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Show offline indicator if using cached data
+                      if (isOffline)
+                        Chip(
+                          label: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Offline - Showing cached data',
+                              ),
+                              Icon(Icons.wifi_off,
+                                  size: 18, color: CafeAppUI.secondaryText),
+                            ],
+                          ),
+                        ),
+                      Center(
+                        child: Text(
+                          displayCafe.name != null
+                              ? displayCafe.name!
+                              : "NO NAME",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(
+                            CafeAppUI.buttonSpacingMedium),
+                      ),
+                      Builder(builder: (context) {
+                        if (displayCafe.totalReviews != null &&
+                            displayCafe.totalReviews! > 0) {
+                          return Column(
+                            children: [
+                              StarRating(
+                                size: 32,
+                                color: CafeAppUI.iconButtonIconColor,
+                                borderColor: CafeAppUI.iconButtonIconColor,
+                                starCount: 5,
+                                rating: displayCafe.rating != null
+                                    ? displayCafe.rating!.toDouble()
+                                    : 0.0,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${displayCafe.rating?.toStringAsFixed(1)}/5 from ${displayCafe.totalReviews} reviews", //TODO: Implement whole number trim of .0
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsGeometry.all(
+                                        CafeAppUI.buttonSpacingSmall),
+                                  ),
+                                  Tooltip(
+                                    message:
+                                        'This is the average across all reviews. The average is calculated based on 3 factors, Coffee, Atmosphere & Service.',
+                                    child: Icon(
+                                      Icons.info_outline_rounded,
+                                      color: Colors.black,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          );
+                        } else {
+                          return Text(
+                            'No Rating',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          );
+                        }
+                      }),
+                      Builder(builder: (context) {
+                        if (displayCafe.description != null &&
+                            displayCafe.description!.isNotEmpty) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsetsGeometry.all(
+                                    CafeAppUI.buttonSpacingMedium),
+                              ),
+                              Text(
+                                'About',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Padding(padding: EdgeInsetsGeometry.all(1)),
+                              Text(
+                                displayCafe.description!,
+                                textAlign: TextAlign.justify,
+                              ),
+                            ],
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      }),
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(
+                          CafeAppUI.buttonSpacingMedium,
+                        ),
+                      ),
+                      Chip(
+                        label: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Laptop Friendly'),
+                            Builder(
+                              builder: (BuildContext context) {
+                                if (displayCafe.isLaptopFriendly != null) {
+                                  return displayCafe.isLaptopFriendly!
+                                      ? Icon(
+                                          Icons.check_rounded,
+                                          color: CafeAppUI.iconButtonIconColor,
+                                        )
+                                      : Icon(
+                                          Icons.close_rounded,
+                                          color: CafeAppUI.iconButtonIconColor,
+                                        );
+                                } else {
+                                  return Icon(
+                                    Icons.question_mark_rounded,
+                                    color: CafeAppUI.iconButtonIconColor,
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Chip(
+                        label: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('WiFi'),
+                            Builder(
+                              builder: (BuildContext context) {
+                                if (displayCafe.hasWifi != null) {
+                                  return displayCafe.hasWifi!
+                                      ? Icon(
+                                          Icons.check_rounded,
+                                          color: CafeAppUI.iconButtonIconColor,
+                                        )
+                                      : Icon(
+                                          Icons.close_rounded,
+                                          color: CafeAppUI.iconButtonIconColor,
+                                        );
+                                } else {
+                                  return Icon(
+                                    Icons.question_mark_rounded,
+                                    color: CafeAppUI.iconButtonIconColor,
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsetsGeometry.all(
+                            CafeAppUI.buttonSpacingLarge),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Builder(builder: (BuildContext context) {
+                            AuthService authService = Provider.of<AuthService>(
+                                context,
+                                listen: false);
+                            if (authService.appState ==
+                                    AppState.Authenticated &&
+                                !isOffline) {
+                              return TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    showModalBottomSheet<void>(
+                                      showDragHandle: true,
+                                      context: context,
+                                      useSafeArea: true,
+                                      isScrollControlled: true,
+                                      builder: (BuildContext context) =>
+                                          rating_popup(
+                                        cafe: cafe,
+                                      ),
+                                    );
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Review'),
+                                      Padding(
+                                          padding: EdgeInsetsGeometry.all(2)),
+                                      Icon(Icons.star_rounded)
+                                    ],
+                                  ));
+                            } else {
+                              return SizedBox.shrink();
+                            }
+                          }),
+                          Padding(
+                            padding: EdgeInsetsGeometry.all(
+                                CafeAppUI.buttonSpacingMedium),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              CafeappUtils.launchMap(cafe.location);
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Goto'),
+                                Padding(padding: EdgeInsetsGeometry.all(3)),
+                                Icon(Icons.assistant_navigation),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ),
