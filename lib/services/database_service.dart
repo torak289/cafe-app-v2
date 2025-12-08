@@ -11,10 +11,32 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+/// Cache entry for bounded cafe queries
+class _BoundsCacheEntry {
+  final DateTime fetchedAt;
+  final List<CafeModel> cafes;
+  final LatLngBounds bounds;
+
+  _BoundsCacheEntry({
+    required this.fetchedAt,
+    required this.cafes,
+    required this.bounds,
+  });
+
+  bool isExpired(Duration ttl) => DateTime.now().difference(fetchedAt) > ttl;
+}
+
 class DatabaseService {
   List<CafeModel> cafeMarkers = List<CafeModel>.empty(
       growable: true); //TODO: look to move out of here and into a provider
   int cafeMarkersLength = 50;
+
+  // Bounded cache with TTL for marker queries
+  final Map<String, _BoundsCacheEntry> _boundsCache = {};
+  static const Duration _cacheTtl = Duration(minutes: 3);
+  static const int _maxCacheEntries = 49;
+  _BoundsCacheEntry? _lastValidEntry; // Fallback for errors
+  Set<String> _previousCafeIds = {}; // For marker diffing
 
   /*List<RoasterModel> roaster = List<RoasterModel>.empty(
       growable: true); //TODO: Implement Roasters in App... */
@@ -186,27 +208,35 @@ class DatabaseService {
 
   Future<MarkerLayer> getCafesInBounds(
       AnimatedMapController mapController) async {
-    List<CafeMarker> markers = List.empty(growable: true);
+    String? cacheKey;
     try {
-      // Wait for the map controller to be ready by polling
-      int attempts = 0;
-      const maxAttempts = 50; // 5 seconds total with 100ms delays
-      LatLngBounds? bounds;
-      
-      while (bounds == null && attempts < maxAttempts) {
-        try {
-          bounds = mapController.mapController.camera.visibleBounds;
-          break;
-        } catch (e) {
-          attempts++;
-          await Future.delayed(const Duration(milliseconds: 100));
-        }
-      }
-      
+      // Safely get map bounds without excessive polling
+      final bounds = _getMapBounds(mapController);
       if (bounds == null) {
-        throw Exception('MapController camera failed to initialize');
+        // If map isn't ready, return last valid cached markers
+        if (_lastValidEntry != null) {
+          debugPrint('Map bounds unavailable; serving stale cache');
+          return _buildMarkerLayer(_lastValidEntry!.cafes, mapController);
+        }
+        return MarkerLayer(markers: []);
       }
-      
+
+      // Get current zoom level for cache key normalization
+      final zoom = mapController.mapController.camera.zoom;
+      // Normalize bounds key to reduce cache misses on small pans
+      cacheKey = _normalizeBoundsKey(bounds, zoom);
+
+      // Check cache first (point 1)
+      // Check cache first (point 1)
+      final cached = _boundsCache[cacheKey];
+      if (cached != null && !cached.isExpired(_cacheTtl)) {
+        _lastValidEntry = cached;
+        debugPrint(
+            'Serving cafes from cache (${cached.cafes.length} cafes at zoom $zoom)');
+        return _buildMarkerLayer(cached.cafes, mapController);
+      }
+
+      // Fetch from Supabase
       List<CafeModel> cafes = List.empty(growable: true);
       final data = await _selectUsingFunc(func: 'cafes_in_bounds', params: {
         'min_lat': bounds.southWest.latitude,
@@ -214,20 +244,117 @@ class DatabaseService {
         'max_lat': bounds.northEast.latitude,
         'max_long': bounds.northEast.longitude,
       });
-      cafes.clear();
       cafes = CafeModel.cafesFromJson(data);
+
+      // Update cache
+      _updateCache(cacheKey, cafes, bounds);
+      _lastValidEntry = _boundsCache[cacheKey]!;
+
+      return _buildMarkerLayer(cafes, mapController);
+    } catch (e) {
+      debugPrint('Error fetching cafes: $e');
+      // Point 3: Graceful offline/error fallback
+      // Try to serve from any cached entry for this area first
+      final cached = _boundsCache[cacheKey];
+      if (cached != null) {
+        debugPrint(
+            'Offline/error: serving expired cache for this area (${cached.cafes.length} cafes)');
+        return _buildMarkerLayer(cached.cafes, mapController);
+      }
+      
+      // If no cache for current area, serve last valid entry from any area
+      if (_lastValidEntry != null) {
+        debugPrint(
+            'Offline/error: serving last valid markers from different area (${_lastValidEntry!.cafes.length} cafes)');
+        return _buildMarkerLayer(_lastValidEntry!.cafes, mapController);
+      }
+      
+      // Last resort: try to serve any cached markers from any area
+      if (_boundsCache.isNotEmpty) {
+        final anyCached = _boundsCache.values.first;
+        debugPrint(
+            'Offline/error: serving any available cached markers (${anyCached.cafes.length} cafes)');
+        return _buildMarkerLayer(anyCached.cafes, mapController);
+      }
+      
+      _database.auth.refreshSession();
+      return MarkerLayer(markers: []);
+    }
+  }
+
+  /// Point 4: Safely get map bounds without excessive polling
+  LatLngBounds? _getMapBounds(AnimatedMapController mapController) {
+    try {
+      return mapController.mapController.camera.visibleBounds;
+    } catch (e) {
+      debugPrint('Failed to get map bounds: $e');
+      return null;
+    }
+  }
+
+  /// Normalize bounds to a cache key (reduces misses on small pans)
+  /// Rounds to ~111m precision per degree, includes zoom for finer granularity
+  String _normalizeBoundsKey(LatLngBounds bounds, double zoom) {
+    final centerLat = (bounds.center.latitude * 10).round() / 10; // ~11km
+    final centerLng = (bounds.center.longitude * 10).round() / 10;
+    final zoomBucket = zoom.toInt();
+    return '${centerLat}_${centerLng}_${zoomBucket}';
+  }
+
+  /// Update cache and evict old entries if needed (point 1: bounded)
+  void _updateCache(
+    String key,
+    List<CafeModel> cafes,
+    LatLngBounds bounds,
+  ) {
+    _boundsCache[key] = _BoundsCacheEntry(
+      fetchedAt: DateTime.now(),
+      cafes: cafes,
+      bounds: bounds,
+    );
+
+    // Evict oldest entry if cache exceeds max size
+    if (_boundsCache.length > _maxCacheEntries) {
+      final oldest = _boundsCache.entries
+          .reduce((a, b) => a.value.fetchedAt.isBefore(b.value.fetchedAt) ? a : b);
+      _boundsCache.remove(oldest.key);
+      debugPrint('Evicted old cache entry; cache size: ${_boundsCache.length}');
+    }
+  }
+
+  /// Build marker layer from cafes with diffing to reduce rebuilds
+  /// Quick win #5: Only rebuild if cafe IDs changed
+  MarkerLayer _buildMarkerLayer(
+    List<CafeModel> cafes,
+    AnimatedMapController mapController,
+  ) {
+    final newIds = cafes.map((c) => c.uid).whereType<String>().toSet();
+    final added = newIds.difference(_previousCafeIds);
+    final removed = _previousCafeIds.difference(newIds);
+
+    // Rebuild markers from current cafes if there are changes
+    if (added.isNotEmpty || removed.isNotEmpty) {
+      debugPrint(
+          'Marker diff: +${added.length} -${removed.length}, rebuilding markers');
+      cafeMarkers.clear();
       for (CafeModel c in cafes) {
         _addCafeToMarkerList(c);
       }
-      markers =
-          CafeappUtils.cafesToMarkers(cafeMarkers, mapController);
-
-      return MarkerLayer(markers: markers);
-    } catch (e) {
-      debugPrint(e.toString());
-      _database.auth.refreshSession();
-      return Future.error(e);
+      _previousCafeIds = newIds;
+    } else if (cafeMarkers.isEmpty) {
+      // First load: build markers even if IDs haven't changed
+      debugPrint('Initial build: no previous markers, building from cafes');
+      cafeMarkers.clear();
+      for (CafeModel c in cafes) {
+        _addCafeToMarkerList(c);
+      }
+      _previousCafeIds = newIds;
+    } else {
+      debugPrint('No cafe changes; reusing existing markers (${cafeMarkers.length})');
     }
+
+    final markers = CafeappUtils.cafesToMarkers(cafeMarkers, mapController);
+    return MarkerLayer(markers: markers);
   }
 
   Future<CafeModel?> getCafeData(String uuid) async {

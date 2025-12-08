@@ -43,6 +43,7 @@ class _MapPageState extends State<MapPage>
   late DatabaseService database;
   Future<MarkerLayer>? _markerLayer;
   bool _isMarkerLayerInitialized = false;
+  MarkerLayer? _lastValidMarkerLayer; // Cache last valid markers to prevent flicker
 
   // Throttle marker refreshes to avoid rapid refetching on map movement
   DateTime _lastMarkerFetch = DateTime.fromMillisecondsSinceEpoch(0);
@@ -119,7 +120,10 @@ class _MapPageState extends State<MapPage>
     _markerFetchInFlight = true;
     _lastMarkerFetch = now;
 
-    markerLayer = database.getCafesInBounds(animatedMapController)
+    markerLayer = database.getCafesInBounds(animatedMapController).then((layer) {
+      _lastValidMarkerLayer = layer; // Cache for display during next fetch
+      return layer;
+    })
       ..whenComplete(() => _markerFetchInFlight = false);
 
     _markerUpdateNotifier.value++;
@@ -330,6 +334,9 @@ class _MapPageState extends State<MapPage>
                         builder: (context, cafeMarkers) {
                           if (cafeMarkers.hasData) {
                             return cafeMarkers.data!;
+                          } else if (_lastValidMarkerLayer != null) {
+                            // Show cached markers while loading to prevent flicker
+                            return _lastValidMarkerLayer!;
                           } else {
                             return const MarkerLayer(markers: []);
                           }
