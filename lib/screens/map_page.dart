@@ -44,6 +44,11 @@ class _MapPageState extends State<MapPage>
   Future<MarkerLayer>? _markerLayer;
   bool _isMarkerLayerInitialized = false;
 
+  // Throttle marker refreshes to avoid rapid refetching on map movement
+  DateTime _lastMarkerFetch = DateTime.fromMillisecondsSinceEpoch(0);
+  bool _markerFetchInFlight = false;
+  final Duration _markerFetchThrottle = const Duration(milliseconds: 600);
+
   // Key to rebuild only the marker FutureBuilder, not the entire map
   final ValueNotifier<int> _markerUpdateNotifier = ValueNotifier<int>(0);
 
@@ -96,6 +101,28 @@ class _MapPageState extends State<MapPage>
 
   set markerLayer(Future<MarkerLayer> value) {
     _markerLayer = value;
+  }
+
+  void _maybeRefreshMarkers() {
+    final now = DateTime.now();
+
+    // Throttle rapid refreshes
+    if (now.difference(_lastMarkerFetch) < _markerFetchThrottle) {
+      return;
+    }
+
+    // Avoid overlapping fetches
+    if (_markerFetchInFlight) {
+      return;
+    }
+
+    _markerFetchInFlight = true;
+    _lastMarkerFetch = now;
+
+    markerLayer = database.getCafesInBounds(animatedMapController)
+      ..whenComplete(() => _markerFetchInFlight = false);
+
+    _markerUpdateNotifier.value++;
   }
 
   final _inBoundsDebouncer = Debouncer(milliseconds: 200);
@@ -253,11 +280,7 @@ class _MapPageState extends State<MapPage>
                             event is MapEventNonRotatedSizeChange;
 
                     if (shouldUpdate) {
-                      _inBoundsDebouncer.run(() {
-                        markerLayer =
-                            database.getCafesInBounds(animatedMapController);
-                        _markerUpdateNotifier.value++;
-                      });
+                      _inBoundsDebouncer.run(_maybeRefreshMarkers);
                     }
                   },
                   onLongPress: (tapPos, latlng) {
