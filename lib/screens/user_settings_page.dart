@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
 import 'package:cafeapp_v2/data_models/user_model.dart';
-import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/share_pref_service.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +10,13 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserSettingsPage extends StatefulWidget {
-  UserSettingsPage({super.key});
-  late String errorString = "";
+  const UserSettingsPage({super.key});
   @override
   State<UserSettingsPage> createState() => _UserSettingsPageState();
 }
 
 class _UserSettingsPageState extends State<UserSettingsPage> {
+  String errorString = "";
   Future<void> _launchInAppBrowser(Uri url) async {
     if (!await launchUrl(
       url,
@@ -150,7 +149,9 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                                       autocorrect: false,
                                       controller: newPassword,
                                       validator:
-                                          (value) {}, //TODO: Implement local password validation???
+                                          (value) {
+                                            return null;
+                                          }, //TODO: Implement local password validation???
                                     ),
                                   ),
                                 ],
@@ -202,14 +203,14 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                                       } else {
                                         setState(() {
                                           debugPrint(res);
-                                          widget.errorString =
+                                          errorString =
                                               res; //TODO: Implement Error string display
                                         });
                                       }
                                     } else {
                                       debugPrint("Passwords do not match!");
                                       setState(() {
-                                        widget.errorString =
+                                        errorString =
                                             "Passwords do not match!";
                                       });
                                     }
@@ -225,12 +226,12 @@ class _UserSettingsPageState extends State<UserSettingsPage> {
                       Builder(
                         //TODO: Fix reformatting issue on error text shown...
                         builder: (context) {
-                          if (widget.errorString.isNotEmpty) {
+                          if (errorString.isNotEmpty) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.errorString,
+                                  errorString,
                                   style: const TextStyle(
                                     color: Colors.red,
                                     fontSize: 12,

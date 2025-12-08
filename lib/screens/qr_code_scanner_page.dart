@@ -9,11 +9,11 @@ class QrCodeScannerPage extends StatefulWidget {
 
   @override
   State<QrCodeScannerPage> createState() => _QrCodeScannerPageState();
-  late String qrCode = "";
-  late int coffeeCount = 1;
 }
 
 class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
+  String qrCode = "";
+  int coffeeCount = 1;
   @override
   Widget build(BuildContext context) {
     MobileScannerController mobileScannerController = MobileScannerController(
@@ -29,7 +29,7 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
             vertical: CafeAppUI.screenVertical,
             horizontal: CafeAppUI.screenHorizontal),
         child: Builder(builder: (context) {
-          if (widget.qrCode.isEmpty) {
+          if (qrCode.isEmpty) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -70,9 +70,9 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                         for (final barcode in barcodes) {
                           if (uuid.hasMatch(barcode.rawValue!)) {
                             database.validateLoyaltyCode(barcode.rawValue!,
-                                widget.coffeeCount); //TODO: Implement debounce
+                                coffeeCount); //TODO: Implement debounce
                             setState(() {
-                              widget.qrCode = barcode.rawValue!;
+                              qrCode = barcode.rawValue!;
                             });
                           }
                         }
@@ -89,8 +89,8 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          if (widget.coffeeCount > 1) {
-                            widget.coffeeCount--;
+                          if (coffeeCount > 1) {
+                            coffeeCount--;
                           }
                         });
                       },
@@ -99,15 +99,15 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32),
                       child: Text(
-                        '${widget.coffeeCount}',
+                        '$coffeeCount',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     TextButton(
                         onPressed: () {
                           setState(() {
-                            if (widget.coffeeCount < 6) {
-                              widget.coffeeCount++;
+                            if (coffeeCount < 6) {
+                              coffeeCount++;
                             }
                           });
                         },

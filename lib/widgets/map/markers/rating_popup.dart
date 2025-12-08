@@ -10,17 +10,17 @@ class rating_popup extends StatefulWidget {
     super.key,
     required this.cafe,
   });
-  CafeModel cafe;
-  double coffeeRating = 0;
-  double atmosphereRating = 0;
-  double serviceRating = 0;
-  bool showError = false;
+  final CafeModel cafe;
 
   @override
   State<rating_popup> createState() => _rating_popupState();
 }
 
 class _rating_popupState extends State<rating_popup> {
+  double coffeeRating = 0;
+  double atmosphereRating = 0;
+  double serviceRating = 0;
+  bool showError = false;
   bool? laptopFriendly;
   bool? hasWifi;
   final formKey = GlobalKey<FormState>();
@@ -100,12 +100,12 @@ class _rating_popupState extends State<rating_popup> {
                           ),
                           StarRating(
                             size: 32,
-                            rating: widget.coffeeRating,
+                            rating: coffeeRating,
                             allowHalfRating: false,
                             color: CafeAppUI.iconButtonIconColor,
                             borderColor: CafeAppUI.iconButtonIconColor,
                             onRatingChanged: (rating) => setState(() {
-                              widget.coffeeRating = rating;
+                              coffeeRating = rating;
                             }),
                           ),
                         ],
@@ -122,12 +122,12 @@ class _rating_popupState extends State<rating_popup> {
                           ),
                           StarRating(
                             size: 32,
-                            rating: widget.serviceRating,
+                            rating: serviceRating,
                             allowHalfRating: false,
                             color: CafeAppUI.iconButtonIconColor,
                             borderColor: CafeAppUI.iconButtonIconColor,
                             onRatingChanged: (rating) => setState(() {
-                              widget.serviceRating = rating;
+                              serviceRating = rating;
                             }),
                           ),
                         ],
@@ -144,13 +144,13 @@ class _rating_popupState extends State<rating_popup> {
                           ),
                           StarRating(
                             size: 32,
-                            rating: widget.atmosphereRating,
+                            rating: atmosphereRating,
                             allowHalfRating: false,
                             color: CafeAppUI.iconButtonIconColor,
                             borderColor: CafeAppUI.iconButtonIconColor,
                             onRatingChanged: (rating) => setState(
                               () {
-                                widget.atmosphereRating = rating;
+                                atmosphereRating = rating;
                               },
                             ),
                           ),
@@ -256,7 +256,7 @@ class _rating_popupState extends State<rating_popup> {
                         ),
                       ),
                       Builder(builder: (context) {
-                        if (widget.showError) {
+                        if (showError) {
                           return Column(
                             children: [
                               Padding(
@@ -285,20 +285,20 @@ class _rating_popupState extends State<rating_popup> {
                       TextButton(
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            if (widget.atmosphereRating < 1 ||
-                                widget.coffeeRating < 1 ||
-                                widget.serviceRating < 1) {
+                            if (atmosphereRating < 1 ||
+                                coffeeRating < 1 ||
+                                serviceRating < 1) {
                               setState(() {
-                                widget.showError = true;
+                                showError = true;
                               });
                               return;
                             }
                             try {
                               bool success = await databaseService.reviewCafe(
                                 widget.cafe.uid!,
-                                widget.coffeeRating,
-                                widget.atmosphereRating,
-                                widget.serviceRating,
+                                coffeeRating,
+                                atmosphereRating,
+                                serviceRating,
                                 hasWifi,
                                 laptopFriendly,
                                 contentTextController.text.trim(),

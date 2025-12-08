@@ -1,7 +1,5 @@
 import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/data_models/cafe_model.dart';
-import 'package:cafeapp_v2/enum/app_states.dart';
-import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/widgets/map/markers/cafe_overview.dart';
@@ -9,8 +7,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:flutter_rating/flutter_rating.dart';
-import 'package:cafeapp_v2/widgets/map/markers/rating_popup.dart';
 import 'package:provider/provider.dart';
 
 class CafeMarker extends Marker {

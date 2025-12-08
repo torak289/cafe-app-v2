@@ -17,8 +17,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class AddCafePage extends StatefulWidget {
-  AddCafePage({super.key});
-  bool? cafeOwner = false;
+  const AddCafePage({super.key});
+  
   @override
   State<AddCafePage> createState() => _AddCafePageState();
 }
@@ -32,6 +32,7 @@ class _AddCafePageState extends State<AddCafePage>
   TextEditingController cafeInstagram = TextEditingController();
   bool? laptopFriendly;
   bool? hasWifi;
+  bool? cafeOwner = false;
 
   @override
   Widget build(BuildContext context) {
