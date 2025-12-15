@@ -6,12 +6,15 @@ import 'package:cafeapp_v2/enum/app_states.dart';
 import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/services/map_cache_service.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:cafeapp_v2/widgets/map/map_controls.dart';
 import 'package:cafeapp_v2/widgets/map/markers/user_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
@@ -468,34 +471,81 @@ class _AddCafePageState extends State<AddCafePage>
     return Stack(
       alignment: AlignmentDirectional.topCenter,
       children: [
-        FlutterMap(
-          mapController: animatedMapController.mapController,
-          options: MapOptions(
-            initialCenter: center,
-            initialZoom: 19,
-            cameraConstraint: CameraConstraint.contain(
-              bounds: LatLngBounds(
-                const LatLng(-90, -180),
-                const LatLng(90, 180),
-              ),
-            ),
-          ),
-          children: [
-            TileLayer(
-              urlTemplate:
-                  'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
-              userAgentPackageName: 'io.cafe-app',
-              maxZoom: 25,
-            ),
-            MarkerLayer(
-              markers: [
-                UserMarker(
-                  position: position,
-                  controller: animatedMapController.mapController,
+        FutureBuilder<CacheStore>(
+          future: MapCacheService().getCacheStore(),
+          builder: (context, cacheSnapshot) {
+            if (cacheSnapshot.hasData) {
+              final cacheStore = cacheSnapshot.data!;
+              return FlutterMap(
+                mapController: animatedMapController.mapController,
+                options: MapOptions(
+                  initialCenter: center,
+                  initialZoom: 19,
+                  cameraConstraint: CameraConstraint.contain(
+                    bounds: LatLngBounds(
+                      const LatLng(-90, -180),
+                      const LatLng(90, 180),
+                    ),
+                  ),
                 ),
-              ],
-            ),
-          ],
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
+                    userAgentPackageName: 'io.cafe-app',
+                    maxZoom: 25,
+                    tileProvider: CachedTileProvider(
+                      store: cacheStore,
+                      maxStale: const Duration(days: 7),
+                    ),
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      UserMarker(
+                        position: position,
+                        controller: animatedMapController.mapController,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            } else if (cacheSnapshot.hasError) {
+              // Fallback to non-cached map if cache fails
+              return FlutterMap(
+                mapController: animatedMapController.mapController,
+                options: MapOptions(
+                  initialCenter: center,
+                  initialZoom: 19,
+                  cameraConstraint: CameraConstraint.contain(
+                    bounds: LatLngBounds(
+                      const LatLng(-90, -180),
+                      const LatLng(90, 180),
+                    ),
+                  ),
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate:
+                        'https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=9xI0Yb0PwYnKHuphfPNr',
+                    userAgentPackageName: 'io.cafe-app',
+                    maxZoom: 25,
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      UserMarker(
+                        position: position,
+                        controller: animatedMapController.mapController,
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ),
         const Center(
           child: Icon(

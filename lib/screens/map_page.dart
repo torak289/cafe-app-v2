@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cafeapp_v2/constants/cafe_app_ui.dart';
 import 'package:cafeapp_v2/constants/routes.dart';
@@ -8,6 +7,7 @@ import 'package:cafeapp_v2/services/auth_service.dart';
 import 'package:cafeapp_v2/services/connectivity_service.dart';
 import 'package:cafeapp_v2/services/database_service.dart';
 import 'package:cafeapp_v2/services/location_service.dart';
+import 'package:cafeapp_v2/services/map_cache_service.dart';
 import 'package:cafeapp_v2/utils/cafeapp_utils.dart';
 import 'package:cafeapp_v2/utils/systemui_utils.dart';
 import 'package:cafeapp_v2/widgets/map/map_controls.dart';
@@ -23,10 +23,6 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
-
-import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:path_provider/path_provider.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key});
@@ -55,17 +51,6 @@ class _MapPageState extends State<MapPage>
 
   // Track permission changes
   final ValueNotifier<int> _permissionCheckNotifier = ValueNotifier<int>(0);
-
-  final Future<CacheStore> _cacheStoreFuture = _getCacheStore();
-
-  /// Get the CacheStore as a Future. This method needs to be static so that it
-  /// can be used to initialize a field variable.
-  static Future<CacheStore> _getCacheStore() async {
-    final dir = await getTemporaryDirectory();
-    // Note, that Platform.pathSeparator from dart:io does not work on web,
-    // import it from dart:html instead.
-    return FileCacheStore('${dir.path}${Platform.pathSeparator}MapTiles');
-  }
 
   @override
   void initState() {
@@ -266,7 +251,7 @@ class _MapPageState extends State<MapPage>
     return Stack(
       children: [
         FutureBuilder(
-          future: _cacheStoreFuture,
+          future: MapCacheService().getCacheStore(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final cacheStore = snapshot.data!;
@@ -322,7 +307,7 @@ class _MapPageState extends State<MapPage>
                     maxZoom: 25,
                     tileProvider: CachedTileProvider(
                       store: cacheStore,
-                      maxStale: const Duration(days: 2),
+                      maxStale: const Duration(days: 7),
                     ),
                   ),
                   // Wrap markers in ValueListenableBuilder to rebuild only markers, not entire map

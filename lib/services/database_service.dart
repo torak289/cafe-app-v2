@@ -261,14 +261,14 @@ class DatabaseService {
             'Offline/error: serving expired cache for this area (${cached.cafes.length} cafes)');
         return _buildMarkerLayer(cached.cafes, mapController);
       }
-      
+
       // If no cache for current area, serve last valid entry from any area
       if (_lastValidEntry != null) {
         debugPrint(
             'Offline/error: serving last valid markers from different area (${_lastValidEntry!.cafes.length} cafes)');
         return _buildMarkerLayer(_lastValidEntry!.cafes, mapController);
       }
-      
+
       // Last resort: try to serve any cached markers from any area
       if (_boundsCache.isNotEmpty) {
         final anyCached = _boundsCache.values.first;
@@ -276,7 +276,7 @@ class DatabaseService {
             'Offline/error: serving any available cached markers (${anyCached.cafes.length} cafes)');
         return _buildMarkerLayer(anyCached.cafes, mapController);
       }
-      
+
       _database.auth.refreshSession();
       return MarkerLayer(markers: []);
     }
@@ -315,8 +315,8 @@ class DatabaseService {
 
     // Evict oldest entry if cache exceeds max size
     if (_boundsCache.length > _maxCacheEntries) {
-      final oldest = _boundsCache.entries
-          .reduce((a, b) => a.value.fetchedAt.isBefore(b.value.fetchedAt) ? a : b);
+      final oldest = _boundsCache.entries.reduce(
+          (a, b) => a.value.fetchedAt.isBefore(b.value.fetchedAt) ? a : b);
       _boundsCache.remove(oldest.key);
       debugPrint('Evicted old cache entry; cache size: ${_boundsCache.length}');
     }
@@ -350,7 +350,8 @@ class DatabaseService {
       }
       _previousCafeIds = newIds;
     } else {
-      debugPrint('No cafe changes; reusing existing markers (${cafeMarkers.length})');
+      debugPrint(
+          'No cafe changes; reusing existing markers (${cafeMarkers.length})');
     }
 
     final markers = CafeappUtils.cafesToMarkers(cafeMarkers, mapController);

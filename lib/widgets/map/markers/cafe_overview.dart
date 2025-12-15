@@ -129,9 +129,11 @@ class CafeOverview extends StatelessWidget {
                             ],
                           );
                         } else {
-                          return Text(
-                            'No Rating',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          return Center(
+                            child: Text(
+                              'No Rating',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           );
                         }
                       }),
